@@ -36,6 +36,7 @@ import {
 } from '@core/features/projects/api/browser/stores/project-selectors';
 import { AgentsPanel } from '@core/features/settings/contributions/browser/agents-page/AgentsPanel';
 import { SkillsPanel } from '@core/features/skills/contributions/browser/SkillsPanel';
+import { MachineColorSettingCard } from '@core/features/workbench/contributions/browser/color-coding/color-code-settings';
 import { WorkspaceDetailPage } from '@core/features/workspaces/contributions/browser/workspace-detail-page';
 import { useOpenModal } from '@core/manifests/browser/modal-api';
 import type { SettingsPageDetailProps } from '@core/primitives/settings/api/page-contribution';
@@ -331,6 +332,8 @@ export const MachineDetailsPage = observer(function MachineDetailsPage({
                 </div>
               </SeparatedList>
             </SettingsCard>
+
+            <MachineColorSettingCard connectionId={machine.id} />
 
             {serverUsable ? (
               <>

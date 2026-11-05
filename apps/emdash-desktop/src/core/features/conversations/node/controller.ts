@@ -16,6 +16,7 @@ import { getConversationsForProject } from './getConversationsForProject';
 import { getConversationsForTask } from './getConversationsForTask';
 import { hydrateConversation } from './hydrateConversation';
 import { linkConversationToTask } from './link-conversation-to-task';
+import { listClaudeSessionsForProject } from './list-claude-sessions';
 import { listHostConversations } from './list-host-conversations';
 import { markConversationSeen } from './markConversationSeen';
 import { renameConversation } from './renameConversation';
@@ -75,6 +76,8 @@ export function createConversationOperations(dependencies: {
       getConversationsForTask(db, projectId, taskId),
     getConversationsForProject: (projectId: string) => getConversationsForProject(db, projectId),
     markConversationSeen: (conversationId: string) => markConversationSeen(db, conversationId),
+    listClaudeSessions: (projectId: string) =>
+      listClaudeSessionsForProject(db, dependencies.runtimes, projectId),
     listHostConversations: (scope: Parameters<typeof listHostConversations>[1]) =>
       listHostConversations(db, scope),
     linkConversationToTask: (input: Parameters<typeof linkConversationToTask>[1]) =>

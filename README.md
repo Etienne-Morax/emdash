@@ -27,6 +27,45 @@ already use: Claude Code, Codex, OpenCode, Amp, and more.
 
 <img alt="Emdash product screenshot" src="https://emdash.sh/media/blog/public-v1-beta/v1beta.jpg" />
 
+## About this fork
+
+This is a personal fork of [generalaction/emdash](https://github.com/generalaction/emdash).
+Fork-only features stay behind settings so each feature branch can be rebased onto new
+upstream releases and offered upstream unchanged:
+
+- **Agent grid** (Settings → Interface → *Agent grid*): a sidebar entry that tiles the live
+  agent terminal of every task, across projects and hosts (2×2, 3×2, 4×3… up to 16 tiles),
+  with per-tile status, conversation picker, expand and open-task actions. See
+  [generalaction/emdash#1588](https://github.com/generalaction/emdash/issues/1588).
+  The grid wears the Morax art direction (fork-only commit, scoped to `.morax-grid`): tokens
+  copied from the `morax-design` kit by
+  `node apps/emdash-desktop/tooling/morax-design/sync-grid-tokens.mjs`. Re-run it after a kit
+  release. Drop that commit to offer the grid upstream with the stock Emdash look.
+- **Project and machine colours** (Settings → Interface → *Project and machine colours*,
+  on by default in this fork): each task shows its project colour (stripe + dot) and a
+  machine chip (this computer, or the SSH machine by name and colour) in the sidebar, the
+  task header and the grid. Change a project's colour in its settings and a machine's in
+  Settings → Machines. Fork default palette = the Claude session-title colours from
+  `~/.claude/hooks/session_color.py`
+  (`apps/emdash-desktop/src/core/primitives/color-coding/api/morax-palette.ts`).
+
+### Syncing with upstream
+
+```bash
+git remote add upstream https://github.com/generalaction/emdash.git   # once
+git fetch upstream
+git switch main && git merge --ff-only upstream/main && git push origin main
+git switch feat/multi-task-grid && git rebase main   # replay fork features on top
+pnpm install && pnpm run check
+git push --force-with-lease origin feat/multi-task-grid
+```
+
+Run the dev build with an isolated profile so it never touches the installed app's data:
+
+```bash
+EMDASH_USER_DATA_DIR="$HOME/.emdash-dev-profile" pnpm run dev
+```
+
 ## What You Can Do
 
 - Run multiple coding agents at once without juggling terminals.

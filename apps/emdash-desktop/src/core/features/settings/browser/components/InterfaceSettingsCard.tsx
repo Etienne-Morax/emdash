@@ -2,6 +2,7 @@ import { SettingsCard } from '@emdash/ui/react/patterns';
 import { SeparatedList, Switch } from '@emdash/ui/react/primitives';
 import React from 'react';
 import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
+import { LocalMachineIconSetting } from '@core/features/workbench/contributions/browser/color-coding/color-code-settings';
 import { ResetToDefaultButton } from './ResetToDefaultButton';
 import { SettingRow } from './SettingRow';
 
@@ -16,6 +17,8 @@ const InterfaceSettingsCard: React.FC = () => {
   } = useAppSettingsKey('interface');
 
   const hideContextBar = interfaceSettings?.hideContextBar ?? false;
+  const enableTaskGrid = interfaceSettings?.enableTaskGrid ?? false;
+  const colorCodeProjects = interfaceSettings?.colorCodeProjects ?? false;
 
   return (
     <SettingsCard>
@@ -39,6 +42,45 @@ const InterfaceSettingsCard: React.FC = () => {
             </>
           }
         />
+        <SettingRow
+          title="Agent grid"
+          description="Show a sidebar entry that tiles the live agents of every task, across projects."
+          control={
+            <>
+              <ResetToDefaultButton
+                visible={isFieldOverridden('enableTaskGrid')}
+                defaultLabel="off"
+                onReset={() => resetField('enableTaskGrid')}
+                disabled={loading || saving}
+              />
+              <Switch
+                checked={enableTaskGrid}
+                disabled={loading || saving}
+                onCheckedChange={(checked) => update({ enableTaskGrid: checked })}
+              />
+            </>
+          }
+        />
+        <SettingRow
+          title="Project and machine colours"
+          description="Mark each task with its project colour and the machine it runs on. Pick colours in project settings and in Settings → Machines."
+          control={
+            <>
+              <ResetToDefaultButton
+                visible={isFieldOverridden('colorCodeProjects')}
+                defaultLabel="off"
+                onReset={() => resetField('colorCodeProjects')}
+                disabled={loading || saving}
+              />
+              <Switch
+                checked={colorCodeProjects}
+                disabled={loading || saving}
+                onCheckedChange={(checked) => update({ colorCodeProjects: checked })}
+              />
+            </>
+          }
+        />
+        {colorCodeProjects && <LocalMachineIconSetting />}
       </SeparatedList>
     </SettingsCard>
   );

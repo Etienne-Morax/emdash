@@ -203,6 +203,7 @@ export function createConversationsWireController(
     linkConversationToTask: (input) => conversationOperations.linkConversationToTask(input),
     deleteHostConversation: ({ conversationId }) =>
       conversationOperations.deleteHostConversation(conversationId),
+    listClaudeSessions: ({ projectId }) => conversationOperations.listClaudeSessions(projectId),
     events: conversationWireEvents,
     acp: {
       setOption: (input, meta) =>
