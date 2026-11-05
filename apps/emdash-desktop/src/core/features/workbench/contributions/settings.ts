@@ -35,6 +35,7 @@ const interfaceSettingsSchema = z.object({
   colorCodeProjects: z.boolean(),
   projectColors: z.record(z.string(), z.string()),
   machineColors: z.record(z.string(), z.string()),
+  machineIcons: z.record(z.string(), z.string()),
 });
 
 const themeSchema = z.enum(['emlight', 'emdark']).nullable().catch(null).optional().default(null);
@@ -72,6 +73,7 @@ export const interfaceSettingsContribution = defineSettingsContribution<
     colorCodeProjects: true,
     projectColors: {},
     machineColors: {},
+    machineIcons: {},
   },
 });
 

@@ -63,6 +63,8 @@ export type InterfaceSettings = {
   projectColors: Record<string, string>;
   /** Explicit SSH machine colours, keyed by connection id. */
   machineColors: Record<string, string>;
+  /** Machine chip icons, keyed by connection id, plus `local` for this computer. */
+  machineIcons: Record<string, string>;
 };
 
 export type ProviderCustomConfig = {

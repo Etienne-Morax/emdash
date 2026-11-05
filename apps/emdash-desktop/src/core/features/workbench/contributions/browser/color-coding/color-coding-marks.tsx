@@ -1,14 +1,14 @@
 import { Tooltip } from '@emdash/ui/react/primitives';
-import { Laptop, Server } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import { COLOR_CODE_LABELS } from '@core/primitives/color-coding/api/color-coding';
 import { cn } from '@core/primitives/styling/browser/cn';
+import { MachineIcon } from './machine-icons';
 import {
   machineMarkerFor,
   projectColorFor,
   useColorCodingSettings,
   useColorValue,
-  useComputerName,
+  useComputerInfo,
 } from './use-color-coding';
 
 /** Small round project colour mark. Renders nothing while colour coding is off. */
@@ -73,13 +73,12 @@ export const MachineChip = observer(function MachineChip({
   compact?: boolean;
   className?: string;
 }) {
-  const { enabled, machineColors } = useColorCodingSettings();
-  const computerName = useComputerName();
+  const { enabled, machineColors, machineIcons } = useColorCodingSettings();
+  const computer = useComputerInfo();
   const colorValue = useColorValue();
   if (!enabled) return null;
-  const marker = machineMarkerFor(projectId, computerName, machineColors);
+  const marker = machineMarkerFor(projectId, computer, machineColors, machineIcons);
   const isLocal = marker.kind === 'local';
-  const Icon = isLocal ? Laptop : Server;
   const accent = isLocal ? undefined : colorValue(marker.color);
   const description = isLocal ? `Runs on ${marker.label}` : `Runs on ${marker.label} (SSH)`;
 
@@ -97,7 +96,11 @@ export const MachineChip = observer(function MachineChip({
       )}
       style={accent ? { borderColor: accent } : undefined}
     >
-      <Icon className="size-3 shrink-0" style={accent ? { color: accent } : undefined} />
+      <MachineIcon
+        icon={marker.icon}
+        className="size-3.5 shrink-0"
+        style={accent ? { color: accent } : undefined}
+      />
       {!compact && <span className="truncate">{marker.label}</span>}
     </span>
   );
