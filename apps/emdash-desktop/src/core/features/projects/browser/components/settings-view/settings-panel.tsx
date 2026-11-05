@@ -8,6 +8,7 @@ import {
 import { ProjectSettingsForm } from '@core/features/projects/browser/components/settings-view/project-settings-form';
 import { getProjectLiveActionDisabledReason } from '@core/features/projects/contributions/browser/project-live-action-guard';
 import { projectViewDef } from '@core/features/projects/contributions/views';
+import { ProjectColorSettingCard } from '@core/features/workbench/contributions/browser/color-coding/color-code-settings';
 import { useCurrentViewParams } from '@core/primitives/navigation/browser/navigation-hooks';
 import type {
   ProjectDurableSettingsDomains,
@@ -62,19 +63,22 @@ export const SettingsPanel = observer(function SettingsPanel() {
   }
 
   return (
-    <ProjectSettingsForm
-      key={projectId}
-      projectId={projectId}
-      projectType={context.project.type}
-      domains={domains}
-      configMigrations={configMigrations}
-      hostActionReason={hostActionReason}
-      hostObservationKind={hostDomains?.kind ?? 'unavailable'}
-      onSuccess={() => {}}
-      save={(s) => store.save(s)}
-      writeConfigToRepo={(request) => store.writeConfigToRepo(request)}
-      migrateProjectConfig={(request) => store.migrateProjectConfig(request)}
-    />
+    <>
+      <ProjectColorSettingCard projectId={projectId} />
+      <ProjectSettingsForm
+        key={projectId}
+        projectId={projectId}
+        projectType={context.project.type}
+        domains={domains}
+        configMigrations={configMigrations}
+        hostActionReason={hostActionReason}
+        hostObservationKind={hostDomains?.kind ?? 'unavailable'}
+        onSuccess={() => {}}
+        save={(s) => store.save(s)}
+        writeConfigToRepo={(request) => store.writeConfigToRepo(request)}
+        migrateProjectConfig={(request) => store.migrateProjectConfig(request)}
+      />
+    </>
   );
 });
 

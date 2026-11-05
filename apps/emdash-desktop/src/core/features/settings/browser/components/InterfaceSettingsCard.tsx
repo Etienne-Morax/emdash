@@ -17,6 +17,7 @@ const InterfaceSettingsCard: React.FC = () => {
 
   const hideContextBar = interfaceSettings?.hideContextBar ?? false;
   const enableTaskGrid = interfaceSettings?.enableTaskGrid ?? false;
+  const colorCodeProjects = interfaceSettings?.colorCodeProjects ?? false;
 
   return (
     <SettingsCard>
@@ -55,6 +56,25 @@ const InterfaceSettingsCard: React.FC = () => {
                 checked={enableTaskGrid}
                 disabled={loading || saving}
                 onCheckedChange={(checked) => update({ enableTaskGrid: checked })}
+              />
+            </>
+          }
+        />
+        <SettingRow
+          title="Project and machine colours"
+          description="Mark each task with its project colour and the machine it runs on. Pick colours in project settings and in Settings → Machines."
+          control={
+            <>
+              <ResetToDefaultButton
+                visible={isFieldOverridden('colorCodeProjects')}
+                defaultLabel="off"
+                onReset={() => resetField('colorCodeProjects')}
+                disabled={loading || saving}
+              />
+              <Switch
+                checked={colorCodeProjects}
+                disabled={loading || saving}
+                onCheckedChange={(checked) => update({ colorCodeProjects: checked })}
               />
             </>
           }

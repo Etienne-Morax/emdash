@@ -17,6 +17,12 @@ import {
   taskDisplayName,
 } from '@core/features/tasks/api/browser/task-state/task-selectors';
 import { taskViewDef } from '@core/features/tasks/contributions/views';
+import {
+  MachineChip,
+  ProjectColorDot,
+  ProjectColorStripe,
+} from '@core/features/workbench/contributions/browser/color-coding/color-coding-marks';
+import { useColorCodingSettings } from '@core/features/workbench/contributions/browser/color-coding/use-color-coding';
 import { useNavigate } from '@core/primitives/navigation/browser/navigation-hooks';
 import { pickTaskGridConversation } from './task-grid-layout';
 
@@ -64,34 +70,39 @@ export const TaskGridTile = observer(function TaskGridTile({
   const projectName = projectDisplayName(getProjectStore(projectId)) ?? 'Project';
   const isRemote = getProjectSshConnectionId(projectId) !== undefined;
   const status = conversation?.indicatorStatus ?? manager?.taskStatus ?? null;
+  const { enabled: isColorCoded } = useColorCodingSettings();
 
   return (
     <section
       aria-label={`${projectName} / ${taskDisplayName(task) ?? 'Task'}`}
       data-task-grid-tile={`${projectId}:${taskId}`}
       data-attention={status ?? undefined}
-      className="morax-grid__tile flex min-h-0 min-w-0 flex-col overflow-hidden"
+      className="morax-grid__tile relative flex min-h-0 min-w-0 flex-col overflow-hidden"
       onMouseDown={() => {
         if (conversation && !conversation.seen) conversation.markSeen();
       }}
     >
+      <ProjectColorStripe projectId={projectId} />
       <header className="morax-grid__header flex h-9 shrink-0 items-center">
         <span className="flex size-5 shrink-0 items-center justify-center">
           <AgentStatus status={status} size={16} tooltip />
         </span>
-        <span className="flex min-w-0 flex-1 items-baseline gap-1.5">
+        <span className="flex min-w-0 flex-1 items-center gap-1.5">
+          <ProjectColorDot projectId={projectId} />
           <span className="morax-grid__project max-w-[40%] truncate">{projectName}</span>
           <span className="morax-grid__project">/</span>
           <span className="morax-grid__task truncate">{taskDisplayName(task) ?? 'Task'}</span>
         </span>
-        {isRemote && (
+        {isColorCoded ? (
+          <MachineChip projectId={projectId} />
+        ) : isRemote ? (
           <Tooltip.Root>
             <Tooltip.Trigger className="morax-grid__project flex shrink-0 items-center">
               <Server className="size-3.5" aria-label="Remote host" />
             </Tooltip.Trigger>
             <Tooltip.Content>Runs on a remote host</Tooltip.Content>
           </Tooltip.Root>
-        )}
+        ) : null}
         {conversations.length > 1 && conversationId && (
           <Select.Root
             value={conversationId}
@@ -132,14 +143,16 @@ export const TaskGridTile = observer(function TaskGridTile({
       <div className="morax-grid__body relative min-h-0 min-w-0 flex-1 bg-(--xterm-bg)">
         <div className="absolute inset-0 overflow-hidden">
           {!provisioned ? (
-            <EmptyState bare
+            <EmptyState
+              bare
               label="Workspace not running"
               description="Open the task to start its workspace."
             />
           ) : !conversation ? (
             <EmptyState bare label="No conversation" description="This task has no agent yet." />
           ) : conversation.data.type === 'acp' ? (
-            <EmptyState bare
+            <EmptyState
+              bare
               label={conversation.data.title}
               description="Chat conversations are shown in the task view."
             />

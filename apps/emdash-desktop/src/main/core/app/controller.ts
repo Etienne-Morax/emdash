@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process';
-import { arch, release } from 'node:os';
+import { arch, hostname, release } from 'node:os';
 import { promisify } from 'node:util';
 import type { HostFileRef } from '@emdash/core/primitives/path/api';
 import type { OpenInAppId } from '@core/primitives/open-in-apps/api/open-in-apps';
@@ -49,6 +49,19 @@ async function getPlatformDisplayName(): Promise<string> {
   }
 
   return `${process.platform} ${release()} (${architecture})`;
+}
+
+async function getComputerName(): Promise<string> {
+  if (process.platform === 'darwin') {
+    try {
+      const { stdout } = await execFileAsync('scutil', ['--get', 'ComputerName']);
+      const name = stdout.trim();
+      if (name) return name;
+    } catch {
+      // scutil can fail in sandboxed environments; the host name is good enough.
+    }
+  }
+  return hostname();
 }
 
 export const appOperations = {
@@ -198,6 +211,7 @@ export const appOperations = {
   getElectronVersion: () => process.versions.electron,
   getPlatform: () => process.platform,
   getPlatformDisplayName,
+  getComputerName,
   getDiagnosticLogAttachment,
   submitFeedback: async (args: { content: string; files: FeedbackAttachment[] }) => {
     try {
