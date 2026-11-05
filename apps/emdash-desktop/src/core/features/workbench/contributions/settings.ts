@@ -68,7 +68,8 @@ export const interfaceSettingsContribution = defineSettingsContribution<
     showLeftSidebarTimestamps: true,
     hideContextBar: false,
     enableTaskGrid: false,
-    colorCodeProjects: false,
+    // Fork default: on (upstream ships it off).
+    colorCodeProjects: true,
     projectColors: {},
     machineColors: {},
   },
