@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { resolveProjectColor } from './color-coding';
-import { moraxProjectColor } from './morax-palette';
+import { defaultLocalMachineIcon, resolveProjectColor } from './color-coding';
+import { moraxLocalMachineIcon, moraxProjectColor } from './morax-palette';
 
 // Expected values computed with ~/.claude/hooks/session_color.py `color_for`.
 describe('moraxProjectColor', () => {
@@ -27,5 +27,13 @@ describe('moraxProjectColor', () => {
     expect(resolveProjectColor({ projectId: 'p', path: '/srv/morax-os', override: 'gray' })).toBe(
       'gray'
     );
+  });
+});
+
+describe('moraxLocalMachineIcon', () => {
+  it('shows the M1 Max MacBook Pro as laptop 1 and leaves the iMac to the default', () => {
+    expect(moraxLocalMachineIcon('MacBookPro18,2')).toBe('laptop-1');
+    expect(defaultLocalMachineIcon('MacBookPro18,2')).toBe('laptop-1');
+    expect(defaultLocalMachineIcon('iMac17,1')).toBe('imac');
   });
 });
