@@ -30,6 +30,7 @@ import {
   projectAttachmentErrorSchema,
   type ProjectAttachmentError,
 } from '@core/features/projects/api/attachments';
+import type { ListClaudeSessionsResult } from '@core/primitives/claude-sessions/api/claude-sessions';
 import type {
   Conversation,
   ConversationEvent,
@@ -260,6 +261,11 @@ export const conversationsContract = defineContract({
   deleteHostConversation: procedure({
     input: z.object({ conversationId: z.string() }),
     output: z.void(),
+  }),
+  /** Claude Code sessions started outside Emdash for this project, newest first. */
+  listClaudeSessions: procedure({
+    input: z.object({ projectId: z.string() }),
+    output: z.custom<ListClaudeSessionsResult>(),
   }),
   events: eventStream({ key: z.void(), event: z.custom<ConversationEvent>() }),
   acp: conversationsAcpContract,

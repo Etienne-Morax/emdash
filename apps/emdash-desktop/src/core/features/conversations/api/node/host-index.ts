@@ -65,6 +65,28 @@ export async function createHostConversationRecord(
 }
 
 /**
+ * Seeds the resume handle of a freshly created host record, so its first spawn resumes an
+ * existing provider session (imported sessions). Same report the backfill uses.
+ */
+export async function reportHostProviderSessionId(
+  runtimes: ConversationsRuntimeBroker,
+  host: HostRef,
+  conversationId: string,
+  providerSessionId: string
+): Promise<{ success: true } | { success: false; message: string }> {
+  const client = await runtimes.client(host);
+  if (!client.success) return { success: false, message: client.error.message };
+  const reported = await client.data.conversations.reports.providerSessionId({
+    conversationId,
+    providerSessionId,
+  });
+  if (reported && typeof reported === 'object' && 'success' in reported && !reported.success) {
+    return { success: false, message: 'The host refused the resume handle.' };
+  }
+  return { success: true };
+}
+
+/**
  * The compensating delete of the host-first creation flow (spec §6.2, step 4): a direct
  * foreground index call, deliberately not the outbox delete verb — the host is reachable
  * by construction and no session exists yet. If this call itself fails, the record
