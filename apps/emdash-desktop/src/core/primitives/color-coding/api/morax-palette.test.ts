@@ -31,9 +31,11 @@ describe('moraxProjectColor', () => {
 });
 
 describe('moraxLocalMachineIcon', () => {
-  it('shows the M1 Max MacBook Pro as laptop 1 and leaves the iMac to the default', () => {
+  it('maps the M1 Max to laptop 1, the M5 Max to laptop 5 and leaves the iMac to the default', () => {
     expect(moraxLocalMachineIcon('MacBookPro18,2')).toBe('laptop-1');
     expect(defaultLocalMachineIcon('MacBookPro18,2')).toBe('laptop-1');
+    expect(defaultLocalMachineIcon('Mac17,6')).toBe('laptop-5');
     expect(defaultLocalMachineIcon('iMac17,1')).toBe('imac');
+    expect(moraxLocalMachineIcon('Mac17,1')).toBeUndefined();
   });
 });
