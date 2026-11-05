@@ -45,7 +45,7 @@ export const TaskGridConversationPane = observer(function TaskGridConversationPa
       return <EmptyState label="Conversation unavailable" description={disabledReason} />;
     }
     return (
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex h-full items-center justify-center">
         <Spinner />
       </div>
     );
