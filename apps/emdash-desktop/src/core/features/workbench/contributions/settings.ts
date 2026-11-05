@@ -32,6 +32,9 @@ const interfaceSettingsSchema = z.object({
   showLeftSidebarTimestamps: z.boolean(),
   hideContextBar: z.boolean(),
   enableTaskGrid: z.boolean(),
+  colorCodeProjects: z.boolean(),
+  projectColors: z.record(z.string(), z.string()),
+  machineColors: z.record(z.string(), z.string()),
 });
 
 const themeSchema = z.enum(['emlight', 'emdark']).nullable().catch(null).optional().default(null);
@@ -65,6 +68,9 @@ export const interfaceSettingsContribution = defineSettingsContribution<
     showLeftSidebarTimestamps: true,
     hideContextBar: false,
     enableTaskGrid: false,
+    colorCodeProjects: false,
+    projectColors: {},
+    machineColors: {},
   },
 });
 

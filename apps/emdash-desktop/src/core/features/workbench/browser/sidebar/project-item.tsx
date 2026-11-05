@@ -28,6 +28,7 @@ import { getGitRepositoryStore } from '@core/features/source-control/api/browser
 import { taskHostActionAvailability } from '@core/features/tasks/api/browser/task-state/task-selectors';
 import { taskViewDef } from '@core/features/tasks/contributions/views';
 import { getSidebarStore } from '@core/features/workbench/contributions/browser/app-stores';
+import { ProjectColorDot } from '@core/features/workbench/contributions/browser/color-coding/color-coding-marks';
 import { useOpenModal } from '@core/manifests/browser/modal-api';
 import { projectAvailabilityUi } from '@core/manifests/browser/project-availability-ui';
 import { BoundShortcut } from '@core/primitives/keybindings/browser/shortcut';
@@ -172,11 +173,13 @@ export const SidebarProjectItem = observer(function SidebarProjectItem({
             >
               {isSshProject ? (
                 <span className="flex min-w-0 items-center gap-2">
+                  <ProjectColorDot projectId={projectId} />
                   <span className="truncate">{project.name}</span>
                   <ConnectionStatusDot state={displayedSshConnectionState} />
                 </span>
               ) : (
                 <span className="flex min-w-0 items-center gap-1.5">
+                  <ProjectColorDot projectId={projectId} />
                   <span className="truncate">{project.name}</span>
                   {projectViewKind(project) === 'context_error' && (
                     <Tooltip.Root>

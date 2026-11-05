@@ -15,6 +15,10 @@ import { TaskGitDiffStats } from '@core/features/tasks/contributions/browser/tas
 import { taskViewDef } from '@core/features/tasks/contributions/views';
 import { getTaskWorkspace } from '@core/features/workbench/api/browser/task-composition-selectors';
 import { TaskSidebarTrailingSlot } from '@core/features/workbench/browser/sidebar/task-sidebar-agent-status';
+import {
+  MachineChip,
+  ProjectColorStripe,
+} from '@core/features/workbench/contributions/browser/color-coding/color-coding-marks';
 import { useOpenModal } from '@core/manifests/browser/modal-api';
 import {
   useNavigate,
@@ -109,13 +113,14 @@ export const SidebarTaskItem = observer(function SidebarTaskItem({
     >
       <SidebarMenuRow
         className={cn(
-          'group/row flex items-center justify-between px-1 py-1.5 h-8 gap-1',
+          'group/row relative flex items-center justify-between px-1 py-1.5 h-8 gap-1',
           rowVariant === 'pinned' ? 'pl-2' : 'pl-8'
         )}
         isActive={isActive}
         onMouseDown={(e) => e.preventDefault()}
         onClick={openTask}
       >
+        <ProjectColorStripe projectId={projectId} className="inset-y-1 rounded-full" />
         <SidebarMenuAction
           aria-label={`Open task ${taskName || 'task'}`}
           className="gap-1 overflow-hidden"
@@ -132,6 +137,7 @@ export const SidebarTaskItem = observer(function SidebarTaskItem({
         <div className="ml-2 flex shrink-0 items-center justify-end gap-1.5">
           {showLineChanges && <TaskGitDiffStats task={task} />}
           {showPrStatus && <RenderPrBadge task={task} />}
+          <MachineChip projectId={projectId} compact />
           <TaskSidebarTrailingSlot task={task} showTimestamp={showTimestamps} />
         </div>
       </SidebarMenuRow>

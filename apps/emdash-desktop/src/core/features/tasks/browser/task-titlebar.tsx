@@ -44,6 +44,10 @@ import {
   useTaskComposition,
   useWorkspace,
 } from '@core/features/workbench/api/browser/task-composition-context';
+import {
+  MachineChip,
+  ProjectColorDot,
+} from '@core/features/workbench/contributions/browser/color-coding/color-coding-marks';
 import { Titlebar } from '@core/features/workbench/contributions/browser/Titlebar';
 import { openExternal } from '@core/primitives/desktop-host/browser/host-client';
 import { formatDiffLineCount } from '@core/primitives/formatting/browser/format-diff-line-count';
@@ -144,6 +148,7 @@ const ActiveTaskTitlebar = observer(function ActiveTaskTitlebar({
     <Titlebar
       leftSlot={
         <div className="flex items-center gap-1 px-2">
+          <ProjectColorDot projectId={projectId} className="mr-1" />
           <button
             type="button"
             className="text-sm text-foreground-passive hover:text-foreground"
@@ -291,6 +296,7 @@ const ActiveTaskTitlebar = observer(function ActiveTaskTitlebar({
               />
             </Popover.Content>
           </Popover.Root>
+          <MachineChip projectId={projectId} className="ml-1" />
           {taskPayload.linkedIssue ? <LinkedIssueBadge issue={taskPayload.linkedIssue} /> : null}
           {taskPayload.type === 'task' && (
             <button
