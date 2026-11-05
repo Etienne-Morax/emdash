@@ -27,6 +27,34 @@ already use: Claude Code, Codex, OpenCode, Amp, and more.
 
 <img alt="Emdash product screenshot" src="https://emdash.sh/media/blog/public-v1-beta/v1beta.jpg" />
 
+## About this fork
+
+This is a personal fork of [generalaction/emdash](https://github.com/generalaction/emdash).
+Fork-only features stay behind settings so each feature branch can be rebased onto new
+upstream releases and offered upstream unchanged:
+
+- **Agent grid** (Settings → Interface → *Agent grid*): a sidebar entry that tiles the live
+  agent terminal of every task, across projects and hosts (2×2, 3×2, 4×3… up to 16 tiles),
+  with per-tile status, conversation picker, expand and open-task actions. See
+  [generalaction/emdash#1588](https://github.com/generalaction/emdash/issues/1588).
+
+### Syncing with upstream
+
+```bash
+git remote add upstream https://github.com/generalaction/emdash.git   # once
+git fetch upstream
+git switch main && git merge --ff-only upstream/main && git push origin main
+git switch feat/multi-task-grid && git rebase main   # replay fork features on top
+pnpm install && pnpm run check
+git push --force-with-lease origin feat/multi-task-grid
+```
+
+Run the dev build with an isolated profile so it never touches the installed app's data:
+
+```bash
+EMDASH_USER_DATA_DIR="$HOME/.emdash-dev-profile" pnpm run dev
+```
+
 ## What You Can Do
 
 - Run multiple coding agents at once without juggling terminals.
