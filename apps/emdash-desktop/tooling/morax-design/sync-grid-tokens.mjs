@@ -5,6 +5,7 @@
 //
 // Usage: node tooling/morax-design/sync-grid-tokens.mjs [path/to/morax-design]
 // Default kit path: $MORAX_DESIGN_DIR or ~/Documents/Claude/Projects/morax-design
+import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
@@ -46,6 +47,9 @@ const target = join(
   dirname(fileURLToPath(import.meta.url)),
   '../../src/core/features/workbench/browser/task-grid/morax-design-tokens.css'
 );
-// Match the repo formatter (oxfmt: single quotes in CSS) so the file stays check-clean.
-writeFileSync(target, output.replaceAll('"', "'"));
+writeFileSync(target, output);
+// Format with the repo's oxfmt so the generated file stays `format:check` clean.
+execFileSync('pnpm', ['exec', 'oxfmt', target], {
+  cwd: join(dirname(target), '../../../../../..'),
+});
 console.log(`Wrote ${target} (tokens v${version})`);

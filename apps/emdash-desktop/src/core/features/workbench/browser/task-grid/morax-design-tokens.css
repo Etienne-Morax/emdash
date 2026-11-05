@@ -39,7 +39,13 @@
     radial-gradient(50% 55% at 85% 45%, rgb(242 214 245), transparent 70%),
     radial-gradient(55% 55% at 45% 45%, rgb(219 209 255), transparent 70%),
     radial-gradient(50% 50% at 85% 0%, rgb(224 209 255), transparent 70%),
-    linear-gradient(160deg, rgb(224 230 255) 0%, rgb(204 209 255) 30%, rgb(214 227 255) 55%, rgb(237 240 255) 100%);
+    linear-gradient(
+      160deg,
+      rgb(224 230 255) 0%,
+      rgb(204 209 255) 30%,
+      rgb(214 227 255) 55%,
+      rgb(237 240 255) 100%
+    );
   --morax-quiet: linear-gradient(180deg, rgb(237 240 255), rgb(224 222 250));
   --morax-ink: rgb(20 20 42);
   --morax-ink-secondary: rgb(20 20 50 / 0.6);

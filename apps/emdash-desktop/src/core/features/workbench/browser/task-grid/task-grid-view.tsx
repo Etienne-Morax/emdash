@@ -76,7 +76,8 @@ export const TaskGridMainPanel = observer(function TaskGridMainPanel() {
     <div className="morax-grid morax-grid__surface flex h-full min-h-0 flex-col">
       <div ref={containerRef} className="min-h-0 flex-1 p-3">
         {visible.length === 0 ? (
-          <EmptyState bare
+          <EmptyState
+            bare
             label="No running agents"
             description="Tasks with an agent conversation appear here, across all projects."
           />

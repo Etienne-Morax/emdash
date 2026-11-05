@@ -41,6 +41,13 @@ upstream releases and offered upstream unchanged:
   copied from the `morax-design` kit by
   `node apps/emdash-desktop/tooling/morax-design/sync-grid-tokens.mjs`. Re-run it after a kit
   release. Drop that commit to offer the grid upstream with the stock Emdash look.
+- **Project and machine colours** (Settings → Interface → *Project and machine colours*,
+  on by default in this fork): each task shows its project colour (stripe + dot) and a
+  machine chip (this computer, or the SSH machine by name and colour) in the sidebar, the
+  task header and the grid. Change a project's colour in its settings and a machine's in
+  Settings → Machines. Fork default palette = the Claude session-title colours from
+  `~/.claude/hooks/session_color.py`
+  (`apps/emdash-desktop/src/core/primitives/color-coding/api/morax-palette.ts`).
 
 ### Syncing with upstream
 
