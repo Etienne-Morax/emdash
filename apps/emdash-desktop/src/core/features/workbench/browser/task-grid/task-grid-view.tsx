@@ -18,6 +18,7 @@ import {
   type TaskGridEntry,
 } from './task-grid-layout';
 import { TaskGridTile } from './task-grid-tile';
+import './morax-grid.css';
 
 /** A task earns a tile once its workspace is up and it has at least one conversation. */
 function hasLiveConversations({ projectId, taskId }: TaskGridEntry): boolean {
@@ -72,16 +73,16 @@ export const TaskGridMainPanel = observer(function TaskGridMainPanel() {
   const { columns, rows } = computeTaskGridDimensions(visible.length, containerAspect);
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-background">
-      <div ref={containerRef} className="min-h-0 flex-1 p-2">
+    <div className="morax-grid morax-grid__surface flex h-full min-h-0 flex-col">
+      <div ref={containerRef} className="min-h-0 flex-1 p-3">
         {visible.length === 0 ? (
-          <EmptyState
+          <EmptyState bare
             label="No running agents"
             description="Tasks with an agent conversation appear here, across all projects."
           />
         ) : (
           <div
-            className="grid h-full w-full gap-2"
+            className="grid h-full w-full gap-3"
             style={{
               gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
               gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
@@ -103,7 +104,7 @@ export const TaskGridMainPanel = observer(function TaskGridMainPanel() {
         )}
       </div>
       {overflow > 0 && !expanded && (
-        <p className="shrink-0 px-3 pb-2 text-xs text-foreground-passive">
+        <p className="morax-grid__note shrink-0 px-4 pb-3">
           {overflow} more {overflow === 1 ? 'task is' : 'tasks are'} hidden. Pin the tasks you want
           to keep in view.
         </p>
@@ -117,9 +118,9 @@ export const TaskGridTitlebar = observer(function TaskGridTitlebar() {
   return (
     <Titlebar
       leftSlot={
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 px-2">
-          <span className="rounded-sm px-1 py-0.5 text-sm text-foreground">Agent grid</span>
-          <span className="text-xs text-foreground-passive tabular-nums">{entries.length}</span>
+        <nav aria-label="Breadcrumb" className="morax-grid flex items-center gap-2 px-2">
+          <span className="morax-grid__eyebrow px-1 py-0.5">Agent grid</span>
+          <span className="morax-grid__count text-xs tabular-nums">{entries.length}</span>
         </nav>
       }
     />

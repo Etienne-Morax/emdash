@@ -37,6 +37,10 @@ upstream releases and offered upstream unchanged:
   agent terminal of every task, across projects and hosts (2×2, 3×2, 4×3… up to 16 tiles),
   with per-tile status, conversation picker, expand and open-task actions. See
   [generalaction/emdash#1588](https://github.com/generalaction/emdash/issues/1588).
+  The grid wears the Morax art direction (fork-only commit, scoped to `.morax-grid`): tokens
+  copied from the `morax-design` kit by
+  `node apps/emdash-desktop/tooling/morax-design/sync-grid-tokens.mjs`. Re-run it after a kit
+  release. Drop that commit to offer the grid upstream with the stock Emdash look.
 
 ### Syncing with upstream
 
