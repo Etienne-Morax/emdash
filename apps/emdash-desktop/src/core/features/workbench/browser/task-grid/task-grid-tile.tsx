@@ -73,7 +73,7 @@ export const TaskGridTile = observer(function TaskGridTile({
       data-task-grid-tile={`${projectId}:${taskId}`}
       className={cn(
         'flex min-h-0 min-w-0 flex-col overflow-hidden rounded-md border border-border bg-(--xterm-bg)',
-        needsAttention && 'border-accent'
+        needsAttention && 'border-border-warning'
       )}
       onMouseDown={() => {
         if (conversation && !conversation.seen) conversation.markSeen();
@@ -134,27 +134,30 @@ export const TaskGridTile = observer(function TaskGridTile({
           <ArrowUpRight className="size-3.5" />
         </Button>
       </header>
-      <div className="relative flex min-h-0 flex-1">
-        {!provisioned ? (
-          <EmptyState
-            label="Workspace not running"
-            description="Open the task to start its workspace."
-          />
-        ) : !conversation ? (
-          <EmptyState label="No conversation" description="This task has no agent yet." />
-        ) : conversation.data.type === 'acp' ? (
-          <EmptyState
-            label={conversation.data.title}
-            description="Chat conversations are shown in the task view."
-          />
-        ) : (
-          <TaskGridConversationPane
-            projectId={projectId}
-            taskId={taskId}
-            workspaceId={provisioned.workspaceId}
-            conversation={conversation}
-          />
-        )}
+      {/* Absolutely positioned so the terminal measures the tile, never its own content. */}
+      <div className="relative min-h-0 min-w-0 flex-1">
+        <div className="absolute inset-0 overflow-hidden">
+          {!provisioned ? (
+            <EmptyState
+              label="Workspace not running"
+              description="Open the task to start its workspace."
+            />
+          ) : !conversation ? (
+            <EmptyState label="No conversation" description="This task has no agent yet." />
+          ) : conversation.data.type === 'acp' ? (
+            <EmptyState
+              label={conversation.data.title}
+              description="Chat conversations are shown in the task view."
+            />
+          ) : (
+            <TaskGridConversationPane
+              projectId={projectId}
+              taskId={taskId}
+              workspaceId={provisioned.workspaceId}
+              conversation={conversation}
+            />
+          )}
+        </div>
       </div>
     </section>
   );
