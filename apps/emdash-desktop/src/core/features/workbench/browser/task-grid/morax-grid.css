@@ -1,0 +1,87 @@
+/* Fork-only: Morax art direction for the agent grid (morax-design kit, tokens in
+ * morax-design-tokens.css). Scoped to `.morax-grid`; terminals keep the app's xterm theme.
+ *
+ * Performance with 10+ live terminals: the mesh is painted once (no
+ * background-attachment: fixed); tiles drop the kit's backdrop-filter blur, outer drop
+ * shadow and transitions. Glass is a flat translucent fill with the kit's 1px inner
+ * highlight: over a smooth gradient the blur is invisible but still costs one GPU
+ * compositing layer per tile. */
+@import './morax-design-tokens.css';
+
+.morax-grid {
+  color: var(--morax-ink);
+}
+
+.morax-grid__surface {
+  background: var(--morax-mesh);
+}
+
+.morax-grid__tile {
+  background: var(--morax-glass);
+  border: 1px solid var(--morax-glass-border);
+  border-radius: var(--morax-radius-tile);
+  box-shadow: inset 0 1px 0 var(--morax-glass-border);
+}
+
+.morax-grid__tile:focus-within {
+  outline: 2px solid var(--morax-accent);
+  outline-offset: 1px;
+}
+
+/* Tint by meaning, never for decoration. */
+.morax-grid__tile[data-attention='awaiting-input'] {
+  background: color-mix(in srgb, var(--morax-caution) 14%, var(--morax-glass));
+  border-color: color-mix(in srgb, var(--morax-caution) 40%, transparent);
+}
+.morax-grid__tile[data-attention='error'] {
+  background: color-mix(in srgb, var(--morax-danger) 16%, var(--morax-glass));
+  border-color: color-mix(in srgb, var(--morax-danger) 40%, transparent);
+}
+.morax-grid__tile[data-attention='completed'] {
+  background: color-mix(in srgb, var(--morax-success) 14%, var(--morax-glass));
+  border-color: color-mix(in srgb, var(--morax-success) 40%, transparent);
+}
+
+.morax-grid__header {
+  font-family: var(--morax-font);
+  font-size: var(--morax-type-caption);
+  gap: var(--morax-space-s);
+  padding: 0 var(--morax-space-s) 0 var(--morax-space-m);
+  -webkit-font-smoothing: antialiased;
+}
+
+.morax-grid__project {
+  color: var(--morax-ink-secondary);
+}
+
+.morax-grid__task {
+  color: var(--morax-ink);
+  font-weight: 600;
+}
+
+.morax-grid__body {
+  margin: 0 var(--morax-space-xs) var(--morax-space-xs);
+  border-radius: var(--morax-radius-chip);
+  overflow: hidden;
+}
+
+.morax-grid__eyebrow {
+  font-family: var(--morax-font);
+  font-size: var(--morax-type-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--morax-type-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--morax-ink-secondary);
+}
+
+.morax-grid__count {
+  font-family: var(--morax-font);
+  font-weight: 600;
+  color: var(--morax-accent-text);
+}
+
+.morax-grid__note {
+  font-family: var(--morax-font);
+  font-size: var(--morax-type-caption);
+  color: var(--morax-ink-secondary);
+}
