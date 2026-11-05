@@ -4,10 +4,11 @@ import { confirmExternalLinkModal } from '../browser/external-link-choice-dialog
 import { feedbackModal } from '../browser/feedback-modal/feedback-modal';
 import { homeViewRuntime } from '../browser/home-view';
 import { quitUnsavedChangesModal } from '../browser/quit-unsaved-changes-dialog';
+import { taskGridViewRuntime } from '../browser/task-grid/task-grid-view';
 import { unsavedChangesModal } from '../browser/unsaved-changes-dialog';
 
 export const workbenchBrowserContributions = {
-  views: [homeViewRuntime],
+  views: [homeViewRuntime, taskGridViewRuntime],
   modalDefs: [
     commandPaletteModal,
     confirmActionModal,

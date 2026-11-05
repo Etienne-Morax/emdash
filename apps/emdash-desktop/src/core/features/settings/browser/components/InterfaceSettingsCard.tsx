@@ -16,6 +16,7 @@ const InterfaceSettingsCard: React.FC = () => {
   } = useAppSettingsKey('interface');
 
   const hideContextBar = interfaceSettings?.hideContextBar ?? false;
+  const enableTaskGrid = interfaceSettings?.enableTaskGrid ?? false;
 
   return (
     <SettingsCard>
@@ -35,6 +36,25 @@ const InterfaceSettingsCard: React.FC = () => {
                 checked={hideContextBar}
                 disabled={loading || saving}
                 onCheckedChange={(checked) => update({ hideContextBar: checked })}
+              />
+            </>
+          }
+        />
+        <SettingRow
+          title="Agent grid"
+          description="Show a sidebar entry that tiles the live agents of every task, across projects."
+          control={
+            <>
+              <ResetToDefaultButton
+                visible={isFieldOverridden('enableTaskGrid')}
+                defaultLabel="off"
+                onReset={() => resetField('enableTaskGrid')}
+                disabled={loading || saving}
+              />
+              <Switch
+                checked={enableTaskGrid}
+                disabled={loading || saving}
+                onCheckedChange={(checked) => update({ enableTaskGrid: checked })}
               />
             </>
           }
