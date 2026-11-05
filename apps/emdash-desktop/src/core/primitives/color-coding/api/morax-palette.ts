@@ -1,4 +1,9 @@
-import type { ColorCodeKey, LocalMachineIconRule, ProjectColorRule } from './color-coding';
+import type {
+  ColorCodeKey,
+  LocalMachineIconRule,
+  MachineIconKey,
+  ProjectColorRule,
+} from './color-coding';
 
 /**
  * Fork-only: the Morax project palette, mirrored from ~/.claude/hooks/session_color.py so a
@@ -100,8 +105,14 @@ export const moraxProjectColor: ProjectColorRule = (repositoryName) => {
 };
 
 /**
- * Fork-only: Etienne's machines. The M1 Max MacBook Pro (MacBookPro18,x) is laptop “1”;
- * an M5 laptop picks laptop “5” in Settings → Interface, and iMacs fall back to the iMac.
+ * Fork-only: Etienne's machines, by hardware model. The M1 Max MacBook Pro
+ * (MacBookPro18,x) is laptop “1”, the M5 Max MacBook Pro (Mac17,6) is laptop “5”; iMacs
+ * fall back to the generic iMac icon.
  */
+const MORAX_MACHINE_ICONS: readonly [RegExp, MachineIconKey][] = [
+  [/^MacBookPro18,/i, 'laptop-1'],
+  [/^Mac17,6$/i, 'laptop-5'],
+];
+
 export const moraxLocalMachineIcon: LocalMachineIconRule = (model) =>
-  /^MacBookPro18,/i.test(model) ? 'laptop-1' : undefined;
+  MORAX_MACHINE_ICONS.find(([pattern]) => pattern.test(model))?.[1];
