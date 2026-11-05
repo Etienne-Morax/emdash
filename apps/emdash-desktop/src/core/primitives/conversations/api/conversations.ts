@@ -119,4 +119,9 @@ export type CreateConversationParams = {
   initialQueue?: InitialQueuePrompt[];
   /** Transport type: 'pty' (default) uses the terminal/PTY path; 'acp' uses the Agent Client Protocol. */
   type?: ConversationType;
+  /**
+   * Resume an existing provider session (e.g. a Claude Code session started outside
+   * Emdash) instead of starting fresh. PTY conversations only.
+   */
+  resumeProviderSessionId?: string;
 };

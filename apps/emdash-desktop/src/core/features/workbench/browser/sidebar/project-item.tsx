@@ -4,6 +4,7 @@ import {
   FolderClosed,
   FolderInput,
   FolderOpen,
+  History,
   Loader2,
   Pencil,
   Plus,
@@ -63,6 +64,7 @@ export const SidebarProjectItem = observer(function SidebarProjectItem({
   const openCreateTaskModal = useOpenModal('taskModal');
   const confirmDeleteProject = useConfirmDeleteProject();
   const openRenameProject = useOpenModal('renameProjectModal');
+  const openResumeClaudeSession = useOpenModal('resumeClaudeSessionModal');
 
   const project = getProjectStore(projectId);
 
@@ -238,6 +240,18 @@ export const SidebarProjectItem = observer(function SidebarProjectItem({
         >
           <Pencil className="size-4" />
           Rename Project
+        </ContextMenu.Item>
+        <ContextMenu.Item
+          disabled={project.state === 'unregistered'}
+          onClick={() => {
+            void openResumeClaudeSession({
+              projectId,
+              projectName: project.name ?? 'this project',
+            });
+          }}
+        >
+          <History className="size-4" />
+          Resume Claude Session…
         </ContextMenu.Item>
         <ContextMenu.Separator />
         <ContextMenu.Item

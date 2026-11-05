@@ -13,6 +13,7 @@ import {
   compensateHostConversationRecord,
   conversationIdRegimeFor,
   createHostConversationRecord,
+  reportHostProviderSessionId,
 } from '@core/features/conversations/api/node/host-index';
 import {
   conversationRegistryTable as conversations,
@@ -88,6 +89,8 @@ export async function createConversation(
   }
 
   const conversationType = params.type ?? 'pty';
+  const resumeProviderSessionId =
+    conversationType === 'pty' ? validResumeSessionId(params.resumeProviderSessionId) : null;
 
   const initialQueue = params.initialQueue?.filter((prompt) => prompt.text.trim());
   const configObj: ConversationConfig =
@@ -127,6 +130,18 @@ export async function createConversation(
     throw new Error(`createConversation: host index registration failed: ${registered.message}`);
   }
   const compensateHostRecord = () => compensateHostConversationRecord(runtimes, identity.host, id);
+  if (resumeProviderSessionId) {
+    const seeded = await reportHostProviderSessionId(
+      runtimes,
+      identity.host,
+      id,
+      resumeProviderSessionId
+    );
+    if (!seeded.success) {
+      await compensateHostRecord();
+      throw new Error(`createConversation: could not set the session to resume: ${seeded.message}`);
+    }
+  }
 
   // The registry only touches the query-builder subset that ConversationCreateDb carries.
   const registry = createConversationRegistry(database as unknown as AppDb);
@@ -142,7 +157,7 @@ export async function createConversation(
       config,
       // Null means this conversation has not successfully spawned yet. PTY placeholder
       // ids and ACP/native provider ids are written only after their session exists.
-      providerSessionId: null,
+      providerSessionId: resumeProviderSessionId,
       isInitialConversation: params.isInitialConversation ?? false,
       type: conversationType,
       lastSessionActivityAt: new Date().toISOString(),
@@ -202,4 +217,13 @@ export async function createConversation(
   });
 
   return conversation;
+}
+
+const RESUME_SESSION_ID = /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/;
+
+/** Provider session ids end up on a command line: accept plain identifiers only. */
+function validResumeSessionId(value: string | undefined): string | null {
+  if (!value) return null;
+  if (!RESUME_SESSION_ID.test(value)) throw new Error('createConversation: invalid session id');
+  return value;
 }
