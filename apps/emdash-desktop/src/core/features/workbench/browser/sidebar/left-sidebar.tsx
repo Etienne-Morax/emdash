@@ -1,9 +1,11 @@
-import { Clock, FolderInput, MessageSquareShare, Settings } from 'lucide-react';
+import { Clock, FolderInput, LayoutGrid, MessageSquareShare, Settings } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { automationsViewDef } from '@core/features/automations/contributions/views';
+import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
 import { settingsViewDef } from '@core/features/settings/contributions/views';
 import { WaitlistCard } from '@core/features/waitlist/contributions/browser/waitlist-card';
+import { taskGridViewDef } from '@core/features/workbench/contributions/views';
 import { useOpenModal } from '@core/manifests/browser/modal-api';
 import { BoundShortcut } from '@core/primitives/keybindings/browser/shortcut';
 import { WORKBENCH_BOTTOM_BAR_HEIGHT_PX } from '@core/primitives/layouts/api/workbench-layout';
@@ -35,6 +37,8 @@ export const LeftSidebar: React.FC = observer(function LeftSidebar() {
   const { currentView } = useWorkspaceSlots();
 
   const openFeedbackModal = useOpenModal('feedbackModal');
+  const { value: interfaceSettings } = useAppSettingsKey('interface');
+  const isTaskGridEnabled = interfaceSettings?.enableTaskGrid ?? false;
   const { isDragOver, onDragOver, onDragEnter, onDragLeave, onDrop } = useSidebarDrop();
 
   return (
@@ -73,6 +77,19 @@ export const LeftSidebar: React.FC = observer(function LeftSidebar() {
         <SidebarFooter>
           <SidebarMenu>
             <SidebarSearchTrigger />
+            {isTaskGridEnabled && (
+              <SidebarMenuButton
+                isActive={isCurrentView(currentView, 'task-grid')}
+                onClick={() => navigate(taskGridViewDef())}
+                aria-label="Agent grid"
+                className="w-full justify-between"
+              >
+                <span className="flex min-w-0 items-center gap-2">
+                  <LayoutGrid className="h-5 w-5 shrink-0 sm:h-4 sm:w-4" />
+                  <span className="truncate">Agent grid</span>
+                </span>
+              </SidebarMenuButton>
+            )}
             <SidebarMenuButton
               isActive={isCurrentView(currentView, 'automations')}
               onClick={() => navigate(automationsViewDef())}

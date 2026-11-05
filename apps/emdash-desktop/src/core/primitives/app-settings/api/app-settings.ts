@@ -55,6 +55,8 @@ export type InterfaceSettings = {
   showLeftSidebarPrStatus: boolean;
   showLeftSidebarTimestamps: boolean;
   hideContextBar: boolean;
+  /** Shows the cross-task grid entry point (one live agent pane per task). */
+  enableTaskGrid: boolean;
 };
 
 export type ProviderCustomConfig = {
