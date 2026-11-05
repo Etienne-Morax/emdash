@@ -171,8 +171,14 @@ export const desktopHostContract = defineContract({
   getElectronVersion: procedure({ input: z.void(), output: z.string() }),
   getPlatform: procedure({ input: z.void(), output: z.custom<NodePlatform>() }),
   getPlatformDisplayName: procedure({ input: z.void(), output: z.string() }),
-  /** User-facing name of this computer (macOS Sharing name, else the host name). */
-  getComputerName: procedure({ input: z.void(), output: z.string() }),
+  /**
+   * This computer's user-facing name (macOS Sharing name, else the host name) and hardware
+   * model identifier (macOS `hw.model`, e.g. "MacBookPro18,2"; empty elsewhere).
+   */
+  getComputerInfo: procedure({
+    input: z.void(),
+    output: z.object({ name: z.string(), model: z.string() }),
+  }),
   getDiagnosticLogAttachment: procedure({
     input: z.void(),
     output: z.object({

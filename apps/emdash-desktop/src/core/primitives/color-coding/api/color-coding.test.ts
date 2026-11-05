@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   COLOR_CODE_KEYS,
+  defaultLocalMachineIcon,
   COLOR_CODE_VALUES,
   describeMachine,
   hashedColor,
@@ -105,7 +106,7 @@ describe('describeMachine', () => {
         connectionName: undefined,
         computerName: 'Etienne’s MacBook Pro',
       })
-    ).toEqual({ kind: 'local', label: 'MacBook Pro' });
+    ).toEqual({ kind: 'local', label: 'MacBook Pro', icon: 'laptop' });
   });
 
   it('labels SSH projects with the connection name and its colour', () => {
@@ -116,7 +117,45 @@ describe('describeMachine', () => {
         computerName: 'whatever',
         machineColors: { c1: 'slate' },
       })
-    ).toEqual({ kind: 'remote', connectionId: 'c1', label: 'NAS VM', color: 'slate' });
+    ).toEqual({
+      kind: 'remote',
+      connectionId: 'c1',
+      label: 'NAS VM',
+      color: 'slate',
+      icon: 'server',
+    });
     expect(resolveMachineColor({ connectionId: 'c2' })).toBe(hashedColor('c2'));
+  });
+});
+
+describe('machine icons', () => {
+  it('detects the hardware family when no rule matches', () => {
+    expect(defaultLocalMachineIcon('iMac17,1', [])).toBe('imac');
+    expect(defaultLocalMachineIcon('MacBookAir10,1', [])).toBe('laptop');
+    expect(defaultLocalMachineIcon(undefined, [])).toBe('laptop');
+  });
+
+  it('lets a rule pick the icon first', () => {
+    expect(defaultLocalMachineIcon('MacBookPro18,2', [() => 'laptop-1'])).toBe('laptop-1');
+  });
+
+  it('prefers the user choice for local and remote machines', () => {
+    expect(
+      describeMachine({
+        connectionId: undefined,
+        connectionName: undefined,
+        computerName: 'iMac',
+        computerModel: 'iMac17,1',
+        machineIcons: { local: 'laptop-5' },
+      })
+    ).toMatchObject({ kind: 'local', icon: 'laptop-5' });
+    expect(
+      describeMachine({
+        connectionId: 'c1',
+        connectionName: 'NAS VM',
+        computerName: undefined,
+        machineIcons: { c1: 'imac' },
+      })
+    ).toMatchObject({ kind: 'remote', icon: 'imac' });
   });
 });

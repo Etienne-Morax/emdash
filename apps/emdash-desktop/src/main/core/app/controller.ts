@@ -51,17 +51,23 @@ async function getPlatformDisplayName(): Promise<string> {
   return `${process.platform} ${release()} (${architecture})`;
 }
 
-async function getComputerName(): Promise<string> {
-  if (process.platform === 'darwin') {
-    try {
-      const { stdout } = await execFileAsync('scutil', ['--get', 'ComputerName']);
-      const name = stdout.trim();
-      if (name) return name;
-    } catch {
-      // scutil can fail in sandboxed environments; the host name is good enough.
-    }
+async function readDarwinValue(command: string, args: string[]): Promise<string> {
+  try {
+    const { stdout } = await execFileAsync(command, args);
+    return stdout.trim();
+  } catch {
+    // Sandboxed or stripped-down environments: fall back to generic values.
+    return '';
   }
-  return hostname();
+}
+
+async function getComputerInfo(): Promise<{ name: string; model: string }> {
+  if (process.platform !== 'darwin') return { name: hostname(), model: '' };
+  const [name, model] = await Promise.all([
+    readDarwinValue('scutil', ['--get', 'ComputerName']),
+    readDarwinValue('sysctl', ['-n', 'hw.model']),
+  ]);
+  return { name: name || hostname(), model };
 }
 
 export const appOperations = {
@@ -211,7 +217,7 @@ export const appOperations = {
   getElectronVersion: () => process.versions.electron,
   getPlatform: () => process.platform,
   getPlatformDisplayName,
-  getComputerName,
+  getComputerInfo,
   getDiagnosticLogAttachment,
   submitFeedback: async (args: { content: string; files: FeedbackAttachment[] }) => {
     try {

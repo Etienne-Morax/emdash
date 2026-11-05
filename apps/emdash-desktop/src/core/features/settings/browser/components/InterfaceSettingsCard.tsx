@@ -2,6 +2,7 @@ import { SettingsCard } from '@emdash/ui/react/patterns';
 import { SeparatedList, Switch } from '@emdash/ui/react/primitives';
 import React from 'react';
 import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
+import { LocalMachineIconSetting } from '@core/features/workbench/contributions/browser/color-coding/color-code-settings';
 import { ResetToDefaultButton } from './ResetToDefaultButton';
 import { SettingRow } from './SettingRow';
 
@@ -79,6 +80,7 @@ const InterfaceSettingsCard: React.FC = () => {
             </>
           }
         />
+        {colorCodeProjects && <LocalMachineIconSetting />}
       </SeparatedList>
     </SettingsCard>
   );

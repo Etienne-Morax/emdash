@@ -1,4 +1,4 @@
-import { PROJECT_COLOR_DEFAULT_RULES } from './project-color-defaults';
+import { LOCAL_MACHINE_ICON_RULES, PROJECT_COLOR_DEFAULT_RULES } from './project-color-defaults';
 
 /**
  * Named colours used to tell projects and machines apart. Each key has a light and a dark
@@ -115,18 +115,70 @@ export function shortComputerName(name: string | undefined): string {
   return trimmed.replace(/\.local$/i, '').split('.')[0] || trimmed;
 }
 
+/** Icons a machine chip can show. Numbered laptops tell several laptops apart. */
+export const MACHINE_ICON_KEYS = ['laptop', 'laptop-1', 'laptop-5', 'imac', 'server'] as const;
+
+export type MachineIconKey = (typeof MACHINE_ICON_KEYS)[number];
+
+export const MACHINE_ICON_LABELS: Record<MachineIconKey, string> = {
+  laptop: 'Laptop',
+  'laptop-1': 'Laptop “1”',
+  'laptop-5': 'Laptop “5”',
+  imac: 'iMac',
+  server: 'Server',
+};
+
+/** Settings key under which this computer's icon is stored in `machineIcons`. */
+export const LOCAL_MACHINE_ICON_ID = 'local';
+
+export function isMachineIconKey(value: unknown): value is MachineIconKey {
+  return typeof value === 'string' && (MACHINE_ICON_KEYS as readonly string[]).includes(value);
+}
+
+/** A default icon for this computer from its hardware model id (e.g. "MacBookPro18,2"). */
+export type LocalMachineIconRule = (model: string) => MachineIconKey | undefined;
+
+/** Default icon for this computer: fork rules first, then the hardware family. */
+export function defaultLocalMachineIcon(
+  model: string | undefined,
+  rules: readonly LocalMachineIconRule[] = LOCAL_MACHINE_ICON_RULES
+): MachineIconKey {
+  const id = (model ?? '').trim();
+  for (const rule of rules) {
+    const icon = rule(id);
+    if (icon) return icon;
+  }
+  return /^imac/i.test(id) ? 'imac' : 'laptop';
+}
+
 export type MachineMarker =
-  | { kind: 'local'; label: string }
-  | { kind: 'remote'; connectionId: string; label: string; color: ColorCodeKey };
+  | { kind: 'local'; label: string; icon: MachineIconKey }
+  | {
+      kind: 'remote';
+      connectionId: string;
+      label: string;
+      color: ColorCodeKey;
+      icon: MachineIconKey;
+    };
 
 /** Describes where a project's sessions run, for the machine chip. */
 export function describeMachine(input: {
   connectionId: string | undefined;
   connectionName: string | undefined;
   computerName: string | undefined;
+  computerModel?: string;
   machineColors?: Record<string, unknown>;
+  machineIcons?: Record<string, unknown>;
 }): MachineMarker {
-  if (!input.connectionId) return { kind: 'local', label: shortComputerName(input.computerName) };
+  if (!input.connectionId) {
+    const chosen = input.machineIcons?.[LOCAL_MACHINE_ICON_ID];
+    return {
+      kind: 'local',
+      label: shortComputerName(input.computerName),
+      icon: isMachineIconKey(chosen) ? chosen : defaultLocalMachineIcon(input.computerModel),
+    };
+  }
+  const chosen = input.machineIcons?.[input.connectionId];
   return {
     kind: 'remote',
     connectionId: input.connectionId,
@@ -135,5 +187,6 @@ export function describeMachine(input: {
       connectionId: input.connectionId,
       override: input.machineColors?.[input.connectionId],
     }),
+    icon: isMachineIconKey(chosen) ? chosen : 'server',
   };
 }

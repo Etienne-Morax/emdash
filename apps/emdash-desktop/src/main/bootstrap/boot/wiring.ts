@@ -95,7 +95,7 @@ export function createDesktopWireOptions(
       getElectronVersion: () => appOperations.getElectronVersion(),
       getPlatform: () => appOperations.getPlatform(),
       getPlatformDisplayName: () => appOperations.getPlatformDisplayName(),
-      getComputerName: () => appOperations.getComputerName(),
+      getComputerInfo: () => appOperations.getComputerInfo(),
       getDiagnosticLogAttachment: () => appOperations.getDiagnosticLogAttachment(),
       submitFeedback: (input) => appOperations.submitFeedback(input),
     },

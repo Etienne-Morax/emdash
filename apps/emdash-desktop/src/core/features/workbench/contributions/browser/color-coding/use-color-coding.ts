@@ -16,7 +16,7 @@ import {
 import { getHostClient } from '@core/primitives/desktop-host/browser/host-client';
 import { useTheme } from '@core/primitives/theme/browser/use-theme';
 
-const COMPUTER_NAME_STALE_MS = 60 * 60 * 1000;
+const COMPUTER_INFO_STALE_MS = 60 * 60 * 1000;
 
 /** Colour-coding settings; `enabled` is false until the user turns the feature on. */
 export function useColorCodingSettings() {
@@ -25,6 +25,7 @@ export function useColorCodingSettings() {
     enabled: value?.colorCodeProjects ?? false,
     projectColors: value?.projectColors ?? {},
     machineColors: value?.machineColors ?? {},
+    machineIcons: value?.machineIcons ?? {},
   };
 }
 
@@ -35,11 +36,13 @@ export function useColorValue(): (key: ColorCodeKey) => string {
   return (key) => COLOR_CODE_VALUES[key][scheme];
 }
 
-export function useComputerName(): string | undefined {
+export type ComputerInfo = { name: string; model: string };
+
+export function useComputerInfo(): ComputerInfo | undefined {
   const { data } = useQuery({
-    queryKey: ['host', 'computer-name'],
-    queryFn: async () => (await getHostClient()).getComputerName(),
-    staleTime: COMPUTER_NAME_STALE_MS,
+    queryKey: ['host', 'computer-info'],
+    queryFn: async () => (await getHostClient()).getComputerInfo(),
+    staleTime: COMPUTER_INFO_STALE_MS,
   });
   return data;
 }
@@ -59,12 +62,20 @@ export function projectColorFor(
 /** Call only inside `observer` components. */
 export function machineMarkerFor(
   projectId: string,
-  computerName: string | undefined,
-  machineColors: Record<string, string>
+  computer: ComputerInfo | undefined,
+  machineColors: Record<string, string>,
+  machineIcons: Record<string, string>
 ): MachineMarker {
   const connectionId = getProjectSshConnectionId(projectId);
   const connectionName = connectionId
     ? getMachinesStore().connections.find((connection) => connection.id === connectionId)?.name
     : undefined;
-  return describeMachine({ connectionId, connectionName, computerName, machineColors });
+  return describeMachine({
+    connectionId,
+    connectionName,
+    computerName: computer?.name,
+    computerModel: computer?.model,
+    machineColors,
+    machineIcons,
+  });
 }
