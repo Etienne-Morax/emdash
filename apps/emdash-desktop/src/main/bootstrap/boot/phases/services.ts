@@ -24,6 +24,10 @@ import { ConversationBackfillService } from '@core/features/conversations/node/s
 import { ConversationSyncService } from '@core/features/conversations/node/sync/conversation-sync-service';
 import { TuiConversationProvider } from '@core/features/conversations/node/tui-conversation-provider';
 import {
+  createFleetOverview,
+  createFleetSettingsPort,
+} from '@core/features/fleet/node/fleet-overview';
+import {
   createGitCredentialsService,
   type GitCredentialsService,
 } from '@core/features/github/api/node/services/git-credentials-service';
@@ -175,6 +179,7 @@ import type { InfrastructureBundle } from './infrastructure';
 export type ServicesBundle = {
   readonly account: ReturnType<typeof createEmdashAccountService>;
   readonly automations: AutomationsService;
+  readonly fleet: ReturnType<typeof createFleetOverview>;
   readonly github: {
     cliImport: GitHubCliAccountImportService;
     legacyTokenImport: GitHubLegacyTokenImportStep;
@@ -216,6 +221,12 @@ export async function bootServices(
     machines: infrastructure.ssh.machines,
     hosts: infrastructure.hosts,
     hostAvailability: desktopRuntimes.hostAvailability,
+  });
+  const fleet = createFleetOverview({
+    scope: appScope,
+    settings: createFleetSettingsPort(appSettingsService),
+    secrets: encryptedAppSecretsStore,
+    logger: log,
   });
   const getMementosRuntimeClient = async () => clients.mementos;
   const getPullRequestsRuntimeClient = async () => clients.pullRequests;
@@ -876,6 +887,7 @@ export async function bootServices(
     taskService,
     taskSessions: taskSessionManager,
     usage,
+    fleet,
     workspacePlacement,
     conversationSync,
     reconcileSweep,

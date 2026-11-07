@@ -7,6 +7,7 @@ import { conversationsContract, conversationsDomain } from '@core/features/conve
 import { devPerfContract, devPerfDomain } from '@core/features/dev-perf/api';
 import { editorContract, editorDomain } from '@core/features/editor/api';
 import { filesDomain, filesWireContract } from '@core/features/files/api';
+import { fleetContract, fleetDomain } from '@core/features/fleet/api/contract';
 import { githubContract, githubDomain } from '@core/features/github/api';
 import { integrationsContract, integrationsDomain } from '@core/features/integrations/api';
 import { issuesContract, issuesDomain } from '@core/features/issues/api';
@@ -52,6 +53,7 @@ import { sshContract, sshDomain } from '@core/services/ssh/api';
 
 export const desktopDomainContracts = {
   [usageDomain]: usageContract,
+  [fleetDomain]: fleetContract,
   [accountDomain]: accountContract,
   [agentsDomain]: agentsContract,
   [appSettingsDomain]: appSettingsContract,
