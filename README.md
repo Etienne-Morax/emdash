@@ -48,6 +48,14 @@ upstream releases and offered upstream unchanged:
   Settings → Machines. Fork default palette = the Claude session-title colours from
   `~/.claude/hooks/session_color.py`
   (`apps/emdash-desktop/src/core/primitives/color-coding/api/morax-palette.ts`).
+- **Fleet** (Settings → Interface → *Fleet*, on by default in this fork; fork-only): a
+  sidebar entry that shows the Morax fleet read from the `fleet_snapshot()` RPC of morax-os
+  (contract: `docs/fleet-jobs-contract.md` there): machines with heartbeat, availability
+  and mode, open jobs (blocked first), jobs ended in the last 24 h, and the `/stop` kill
+  switch. Connect it from the view with the gateway URL (`SUPABASE_URL`) and a key that may
+  call `fleet_snapshot()`; the key goes to the encrypted secret store and never reaches the
+  renderer. Read only, polled every 20 s and only while the view is open
+  (`apps/emdash-desktop/src/core/features/fleet/`).
 
 ### Syncing with upstream
 

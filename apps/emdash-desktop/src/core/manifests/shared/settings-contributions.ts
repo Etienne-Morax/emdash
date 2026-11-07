@@ -5,6 +5,7 @@ import {
 } from '@core/features/browser/contributions/settings';
 import { preferredConversationTypeSettingsContribution } from '@core/features/conversations/contributions/settings';
 import { filesSettingsContribution } from '@core/features/editor/contributions/settings';
+import { fleetSettingsContribution } from '@core/features/fleet/contributions/settings';
 import {
   localProjectSettingsSchemaContribution,
   projectSettingsContribution,
@@ -46,6 +47,7 @@ export const appSettingsSchemaContributions = {
   browser: browserSettingsContribution,
   changesViewMode: changesViewModeSettingsContribution,
   remoteMachine: hostSettingsSchemaContribution,
+  fleet: fleetSettingsContribution,
 } as const;
 
 export type AppSettings = SettingsValues<typeof appSettingsSchemaContributions>;

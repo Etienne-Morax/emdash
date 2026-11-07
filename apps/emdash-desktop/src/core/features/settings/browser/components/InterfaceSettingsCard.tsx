@@ -19,6 +19,9 @@ const InterfaceSettingsCard: React.FC = () => {
   const hideContextBar = interfaceSettings?.hideContextBar ?? false;
   const enableTaskGrid = interfaceSettings?.enableTaskGrid ?? false;
   const colorCodeProjects = interfaceSettings?.colorCodeProjects ?? false;
+  const fleet = useAppSettingsKey('fleet');
+  const showFleet = fleet.value?.showInSidebar ?? false;
+  const isFleetBusy = fleet.isLoading || fleet.isSaving;
 
   return (
     <SettingsCard>
@@ -57,6 +60,25 @@ const InterfaceSettingsCard: React.FC = () => {
                 checked={enableTaskGrid}
                 disabled={loading || saving}
                 onCheckedChange={(checked) => update({ enableTaskGrid: checked })}
+              />
+            </>
+          }
+        />
+        <SettingRow
+          title="Fleet"
+          description="Show a sidebar entry with the Morax fleet: machines, heartbeats and leased jobs."
+          control={
+            <>
+              <ResetToDefaultButton
+                visible={fleet.isFieldOverridden('showInSidebar')}
+                defaultLabel="shown"
+                onReset={() => fleet.resetField('showInSidebar')}
+                disabled={isFleetBusy}
+              />
+              <Switch
+                checked={showFleet}
+                disabled={isFleetBusy}
+                onCheckedChange={(checked) => fleet.update({ showInSidebar: checked })}
               />
             </>
           }

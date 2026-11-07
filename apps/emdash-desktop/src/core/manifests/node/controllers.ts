@@ -29,6 +29,8 @@ import {
 import type { EditorBufferService } from '@core/features/editor/node/editor-buffer-service';
 import { createEditorWireController } from '@core/features/editor/node/wire-controller';
 import { createFilesWireController } from '@core/features/files/node/wire-controller';
+import type { FleetOverviewSource } from '@core/features/fleet/node/fleet-overview';
+import { createFleetWireController } from '@core/features/fleet/node/wire-controller';
 import type { GitCredentialsService } from '@core/features/github/api/node/services/git-credentials-service';
 import { createGithubWireController } from '@core/features/github/node/wire-controller';
 import { createIntegrationsWireController } from '@core/features/integrations/node/wire-controller';
@@ -129,6 +131,7 @@ export type DesktopControllerContext = {
   readonly db: AppDb;
   readonly devPerfOperations: DevPerfOperations;
   readonly editorBuffer: EditorBufferService;
+  readonly fleet: FleetOverviewSource;
   readonly github: Omit<Parameters<typeof createGithubWireController>[0], 'logger'>;
   readonly gitlabRepositories: GitLabRepositoryService;
   readonly gitCredentials: GitCredentialsService;
@@ -438,6 +441,9 @@ export const desktopNodeControllers = {
   },
   usage: {
     create: ({ scope, usage }) => createUsageWireController({ scope, usage }),
+  },
+  fleet: {
+    create: ({ fleet, scope }) => createFleetWireController({ scope, fleet }),
   },
   hosts: {
     create: ({ hostAvailability, hosts, ssh }) =>

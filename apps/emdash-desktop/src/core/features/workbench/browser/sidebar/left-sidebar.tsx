@@ -1,7 +1,15 @@
-import { Clock, FolderInput, LayoutGrid, MessageSquareShare, Settings } from 'lucide-react';
+import {
+  Clock,
+  FolderInput,
+  LayoutGrid,
+  MessageSquareShare,
+  Network,
+  Settings,
+} from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { automationsViewDef } from '@core/features/automations/contributions/views';
+import { fleetViewDef } from '@core/features/fleet/contributions/views';
 import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
 import { settingsViewDef } from '@core/features/settings/contributions/views';
 import { taskGridViewDef } from '@core/features/workbench/contributions/views';
@@ -38,6 +46,8 @@ export const LeftSidebar: React.FC = observer(function LeftSidebar() {
   const openFeedbackModal = useOpenModal('feedbackModal');
   const { value: interfaceSettings } = useAppSettingsKey('interface');
   const isTaskGridEnabled = interfaceSettings?.enableTaskGrid ?? false;
+  const { value: fleetSettings } = useAppSettingsKey('fleet');
+  const isFleetShown = fleetSettings?.showInSidebar ?? false;
   const { isDragOver, onDragOver, onDragEnter, onDragLeave, onDrop } = useSidebarDrop();
 
   return (
@@ -85,6 +95,19 @@ export const LeftSidebar: React.FC = observer(function LeftSidebar() {
                 <span className="flex min-w-0 items-center gap-2">
                   <LayoutGrid className="h-5 w-5 shrink-0 sm:h-4 sm:w-4" />
                   <span className="truncate">Agent grid</span>
+                </span>
+              </SidebarMenuButton>
+            )}
+            {isFleetShown && (
+              <SidebarMenuButton
+                isActive={isCurrentView(currentView, 'fleet')}
+                onClick={() => navigate(fleetViewDef())}
+                aria-label="Fleet"
+                className="w-full justify-between"
+              >
+                <span className="flex min-w-0 items-center gap-2">
+                  <Network className="h-5 w-5 shrink-0 sm:h-4 sm:w-4" />
+                  <span className="truncate">Fleet</span>
                 </span>
               </SidebarMenuButton>
             )}
