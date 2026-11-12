@@ -56,7 +56,6 @@ type Options = {
   devices: MobileDeviceRegistry;
   pairing: PairingManager;
   audit: MobileAuditLog;
-  staticRoot: () => string | null;
   createSessionController(device: MobileDevice): Controller;
   detectTailscale(): Promise<TailscaleIdentity>;
   startServer(options: MobileHttpServerOptions): Promise<MobileHttpServer>;
@@ -149,7 +148,6 @@ export function createMobileRemoteService(options: Options): MobileRemoteSource 
         devices: options.devices,
         pairing: options.pairing,
         audit: options.audit,
-        staticRoot: options.staticRoot(),
         createSessionController: options.createSessionController,
         onError: (error) =>
           options.logger?.warn('mobile-remote: gateway error', { error: String(error) }),

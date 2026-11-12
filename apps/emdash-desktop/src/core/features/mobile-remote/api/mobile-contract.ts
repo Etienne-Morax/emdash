@@ -12,6 +12,8 @@ import { hostsContract } from '@core/services/hosts/api/contract';
 import { notificationsContract } from '@core/services/notifications/api/contract';
 import {
   mobileAppearanceSchema,
+  mobileColorsInputSchema,
+  mobileColorsSchema,
   mobileDeviceSessionSchema,
   mobileMachineSchema,
   mobilePullRequestErrorSchema,
@@ -169,6 +171,8 @@ export const mobileWireContract = defineContract({
     machines: procedure({ input: z.void().optional(), output: z.array(mobileMachineSchema) }),
     appearance: procedure({ input: z.void().optional(), output: mobileAppearanceSchema }),
     taskDefaults: procedure({ input: z.void().optional(), output: mobileTaskDefaultsSchema }),
+    /** Project and machine colours, resolved by the desktop (rules and Settings overrides). */
+    colors: procedure({ input: mobileColorsInputSchema, output: mobileColorsSchema }),
     pullRequests: defineContract({
       /** Pull requests whose head is `branch` in the project's repository. */
       forBranch: fallible({

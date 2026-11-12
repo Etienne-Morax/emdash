@@ -1,5 +1,4 @@
 import { execFile } from 'node:child_process';
-import { existsSync } from 'node:fs';
 import { hostname } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
@@ -11,6 +10,7 @@ import { machinesContract } from '@core/features/machines/api/contract';
 import { mobileWireContract } from '@core/features/mobile-remote/api/mobile-contract';
 import type { MobileAppearance, MobileMachine } from '@core/features/mobile-remote/api/schemas';
 import { createMobileAuditLog } from '@core/features/mobile-remote/node/audit-log';
+import { resolveMobileColors } from '@core/features/mobile-remote/node/colors';
 import { createMobileDeviceRegistry } from '@core/features/mobile-remote/node/device-registry';
 import { startMobileHttpServer } from '@core/features/mobile-remote/node/mobile-http-server';
 import {
@@ -127,6 +127,17 @@ export function createMobileGateway(options: {
         appendRandomBranchSuffix: project.appendRandomBranchSuffix,
       };
     },
+    async colors(request) {
+      const [settings, remote] = await Promise.all([
+        options.appSettings.get('interface'),
+        desktop.machines.getMachines(),
+      ]);
+      return resolveMobileColors({
+        request,
+        machineIds: remote.map((machine) => machine.id),
+        overrides: { projectColors: settings.projectColors, machineColors: settings.machineColors },
+      });
+    },
     async appearance(): Promise<MobileAppearance> {
       const settings = await options.appSettings.get('interface');
       return {
@@ -143,7 +154,6 @@ export function createMobileGateway(options: {
     devices,
     pairing: createPairingManager(),
     audit,
-    staticRoot: resolveMobileAppRoot,
     createSessionController: (device) =>
       createMobileSessionController({ upstream: upstream.client, device, local, audit }),
     detectTailscale: detectTailscaleIdentity,
@@ -156,22 +166,6 @@ export function createMobileGateway(options: {
     logger: options.logger,
   });
   return { source, pushSink };
-}
-
-/**
- * Built PWA location: `EMDASH_MOBILE_APP_DIR`, then the copy bundled next to the desktop
- * build (`out/mobile`), then the workspace build in development.
- */
-function resolveMobileAppRoot(): string | null {
-  const candidates = [
-    process.env['EMDASH_MOBILE_APP_DIR'],
-    join(app.getAppPath(), 'out', 'mobile'),
-    join(app.getAppPath(), '..', 'emdash-mobile', 'dist'),
-  ];
-  for (const candidate of candidates) {
-    if (candidate && existsSync(join(candidate, 'index.html'))) return candidate;
-  }
-  return null;
 }
 
 function readComputerName(): { current: string } {

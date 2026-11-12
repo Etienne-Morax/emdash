@@ -1,0 +1,103 @@
+# Source of truth for the Xcode project (the .xcodeproj is generated, never committed).
+# Regenerate with `xcodegen generate`.
+name: MoraxCode
+options:
+  bundleIdPrefix: com.morax
+  developmentLanguage: en
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    TARGETED_DEVICE_FAMILY: "1,2"
+    MARKETING_VERSION: 0.1.0
+    CURRENT_PROJECT_VERSION: 1
+    DEVELOPMENT_TEAM: NU43RNA6U9
+
+packages:
+  MoraxDesign:
+    url: https://github.com/Etienne-Morax/morax-design.git
+    from: 1.1.1
+  # 1.18: newer releases run a build-tool plugin that Xcode must approve on every machine.
+  SwiftTerm:
+    url: https://github.com/migueldeicaza/SwiftTerm
+    exactVersion: 1.18.0
+  MoraxWire:
+    path: Packages/MoraxWire
+
+targets:
+  MoraxCode:
+    type: application
+    platform: iOS
+    sources:
+      - path: MoraxCode
+    info:
+      path: MoraxCode/Info.plist
+      properties:
+        # The desktop's pairing QR code opens the app (moraxcode://pair?gateway=…&code=…).
+        CFBundleURLTypes:
+          - CFBundleURLName: com.morax.moraxcode.pair
+            CFBundleURLSchemes: [moraxcode]
+    dependencies:
+      - package: MoraxDesign
+      - package: SwiftTerm
+      - package: MoraxWire
+        product: MoraxWire
+      - package: MoraxWire
+        product: MoraxCodeKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.morax.moraxcode
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Morax Code
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.developer-tools
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIStatusBarStyle: UIStatusBarStyleLightContent
+        INFOPLIST_KEY_NSCameraUsageDescription: Scan the pairing code your Mac shows.
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_STYLE: Automatic
+
+  MoraxCodeTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [MoraxCodeTests]
+    dependencies:
+      - target: MoraxCode
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.morax.moraxcode.tests
+
+  MoraxCodeUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [MoraxCodeUITests]
+    dependencies:
+      - target: MoraxCode
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.morax.moraxcode.uitests
+        TEST_TARGET_NAME: MoraxCode
+
+schemes:
+  MoraxCode:
+    build:
+      targets:
+        MoraxCode: all
+        MoraxCodeTests: [test]
+        MoraxCodeUITests: [test]
+    test:
+      environmentVariables:
+        MORAX_LIVE_DESKTOP: $(MORAX_LIVE_DESKTOP)
+      targets:
+        - MoraxCodeTests
+        - MoraxCodeUITests
+        - package: MoraxWire/MoraxWireTests
+        - package: MoraxWire/MoraxCodeKitTests

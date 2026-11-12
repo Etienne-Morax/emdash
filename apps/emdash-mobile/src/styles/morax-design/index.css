@@ -1,3 +1,0 @@
-/* Morax design for the web: tokens + components. Tailwind v4 apps also import theme.css. */
-@import './tokens.css';
-@import './components.css';

@@ -1,4 +1,4 @@
-# Emdash Mobile — journal de progression
+# Morax Code (ex-Emdash Mobile) — journal de progression
 
 Mémoire de travail de la mission « Emdash Mobile » (piloter Emdash et toutes ses machines
 depuis l'iPhone). Relire en reprenant une session compactée.
@@ -150,13 +150,45 @@ Worktree : `~/Developer/Projects/emdash-mobile`, branche `feat/mobile-remote` is
   (`tmux.test.ts`, `open-in-apps`, `machine-details-page.browser.test.tsx` qui importe
   `getProjectSshConnectionId` absent de la base), tests navigateur instables relancés verts.
 
+### Changement de cap (2026-11-12) : app iOS native « Morax Code »
+
+Demande d'Etienne (relayée par la session parente) : remplacer la PWA par une vraie app iOS
+native. Garder la phase 1 (transport WebSocket, passerelle, `tailscale serve`, jeton +
+`Tailscale-User-Login`, audit) ; la passerelle ne sert plus la PWA.
+
+Fait (branche `feat/morax-code-ios`) :
+- `apps/morax-code-ios` : SwiftUI iOS 26, Swift 6 strict, XcodeGen. Package local
+  `MoraxWire` (client Wire : trames, appels, états live + patches Immer, logs live, flux
+  d'événements, jobs) et `MoraxCodeKit` (adresse/appairage, modèles, tableau des tâches,
+  règles de statut, création de tâche, compositeur). SwiftTerm 1.18.0 (MIT ; 1.99 ajoute un
+  plugin de build à approuver), MoraxDesign. Icône 1024 depuis `Logo/Coding center.png`
+  (sips).
+- Fixtures partagées TS ↔ Swift : session Wire enregistrée (trames exactes) depuis
+  `packages/wire`, table des endpoints du contrat mobile, règles de statut évaluées par les
+  fonctions TS du bureau sur tous les petits cas. Tests des deux côtés.
+- Couleurs projet/machine résolues par le bureau (`mobile.colors`) : l'app ne réimplémente
+  pas les règles.
+- Appairage par QR (`moraxcode://pair?gateway=…&code=…`) dans Settings → Mobile access :
+  générateur QR de Nayuki vendorisé (MIT, fichier unique, aucune dépendance npm), QR décodé
+  par CoreImage pour vérifier. Jeton dans le Trousseau, envoyé en `Bearer`.
+- Notifications locales tant que l'app est connectée ; APNs laissé en TODO documenté.
+- PWA (`apps/emdash-mobile`), coquille WKWebView (`apps/emdash-ios`) et service statique de
+  la passerelle retirés (CSP `default-src 'none'`, toute page → 404).
+- Vérifié sur simulateur (iPhone 18 Pro, iOS 27.2) contre l'instance de dev isolée via
+  `tailscale serve` : appairage par lien QR, accueil live, tâche créée depuis l'app
+  (`polite-news-film`), terminal Claude Code en direct, message envoyé et soumis, statut
+  « Waiting for you » (`MoraxCodeUITests`, opt-in `MORAX_LIVE_DESKTOP=1`). Captures
+  `screenshots/ios-*.png`. Ensuite : `tailscale serve reset`, instance arrêtée, worktrees
+  de test retirés.
+
+Reste :
+- Écran de revue (diff + PR) dans l'app native (contrat déjà prêt côté bureau).
+- APNs (compte payant + expéditeur) ; le service Web Push VAPID du bureau n'a plus de client.
+- Installation sur l'iPhone réel (Xcode, équipe personnelle) et vérification sur l'appareil.
+
 ## Reste (bloqué / suites)
 
-- **TestFlight** : l'API App Store Connect refuse la création d'app (`apps` sans CREATE) et Chrome
-  n'a pas de session App Store Connect (pas de saisie d'identifiants par l'agent). Etienne crée
-  l'enregistrement une fois (Apps → + → Nouvelle app : iOS, nom « Emdash Mobile », bundle
-  `com.morax.emdashmobile`, SKU `emdashmobile`), puis
-  `cd apps/emdash-ios && scripts/archive.sh --upload`.
+- TestFlight : hors périmètre (consigne : pas d'envoi TestFlight / App Store).
 - Notifications dans l'app native : APNs (clé APNs du compte développeur) ; d'ici là, la PWA
   sur l'écran d'accueil reçoit les notifications.
 - Réception push réelle sur iPhone, projet SSH et ACP à confirmer sur l'appareil.

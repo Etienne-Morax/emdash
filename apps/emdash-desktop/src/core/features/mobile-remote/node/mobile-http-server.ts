@@ -1,9 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { createReadStream } from 'node:fs';
-import { stat } from 'node:fs/promises';
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
-import { extname, resolve, sep } from 'node:path';
-import { pipeline, type Duplex } from 'node:stream';
+import type { Duplex } from 'node:stream';
 import { serve, webSocketTransport, type Controller } from '@emdash/wire/rpc';
 import { WebSocketServer, type WebSocket } from 'ws';
 import { z } from 'zod';
@@ -26,37 +23,12 @@ export const MOBILE_WIRE_PATH = '/wire';
 const MAX_JSON_BODY_BYTES = 4 * 1024;
 /** One Wire frame is at most 16 MiB; leave room for the frame header. */
 const MAX_WS_PAYLOAD_BYTES = 17 * 1024 * 1024;
-/** Phones vanish without closing their socket (iOS suspends PWAs); ping to notice. */
+/** Phones vanish without closing their socket (iOS suspends backgrounded apps); ping to notice. */
 const WS_PING_INTERVAL_MS = 30_000;
 const REQUEST_TIMEOUT_MS = 30_000;
 
-const CONTENT_TYPES: Record<string, string> = {
-  '.html': 'text/html; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.mjs': 'text/javascript; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.webmanifest': 'application/manifest+json; charset=utf-8',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-  '.ico': 'image/x-icon',
-  '.woff2': 'font/woff2',
-  '.txt': 'text/plain; charset=utf-8',
-};
-
-const CONTENT_SECURITY_POLICY = [
-  "default-src 'self'",
-  "script-src 'self'",
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
-  "font-src 'self' data:",
-  "connect-src 'self'",
-  "worker-src 'self'",
-  "manifest-src 'self'",
-  "frame-ancestors 'none'",
-  "base-uri 'none'",
-  "form-action 'none'",
-].join('; ');
+/** The gateway serves no page: nothing may load, frame or run from it. */
+const CONTENT_SECURITY_POLICY = "default-src 'none'; frame-ancestors 'none'; base-uri 'none'";
 
 const pairBodySchema = z.object({
   code: z.string().min(1).max(32),
@@ -70,8 +42,6 @@ export type MobileHttpServerOptions = {
   devices: MobileDeviceRegistry;
   pairing: PairingManager;
   audit: MobileAuditLog;
-  /** Directory holding the built PWA; null serves a short placeholder page. */
-  staticRoot: string | null;
   createSessionController(device: MobileDevice): Controller;
   onError?: (error: unknown) => void;
 };
@@ -142,7 +112,7 @@ export async function startMobileHttpServer(
     const url = new URL(request.url ?? '/', 'http://localhost');
     const headers = request.headers as RequestHeaders;
 
-    // Even the static shell is tailnet-user only.
+    // Every request is tailnet-user only.
     const login = checkTailnetLogin(headers, options.identity());
     if (!login.success) {
       deny(login.error, 'http');
@@ -180,8 +150,8 @@ export async function startMobileHttpServer(
       }
     }
 
-    if (request.method !== 'GET' && request.method !== 'HEAD') return sendStatus(response, 405);
-    return await serveStatic(url.pathname, request, response);
+    // The phone app is native (Morax Code): there is no web app to serve.
+    return sendStatus(response, 404);
   }
 
   async function handlePair(
@@ -220,30 +190,6 @@ export async function startMobileHttpServer(
     });
     response.setHeader('Set-Cookie', deviceTokenCookie(token));
     return sendJson(response, 200, { deviceId: device.id, label: device.label });
-  }
-
-  async function serveStatic(pathname: string, request: IncomingMessage, response: ServerResponse) {
-    if (!options.staticRoot) {
-      response.setHeader('Content-Type', 'text/plain; charset=utf-8');
-      response.writeHead(200);
-      response.end('Emdash Mobile is enabled, but the mobile app is not built.\n');
-      return;
-    }
-    const file = await resolveStaticFile(options.staticRoot, pathname);
-    if (!file) return sendStatus(response, 404);
-    const extension = extname(file.path);
-    response.setHeader('Content-Type', CONTENT_TYPES[extension] ?? 'application/octet-stream');
-    response.setHeader('Content-Length', String(file.size));
-    // Hashed assets are immutable; the shell and service worker must always revalidate.
-    response.setHeader(
-      'Cache-Control',
-      pathname.startsWith('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache'
-    );
-    response.writeHead(200);
-    if (request.method === 'HEAD') return response.end();
-    // pipeline() destroys the file stream when the client aborts and swallows read errors
-    // that would otherwise be uncaught.
-    pipeline(createReadStream(file.path), response, () => {});
   }
 
   server.on('upgrade', (request: IncomingMessage, socket: Duplex, head: Buffer) => {
@@ -374,42 +320,6 @@ async function readJsonBody(request: IncomingMessage): Promise<unknown> {
   }
   try {
     return JSON.parse(Buffer.concat(chunks).toString('utf8'));
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Maps a URL path to a file inside `root`, refusing traversal and dotfiles. Unknown paths
- * without an extension fall back to `index.html` (client-side routes).
- */
-export async function resolveStaticFile(
-  root: string,
-  pathname: string
-): Promise<{ path: string; size: number } | null> {
-  let decoded: string;
-  try {
-    decoded = decodeURIComponent(pathname);
-  } catch {
-    return null;
-  }
-  if (decoded.includes('\0')) return null;
-  const segments = decoded.split('/').filter((segment) => segment.length > 0);
-  if (segments.some((segment) => segment.startsWith('.'))) return null;
-  const base = resolve(root);
-  const candidate = resolve(base, ...segments);
-  if (candidate !== base && !candidate.startsWith(base + sep)) return null;
-
-  const file = await statFile(candidate === base ? resolve(base, 'index.html') : candidate);
-  if (file) return file;
-  if (extname(candidate) === '') return await statFile(resolve(base, 'index.html'));
-  return null;
-}
-
-async function statFile(path: string): Promise<{ path: string; size: number } | null> {
-  try {
-    const info = await stat(path);
-    return info.isFile() ? { path, size: info.size } : null;
   } catch {
     return null;
   }
