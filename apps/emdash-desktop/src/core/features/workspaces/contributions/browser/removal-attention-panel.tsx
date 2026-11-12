@@ -2,6 +2,7 @@ import { Button, RelativeTime, Spinner, toast } from '@emdash/ui/react/primitive
 import { AlertTriangleIcon } from 'lucide-react';
 import { useState } from 'react';
 import { getWorkspaceRegistryWireClient } from '@core/features/workspaces/api/browser/client';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { cn } from '@core/primitives/styling/browser/cn';
 import {
   workspaceRemovalNeedsAttention,
@@ -44,7 +45,7 @@ export function WorkspaceRemovalAttentionPanel({
       } else {
         await registry.abandonWorkspaceRemoval({ workspaceId });
         toast('Workspace untracked', {
-          description: 'Emdash dropped the pending removal without deleting files on the host.',
+          description: `${PRODUCT_NAME} dropped the pending removal without deleting files on the host.`,
         });
       }
     } catch (error) {

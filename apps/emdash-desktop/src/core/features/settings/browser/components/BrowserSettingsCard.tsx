@@ -15,6 +15,7 @@ import { browserSessionStore } from '@core/features/browser/api/browser/browser-
 import { getBrowserClient } from '@core/features/browser/api/browser/client';
 import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
 import { useOpenModal } from '@core/manifests/browser/modal-api';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import {
   BROWSER_ISOLATED_PROFILE_ID,
   DEFAULT_BROWSER_PROFILE_ID,
@@ -166,7 +167,7 @@ export function BrowserSettingsCard() {
 
           <SettingRow
             title="Disable CORS for localhost"
-            description="Allows pages opened from localhost in Emdash browser tabs to call APIs that do not send matching CORS headers."
+            description={`Allows pages opened from localhost in ${PRODUCT_NAME} browser tabs to call APIs that do not send matching CORS headers.`}
             control={
               <Switch
                 checked={browserSettings?.relaxCorsForLocalhost ?? false}

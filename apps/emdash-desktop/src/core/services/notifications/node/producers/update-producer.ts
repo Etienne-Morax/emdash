@@ -1,3 +1,4 @@
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import type { NotificationService } from '../notification-service';
 
 export function publishUpdateAvailableNotification(
@@ -9,7 +10,7 @@ export function publishUpdateAvailableNotification(
     groupKey: 'app-update',
     dedupeKey: `update-available:${version}`,
     title: 'Update available',
-    body: `Emdash ${version} is ready to download.`,
+    body: `${PRODUCT_NAME} ${version} is ready to download.`,
     sound: null,
     target: { kind: 'update', version },
     source: { kind: 'app' },
@@ -25,7 +26,7 @@ export function publishUpdateDownloadedNotification(
     groupKey: 'app-update',
     dedupeKey: `update:${version}`,
     title: 'Update ready',
-    body: `Emdash ${version} has been downloaded and will install on restart.`,
+    body: `${PRODUCT_NAME} ${version} has been downloaded and will install on restart.`,
     sound: null,
     target: { kind: 'update', version },
     source: { kind: 'app' },

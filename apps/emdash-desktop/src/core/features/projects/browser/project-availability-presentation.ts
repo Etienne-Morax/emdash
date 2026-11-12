@@ -9,6 +9,7 @@ import {
   type ProjectIssueRecovery,
 } from '@core/features/projects/api/browser/project-attachment-recovery';
 import type { ProjectHostAccessState } from '@core/features/projects/api/browser/stores/project-context';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 
 export const DEFAULT_PROJECT_LIVE_ACTION_DISABLED_REASON = PROJECT_LIVE_ACCESS_REQUIRED_MESSAGE;
 
@@ -259,8 +260,8 @@ const issuePresentationDescriptors: Record<
   },
   'protocol-upgrade-client': {
     correctiveActions: ['update-client'],
-    title: () => 'Update Emdash to use this Project',
-    detail: () => 'Install the latest Emdash version to restore Project access.',
+    title: () => `Update ${PRODUCT_NAME} to use this Project`,
+    detail: () => `Install the latest ${PRODUCT_NAME} version to restore Project access.`,
   },
   'protocol-upgrade-server': {
     correctiveActions: ['diagnostics', 'retry'],
@@ -296,8 +297,8 @@ const issuePresentationDescriptors: Record<
         : 'This Project is no longer linked to a Machine',
     detail: (host) =>
       host.kind === 'local'
-        ? 'Relink this Project to a local runtime or remove it from Emdash.'
-        : 'Relink this Project to a Machine or remove it from Emdash.',
+        ? `Relink this Project to a local runtime or remove it from ${PRODUCT_NAME}.`
+        : `Relink this Project to a Machine or remove it from ${PRODUCT_NAME}.`,
   },
   'attachment-unavailable': {
     correctiveActions: [],
@@ -397,7 +398,7 @@ function recoveryActions(
       case 'diagnostics':
         return action('diagnostics', host.kind === 'local' ? 'Open Diagnostics' : 'Open Machines');
       case 'update-client':
-        return action('update-client', 'Update Emdash');
+        return action('update-client', `Update ${PRODUCT_NAME}`);
       case 'configure':
         return action(
           'configure',

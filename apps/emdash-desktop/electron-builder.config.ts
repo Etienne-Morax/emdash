@@ -3,6 +3,7 @@ import { DEB_DEPENDS, RPM_DEPENDS } from './scripts/release/lib/linux-dependenci
 import {
   APP_ID,
   ARTIFACT_PREFIX,
+  INTERNAL_APP_NAME,
   LINUX_DESKTOP_ID,
   PRODUCT_NAME,
   R2_BASE_URL,
@@ -56,10 +57,8 @@ const config: Configuration = {
     entitlements: 'build/entitlements.mac.plist',
     entitlementsInherit: 'build/entitlements.mac.plist',
     extendInfo: {
-      NSMicrophoneUsageDescription:
-        'Emdash needs microphone access for voice dictation and voice mode features.',
-      NSLocalNetworkUsageDescription:
-        'Emdash needs local network access to connect to SSH hosts on your network.',
+      NSMicrophoneUsageDescription: `${PRODUCT_NAME} needs microphone access for voice dictation and voice mode features.`,
+      NSLocalNetworkUsageDescription: `${PRODUCT_NAME} needs local network access to connect to SSH hosts on your network.`,
     },
     target: [
       { target: 'dmg', arch: ['arm64'] },
@@ -82,7 +81,7 @@ const config: Configuration = {
     icon: 'src/assets/images/emdash/emdash.png',
     syncDesktopName: true,
     desktop: {
-      entry: { StartupWMClass: PRODUCT_NAME },
+      entry: { StartupWMClass: INTERNAL_APP_NAME },
     },
     target: [
       { target: 'AppImage', arch: ['x64'] },

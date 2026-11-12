@@ -2,6 +2,7 @@ import { Button, Dialog, Tooltip } from '@emdash/ui/react/primitives';
 import { Check, Copy, ExternalLink, Globe } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useModalController } from '@core/manifests/browser/modal-api';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { defineModal } from '@core/primitives/modals/react';
 
 export type ExternalLinkChoice = 'emdash-browser' | 'external-browser';
@@ -87,7 +88,7 @@ export function ExternalLinkChoiceDialog({
             onClick={() => controller.complete('emdash-browser')}
           >
             <Globe className="size-4" />
-            Open in Emdash
+            Open in {PRODUCT_NAME}
           </Button>
           <Button
             className="w-full"

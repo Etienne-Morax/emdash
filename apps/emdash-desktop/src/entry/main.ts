@@ -1,4 +1,5 @@
 import { app, dialog } from 'electron';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { configureChromiumCommandLine } from '@main/host/chromium-command-line';
 
 // Packaged Electron does not set NODE_ENV, so environment-keyed defaults (such
@@ -25,7 +26,7 @@ async function start(): Promise<void> {
       await app.whenReady();
       dialog.showErrorBox(
         'Something went wrong',
-        `Emdash could not start recovery mode.\n\n${
+        `${PRODUCT_NAME} could not start recovery mode.\n\n${
           recoveryError instanceof Error ? recoveryError.message : String(recoveryError)
         }`
       );

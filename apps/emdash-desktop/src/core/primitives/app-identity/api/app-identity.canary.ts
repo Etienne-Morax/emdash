@@ -5,7 +5,9 @@
 export const R2_BASE_URL = 'https://releases.emdash.sh';
 
 export const APP_ID = 'com.emdash.canary';
-export const PRODUCT_NAME = 'Emdash Canary';
+export const PRODUCT_NAME = 'Morax Code Canary';
+// Keep in sync with INTERNAL_APP_NAME in ./app-identity.ts (keychain + Linux WM class).
+export const INTERNAL_APP_NAME = 'Emdash Canary';
 export const APP_NAME_LOWER = 'emdash-canary';
 export const LINUX_DESKTOP_ID = 'emdash-canary';
 export const UPDATE_CHANNEL = 'v1-canary';

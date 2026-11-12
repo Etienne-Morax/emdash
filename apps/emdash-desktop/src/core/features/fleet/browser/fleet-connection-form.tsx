@@ -1,6 +1,7 @@
 import { Button, Field, Input, Label } from '@emdash/ui/react/primitives';
 import { useId, useState, type FormEvent } from 'react';
 import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { getFleetClient } from '../api/browser/client';
 import { fleetSnapshotUrl } from '../api/fleet-endpoint';
 
@@ -72,8 +73,8 @@ export function FleetConnectionForm({ endpoint, hasApiKey, onCancel, onSaved }: 
       <div className="flex flex-col gap-1">
         <h2 className="text-sm font-medium text-foreground">Connect to the fleet</h2>
         <p className="text-sm text-foreground-muted">
-          Emdash reads <code className="font-mono text-xs">fleet_snapshot()</code> through the
-          PostgREST gateway, every 20 s while this view is open. Nothing is written.
+          {PRODUCT_NAME} reads <code className="font-mono text-xs">fleet_snapshot()</code> through
+          the PostgREST gateway, every 20 s while this view is open. Nothing is written.
         </p>
       </div>
       <Field.Root>

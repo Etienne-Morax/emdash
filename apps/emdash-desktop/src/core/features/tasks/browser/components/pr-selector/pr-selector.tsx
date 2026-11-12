@@ -14,6 +14,7 @@ import { ProviderAccountStateEmpty } from '@core/features/integrations/contribut
 import { IntegrationIcon } from '@core/features/integrations/contributions/browser/integration-icon';
 import { useIntegrationsContext } from '@core/features/integrations/contributions/browser/integrations-provider';
 import { useOpenModal } from '@core/manifests/browser/modal-api';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { useDebounce } from '@core/primitives/react-hooks/browser/useDebounce';
 import { cn } from '@core/primitives/styling/browser/cn';
 import { useRemoteModelState } from '@core/primitives/wire/browser/use-remote-model-state';
@@ -161,7 +162,7 @@ export const PrSelector = observer(function PrSelector({
   const authDescription =
     error?.type === 'account_not_found'
       ? `The selected ${authIntegrationName} account is no longer connected. Reconnect ${authIntegrationName} to show ${requestsName} for this repository.`
-      : `Emdash needs a connected ${authIntegrationName} account before it can show ${requestsName} for this repository.`;
+      : `${PRODUCT_NAME} needs a connected ${authIntegrationName} account before it can show ${requestsName} for this repository.`;
   const connectButton = (
     <Button
       type="button"

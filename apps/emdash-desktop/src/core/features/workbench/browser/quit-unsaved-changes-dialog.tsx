@@ -1,5 +1,6 @@
 import { Button, Dialog } from '@emdash/ui/react/primitives';
 import { useModalController } from '@core/manifests/browser/modal-api';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { defineModal } from '@core/primitives/modals/react';
 
 export type QuitUnsavedChangesResult = 'save-all' | 'discard';
@@ -19,7 +20,7 @@ export function QuitUnsavedChangesDialog({ count }: QuitUnsavedChangesDialogArgs
       </Dialog.Header>
       <Dialog.Body className="pt-0">
         <p>
-          {count} {label} unsaved changes. Save them before quitting Emdash?
+          {count} {label} unsaved changes. Save them before quitting {PRODUCT_NAME}?
         </p>
       </Dialog.Body>
       <Dialog.Footer>

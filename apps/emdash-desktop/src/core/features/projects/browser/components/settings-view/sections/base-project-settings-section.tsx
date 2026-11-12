@@ -21,6 +21,7 @@ import {
 import type { ProvenanceFlavor } from '@core/features/projects/contributions/browser/settings-provenance-labels';
 import { ProjectBranchSelector } from '@core/features/source-control/contributions/browser/project-branch-selector';
 import { RemoteSelector } from '@core/features/source-control/contributions/browser/remote-selector';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { getHostClient } from '@core/primitives/desktop-host/browser/host-client';
 import { detectPlatformContext } from '@core/primitives/keybindings/api';
 import type {
@@ -319,9 +320,9 @@ export const BaseProjectSettingsSection = observer(function BaseProjectSettingsS
         <Field.Label>Git credentials</Field.Label>
         <Field.Description className="text-foreground-muted">
           Which git credentials this project uses. Effective account uses the account above for
-          agent and terminal sessions and for Emdash's own pushes, pulls, and fetches. System uses
-          your machine's credentials for both. None disables credential helpers in agent and
-          terminal sessions; Emdash's own git operations still use the account above.
+          agent and terminal sessions and for {PRODUCT_NAME}'s own pushes, pulls, and fetches.
+          System uses your machine's credentials for both. None disables credential helpers in agent
+          and terminal sessions; {PRODUCT_NAME}'s own git operations still use the account above.
         </Field.Description>
         <Select.Root
           value={gitIdentityForm.agentGitCredentials}

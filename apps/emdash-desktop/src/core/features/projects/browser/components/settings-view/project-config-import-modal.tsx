@@ -3,6 +3,7 @@ import { Button, Dialog, Field, RadioGroup, Select } from '@emdash/ui/react/prim
 import { Check, Loader2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useModalController } from '@core/manifests/browser/modal-api';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { ConfirmButton } from '@core/primitives/keybindings/browser/confirm-button';
 import { defineModal } from '@core/primitives/modals/react';
 import type {
@@ -56,8 +57,8 @@ export function ProjectConfigImportModal({
   );
   const description =
     migrations.length === 1 && selectedMigration
-      ? `Found configuration file from ${selectedMigration.label} that can be imported into Emdash.`
-      : 'Found configuration files that can be imported into Emdash.';
+      ? `Found configuration file from ${selectedMigration.label} that can be imported into ${PRODUCT_NAME}.`
+      : `Found configuration files that can be imported into ${PRODUCT_NAME}.`;
 
   const disabled = !selectedMigration || status === 'importing' || status === 'imported';
 
