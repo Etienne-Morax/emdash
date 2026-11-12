@@ -4,6 +4,7 @@ import { EmptyState } from './components';
 import { HomeScreen } from './home-screen';
 import { NewTaskScreen } from './new-task-screen';
 import { PairScreen } from './pair-screen';
+import { ReviewScreen } from './review-screen';
 import { useRoute } from './router';
 import { TaskScreen } from './task-screen';
 
@@ -58,6 +59,8 @@ function PairedApp() {
   switch (route.name) {
     case 'task':
       return <TaskScreen projectId={route.projectId} taskId={route.taskId} />;
+    case 'review':
+      return <ReviewScreen projectId={route.projectId} taskId={route.taskId} />;
     case 'new':
       return <NewTaskScreen />;
     case 'home':

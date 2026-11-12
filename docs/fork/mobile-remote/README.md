@@ -36,6 +36,21 @@ iPhone (app sur l'écran d'accueil)
 
 Pour couper la publication : `tailscale serve reset`.
 
+## Revue et pull request
+
+Dans une tâche, *Changes* ouvre la revue en lecture seule :
+
+- **Committed on this branch** : fichiers modifiés depuis que la branche a quitté la branche
+  par défaut du projet (de préférence `origin/<défaut>`) ; toucher un fichier affiche son diff
+  ligne à ligne (calculé sur le téléphone, limité aux fichiers raisonnables).
+- **Uncommitted** : fichiers encore non commités, avec leurs compteurs seulement (le téléphone
+  ne lit jamais l'arbre de travail).
+- **Pull request** : lien vers la PR ouverte de la branche, sinon formulaire titre /
+  description / brouillon. Si le dépôt distant n'a pas la branche (ou une version plus
+  ancienne), elle est d'abord publiée sous son propre nom, jamais en force. Le dépôt cible
+  est celui que le bureau résout pour le projet ; le compte GitHub/GitLab est celui du projet
+  sur le bureau (à configurer là-bas si la création échoue).
+
 ## Sécurité
 
 - La passerelle n'écoute que sur `127.0.0.1` ; `tailscale serve` est la seule entrée.
@@ -43,7 +58,9 @@ Pour couper la publication : `tailscale serve reset`.
   d'API et le WebSocket exigent en plus l'`Origin` `https://<MagicDNS du Mac>` et un jeton
   d'appareil valide. Tout refus répond `401` sans détail.
 - Le téléphone ne voit que le **contrat mobile** : tâches, conversations (terminal de l'agent,
-  ACP), création de tâche en nouveau worktree, état des machines, notifications. Jamais :
+  ACP), création de tâche en nouveau worktree, état des machines, notifications, revue (contenu
+  **commité** des fichiers d'un worktree de tâche, publication non forcée de sa branche,
+  création de PR dans le dépôt résolu par le bureau). Jamais :
   écriture de fichiers, secrets, réglages, identifiants SSH, MCP, mises à jour, journaux bruts,
   ni paramètres de lancement des agents (dossier, arguments, shell).
 - Un appareil appairé peut **taper dans le terminal de vos agents**, donc exécuter des
@@ -53,6 +70,9 @@ Pour couper la publication : `tailscale serve reset`.
   `~/Library/Application Support/Emdash/mobile-remote-audit.jsonl`.
 
 ## Limites
+
+- PR depuis un fork (branche poussée vers un autre dépôt que la cible) : pas géré depuis le
+  téléphone, à faire sur le bureau. Les liens de PR s'ouvrent dans Safari.
 
 - Le Mac qui fait tourner Emdash doit rester allumé, Emdash ouvert.
 - Un processus local à ce Mac peut forger `Tailscale-User-Login` ; il lui faut quand même un

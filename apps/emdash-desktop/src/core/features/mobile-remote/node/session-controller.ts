@@ -1,3 +1,4 @@
+import type { Result } from '@emdash/shared';
 import {
   createController,
   forwardContractImpl,
@@ -5,12 +6,18 @@ import {
   type ContractClient,
   type Controller,
 } from '@emdash/wire/rpc';
-import { mobileWireContract, type MobileWireContract } from '../api/mobile-contract';
+import {
+  mobileWireContract,
+  type MobileCreatePullRequestInput,
+  type MobileWireContract,
+} from '../api/mobile-contract';
 import type {
   MobileAppearance,
   MobileDevice,
   MobileDeviceSession,
   MobileMachine,
+  MobilePullRequest,
+  MobilePullRequestError,
   MobilePushSubscription,
   MobileTaskDefaults,
 } from '../api/schemas';
@@ -22,6 +29,15 @@ export type MobileLocalOperations = {
   machines(): Promise<MobileMachine[]>;
   appearance(): Promise<MobileAppearance>;
   taskDefaults(): Promise<MobileTaskDefaults>;
+  pullRequests: {
+    forBranch(input: {
+      projectId: string;
+      branch: string;
+    }): Promise<Result<{ prs: MobilePullRequest[] }, MobilePullRequestError>>;
+    create(
+      input: MobileCreatePullRequestInput
+    ): Promise<Result<{ url: string; number: number }, MobilePullRequestError>>;
+  };
   push: {
     publicKey(): Promise<string>;
     subscribe(deviceId: string, subscription: MobilePushSubscription): Promise<void>;
@@ -58,6 +74,10 @@ export function createMobileSessionController(options: {
         machines: () => local.machines(),
         appearance: () => local.appearance(),
         taskDefaults: () => local.taskDefaults(),
+        pullRequests: {
+          forBranch: (input) => local.pullRequests.forBranch(input),
+          create: (input) => local.pullRequests.create(input),
+        },
         push: {
           publicKey: async () => ({ publicKey: await local.push.publicKey() }),
           subscribe: (subscription) => local.push.subscribe(device.id, subscription),

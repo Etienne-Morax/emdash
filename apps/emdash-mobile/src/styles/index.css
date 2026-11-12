@@ -584,3 +584,114 @@ a {
   flex: 1 1 200px;
   margin: 0;
 }
+
+/* Review: read-only diff and pull request. */
+.review-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--morax-space-s);
+  margin-top: var(--morax-space-m);
+}
+
+.review-files {
+  display: flex;
+  flex-direction: column;
+  gap: var(--morax-space-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.review-file {
+  overflow: hidden;
+  border-radius: var(--morax-radius-tile);
+}
+
+.review-file-header {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--morax-space-s);
+  padding: var(--morax-space-s) var(--morax-space-m);
+  border: 0;
+  background: none;
+  color: var(--morax-ink);
+  font: inherit;
+  text-align: left;
+}
+
+.review-file-header:disabled {
+  color: var(--morax-ink-secondary);
+}
+
+.review-file-path {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: var(--morax-type-caption);
+}
+
+.review-file-counts {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--morax-space-xs);
+  font-size: var(--morax-type-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+.count-add {
+  color: var(--morax-success-text);
+}
+
+.count-remove {
+  color: var(--morax-danger-text);
+}
+
+.diff-body {
+  overflow-x: auto;
+  border-top: 1px solid var(--morax-glass-border);
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.diff-hunk-header {
+  padding: 2px var(--morax-space-s);
+  color: var(--morax-ink-secondary);
+}
+
+.diff-line {
+  display: flex;
+  min-width: max-content;
+  white-space: pre;
+}
+
+.diff-sign {
+  width: 1.5em;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.diff-text {
+  padding-right: var(--morax-space-s);
+}
+
+.diff-add {
+  background: color-mix(in srgb, var(--morax-success) 18%, transparent);
+}
+
+.diff-remove {
+  background: color-mix(in srgb, var(--morax-danger-text) 18%, transparent);
+}
+
+.pr-link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--morax-space-xs);
+  padding: var(--morax-space-m);
+  border-radius: var(--morax-radius-tile);
+  color: var(--morax-ink);
+  text-decoration: none;
+}

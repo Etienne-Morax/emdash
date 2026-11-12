@@ -19,6 +19,7 @@ import {
   type MobileRemoteSource,
 } from '@core/features/mobile-remote/node/mobile-remote-service';
 import { createPairingManager } from '@core/features/mobile-remote/node/pairing';
+import { createMobilePullRequestOperations } from '@core/features/mobile-remote/node/pull-requests';
 import {
   createMobilePushService,
   createMobilePushSink,
@@ -28,18 +29,25 @@ import {
   type MobileLocalOperations,
 } from '@core/features/mobile-remote/node/session-controller';
 import { detectTailscaleIdentity } from '@core/features/mobile-remote/node/tailscale';
+import { repositoryContract } from '@core/features/repository/api/contract';
 import { shortComputerName } from '@core/primitives/color-coding/api/color-coding';
 import type { SecretStore } from '@core/primitives/secrets/api/secret-store';
 import type { NotificationSink } from '@core/services/notifications/api/ports';
+import { pullRequestsContract } from '@core/services/pull-requests/api/contract';
 import type { AppSettingsService } from '@core/services/settings/node';
 import { createLazyRoutingController } from './desktop-wire';
 
 const execFileAsync = promisify(execFile);
 const AUDIT_LOG_FILE = 'mobile-remote-audit.jsonl';
 
-/** The one desktop endpoint the gateway itself reads, outside the phone's contract. */
+/** The desktop endpoints the gateway itself calls, outside the phone's contract. */
 const gatewayDesktopContract = defineContract({
   machines: defineContract({ getMachines: machinesContract.getMachines }),
+  repository: defineContract({ resolveProvider: repositoryContract.resolveProvider }),
+  pullRequests: defineContract({
+    getPullRequestsForBranch: pullRequestsContract.getPullRequestsForBranch,
+    createPullRequest: pullRequestsContract.createPullRequest,
+  }),
 });
 
 /**
@@ -98,6 +106,11 @@ export function createMobileGateway(options: {
         })),
       ];
     },
+    pullRequests: createMobilePullRequestOperations({
+      resolveProvider: (input) => desktop.repository.resolveProvider(input),
+      getPullRequestsForBranch: (input) => desktop.pullRequests.getPullRequestsForBranch(input),
+      createPullRequest: (input) => desktop.pullRequests.createPullRequest(input),
+    }),
     push: {
       publicKey: () => push.publicKey(),
       subscribe: (deviceId, subscription) => push.subscribe(deviceId, subscription),

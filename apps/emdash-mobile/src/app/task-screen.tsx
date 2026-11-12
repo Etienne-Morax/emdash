@@ -77,6 +77,16 @@ export function TaskScreen({ projectId, taskId }: { projectId: string; taskId: s
         }
         eyebrow={project?.name ?? 'Task'}
         title={task?.name ?? (tasks.isLoading ? 'Loading…' : 'Task not found')}
+        action={
+          task?.workspaceId ? (
+            <a
+              className="button-glass small"
+              href={routeHref({ name: 'review', projectId, taskId })}
+            >
+              Changes
+            </a>
+          ) : undefined
+        }
       />
       <LinkBanner link={link} />
       {row && (
