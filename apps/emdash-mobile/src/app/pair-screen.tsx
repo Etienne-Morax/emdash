@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { isNativeShell } from '../push';
 import { defaultDeviceLabel, pairDevice, type DeviceSession } from '../session';
 
 const CODE_LENGTH = 8;
@@ -85,10 +86,12 @@ export function PairScreen({ onPaired }: { onPaired: (session: DeviceSession) =>
           {busy ? 'Pairing…' : 'Pair'}
         </button>
       </form>
-      <p className="morax-caption footnote">
-        Installed from Safari with Share → Add to Home Screen? Pair inside the installed app: it
-        keeps its own storage.
-      </p>
+      {!isNativeShell() && (
+        <p className="morax-caption footnote">
+          Installed from Safari with Share → Add to Home Screen? Pair inside the installed app: it
+          keeps its own storage.
+        </p>
+      )}
     </main>
   );
 }
