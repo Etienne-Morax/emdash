@@ -186,9 +186,21 @@ Reste :
 - APNs (compte payant + expéditeur) ; le service Web Push VAPID du bureau n'a plus de client.
 - Installation sur l'iPhone réel (Xcode, équipe personnelle) et vérification sur l'appareil.
 
+### iPad et TestFlight (2026-11-12, branche `feat/morax-code-ipad`)
+
+- App universelle : `NavigationSplitView` en largeur régulière (liste des tâches en barre
+  latérale, tâche ou nouvelle tâche en détail), pile inchangée sur iPhone ; un seul état de
+  navigation, donc redimensionner une fenêtre iPad garde la tâche ouverte. Formulaires en
+  colonne lisible, terminal en 13 pt sur iPad, ⌘N (menu) et ⌘↩ (envoi), survol pointeur.
+- `PrivacyInfo.xcprivacy` (UserDefaults, CA92.1) : seul bloquant de `/ios-audit`, corrigé.
+- Mode démo debug `-MoraxDemo YES` (tableau d'exemple sans Mac appairé) ; captures
+  `screenshots/ipad-*.png`. `scripts/test.sh` (paquet + iPhone + iPad), `scripts/archive.sh`.
+- Bundle `com.morax.emdashmobile` : reprend la fiche App Store Connect de l'ancienne coque
+  web (renommée « Morax Code » par l'API). Le jeton d'un appareil appairé avec l'ancien bundle
+  `com.morax.moraxcode` (simulateur seulement) n'est pas repris : réappairer.
+
 ## Reste (bloqué / suites)
 
-- TestFlight : hors périmètre (consigne : pas d'envoi TestFlight / App Store).
 - Notifications dans l'app native : APNs (clé APNs du compte développeur) ; d'ici là, la PWA
   sur l'écran d'accueil reçoit les notifications.
 - Réception push réelle sur iPhone, projet SSH et ACP à confirmer sur l'appareil.

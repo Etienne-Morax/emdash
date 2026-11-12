@@ -8,6 +8,7 @@ struct TaskScreen: View {
   let projectId: String
   let taskId: String
   @Environment(AppModel.self) private var model
+  @Environment(\.horizontalSizeClass) private var sizeClass
   @State private var selected: String?
   /// Bumped to rebuild the terminal, which re-hydrates (resumes) the agent.
   @State private var generation = 0
@@ -23,7 +24,8 @@ struct TaskScreen: View {
     ZStack {
       QuietBackground().ignoresSafeArea()
       VStack(alignment: .leading, spacing: 12) {
-        OfflineBanner()
+        // On iPad the sidebar already shows it.
+        if sizeClass != .regular { OfflineBanner() }
         if let row = model.board.first(where: { $0.taskId == taskId }) {
           HStack {
             StatusPill(status: row.status)

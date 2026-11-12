@@ -157,6 +157,7 @@ struct ChatPanel: View {
           Button { Task { await session.cancel() } } label: {
             Image(systemName: "stop.circle.fill").font(.title)
           }
+          .keyboardShortcut(".", modifiers: .command)
           .accessibilityLabel("Stop")
         }
         Button {
@@ -167,6 +168,7 @@ struct ChatPanel: View {
         } label: {
           Image(systemName: "arrow.up.circle.fill").font(.title)
         }
+        .keyboardShortcut(.return, modifiers: .command)
         .accessibilityLabel("Send")
       }
     }

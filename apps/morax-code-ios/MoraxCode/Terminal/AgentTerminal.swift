@@ -100,18 +100,26 @@ final class TerminalSession {
 
 struct TerminalHost: UIViewRepresentable {
   let session: TerminalSession
+  /// Larger text where there is room (iPad, wide windows): fewer, readable columns.
+  var fontSize: CGFloat = Self.compactFontSize
+  static let compactFontSize: CGFloat = 11
+  static let regularFontSize: CGFloat = 13
 
   func makeUIView(context: Context) -> DisplayTerminalView {
     let view = DisplayTerminalView(frame: .zero)
     view.terminalDelegate = context.coordinator
     view.nativeBackgroundColor = UIColor(red: 0.03, green: 0.04, blue: 0.12, alpha: 1)
     view.nativeForegroundColor = UIColor(white: 0.92, alpha: 1)
-    view.font = UIFont.monospacedSystemFont(ofSize: 11, weight: .regular)
+    view.font = UIFont.monospacedSystemFont(ofSize: fontSize, weight: .regular)
     session.view = view
     return view
   }
 
-  func updateUIView(_ view: DisplayTerminalView, context: Context) {}
+  func updateUIView(_ view: DisplayTerminalView, context: Context) {
+    if view.font.pointSize != fontSize {
+      view.font = UIFont.monospacedSystemFont(ofSize: fontSize, weight: .regular)
+    }
+  }
 
   func makeCoordinator() -> Coordinator { Coordinator(session: session) }
 
@@ -142,11 +150,13 @@ struct TerminalPanel: View {
   @State var session: TerminalSession
   @State private var draft = ""
   @FocusState private var composerFocused: Bool
+  @Environment(\.horizontalSizeClass) private var sizeClass
 
   var body: some View {
     VStack(spacing: 10) {
       ZStack {
-        TerminalHost(session: session)
+        TerminalHost(session: session, fontSize: sizeClass == .regular
+            ? TerminalHost.regularFontSize : TerminalHost.compactFontSize)
           .clipShape(.rect(cornerRadius: 14))
         switch session.state {
         case .starting: ProgressView("Starting the agent…")
@@ -179,6 +189,8 @@ struct TerminalPanel: View {
         } label: {
           Image(systemName: "arrow.up.circle.fill").font(.title)
         }
+        // Hardware keyboards (iPad): ⌘↩ sends, Return stays a new line in the composer.
+        .keyboardShortcut(.return, modifiers: .command)
         .accessibilityLabel("Send")
       }
     }

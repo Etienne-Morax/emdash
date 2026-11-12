@@ -3,7 +3,8 @@
 Native SwiftUI client for Emdash's Mobile access gateway (fork-only). Setup, security model and
 limits: [docs/fork/mobile-remote/README.md](../../docs/fork/mobile-remote/README.md).
 
-- iOS 26, Swift 6 strict concurrency, Observation.
+- iOS 26, Swift 6 strict concurrency, Observation. Universal: iPhone (navigation stack) and
+  iPad (sidebar + detail on regular widths, any window size, ⌘N new task, ⌘↩ send).
 - `Packages/MoraxWire`: `MoraxWire` (Wire client: frames, calls, live states with Immer
   patches, live logs, event streams, live jobs) and `MoraxCodeKit` (gateway access, pairing,
   models, task board, status rules, new-task input). No UI; `swift test` runs in seconds.
@@ -33,20 +34,37 @@ cd apps/morax-code-ios/Packages/MoraxWire && swift test
 ```
 
 ```bash
-cd apps/morax-code-ios && xcodebuild -project MoraxCode.xcodeproj -scheme MoraxCode -destination 'platform=iOS Simulator,name=iPhone 18 Pro' test
+cd apps/morax-code-ios && scripts/test.sh
 ```
+
+`scripts/test.sh` runs the package tests, then the app's tests on an iPhone and an iPad simulator
+(`IPHONE_SIM` / `IPAD_SIM` override the names).
 
 SwiftTerm compiles a Metal shader: on a fresh Xcode, run `xcodebuild -downloadComponent MetalToolchain` once.
 
 `MoraxCodeUITests` drives the app against a live, already paired dev desktop and creates a real
 task; it is skipped unless `MORAX_LIVE_DESKTOP=1` is set. Debug builds accept a
 `-MoraxOpenURL <moraxcode://…>` launch argument (pairing link, `moraxcode://task/<project>/<task>`,
-`moraxcode://new`) for scripted screenshots.
+`moraxcode://new`) for scripted screenshots, and `-MoraxDemo YES` shows a sample board without a
+paired Mac (layout checks, screenshots).
 
-## Install on an iPhone
+## Install on an iPhone or iPad
 
-Open `MoraxCode.xcodeproj`, select your iPhone, Run. Signing is automatic with the personal team
-(`DEVELOPMENT_TEAM` in `project.yml`). Nothing is uploaded to TestFlight or the App Store.
+Open `MoraxCode.xcodeproj`, select the device, Run. Signing is automatic with the team
+(`DEVELOPMENT_TEAM` in `project.yml`).
+
+## TestFlight
+
+The bundle id `com.morax.emdashmobile` continues the App Store Connect record created for the
+former web shell (renamed "Morax Code"). The internal group "Etienne" gets every build.
+
+```bash
+cd apps/morax-code-ios && scripts/archive.sh --upload
+```
+
+The build number is the commit count of `HEAD` (commit first). Signing and upload use the team
+API key in `~/.appstoreconnect/speaklikejess.env` (`ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY_PATH`).
+Run `/ios-audit` first: zero blockers.
 
 ## TODO: remote push (APNs)
 

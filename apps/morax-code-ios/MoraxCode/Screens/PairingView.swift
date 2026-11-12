@@ -13,6 +13,7 @@ struct PairingView: View {
   @State private var error: String?
   @State private var isPairing = false
   @State private var isScanning = false
+  private static let maxContentWidth: CGFloat = 560
 
   var body: some View {
     ZStack {
@@ -64,12 +65,15 @@ struct PairingView: View {
           VStack(alignment: .leading, spacing: 10) {
             Label("On the Mac: Emdash → Settings → Interface → Mobile access.", systemImage: "1.circle")
             Label("Publish it on your tailnet: tailscale serve --bg --https=8443 http://127.0.0.1:7781", systemImage: "2.circle")
-            Label("Keep Tailscale on, then Pair a phone and scan the code.", systemImage: "3.circle")
+            Label("Keep Tailscale on, then Pair a device and scan the code.", systemImage: "3.circle")
           }
           .font(.callout)
           .foregroundStyle(.secondary)
         }
         .padding(20)
+        // Readable column on iPad and in wide windows.
+        .frame(maxWidth: Self.maxContentWidth)
+        .frame(maxWidth: .infinity)
       }
     }
     .tint(Palette.accent)

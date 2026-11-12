@@ -20,6 +20,7 @@ struct NewTaskScreen: View {
   @State private var error: String?
   @State private var refsFollower: LiveStateFollower?
   private let suffix = NewTask.randomSuffix()
+  private static let maxFormWidth: CGFloat = 720
 
   private var options: [BaseBranch] { NewTask.baseBranches(refs: refs) }
   private var base: BaseBranch? {
@@ -62,6 +63,9 @@ struct NewTaskScreen: View {
       }
     }
     .scrollContentBackground(.hidden)
+    // Readable column on iPad and in wide windows.
+    .frame(maxWidth: Self.maxFormWidth)
+    .frame(maxWidth: .infinity)
     .background(QuietBackground().ignoresSafeArea())
     .navigationTitle("New task")
     .task { await load() }
