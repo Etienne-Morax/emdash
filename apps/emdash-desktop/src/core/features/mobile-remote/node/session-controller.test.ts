@@ -78,6 +78,7 @@ describe('mobile session controller', () => {
           branchPrefix: '',
           appendRandomBranchSuffix: true,
         }),
+        colors: async () => ({ projects: {}, machines: {}, localMachine: '#000' }),
         pullRequests: {
           forBranch: async () => ({ success: true, data: { prs: [] } }),
           create: async () => ({ success: true, data: { url: 'u', number: 1 } }),
@@ -265,6 +266,7 @@ describe('mobile session controller', () => {
           branchPrefix: '',
           appendRandomBranchSuffix: true,
         }),
+        colors: async () => ({ projects: {}, machines: {}, localMachine: '#000' }),
         pullRequests: {
           forBranch: async () => ({ success: true, data: { prs: [] } }),
           create: async () => ({ success: true, data: { url: 'u', number: 1 } }),
@@ -316,6 +318,7 @@ describe('mobile review endpoints', () => {
           branchPrefix: '',
           appendRandomBranchSuffix: true,
         }),
+        colors: async () => ({ projects: {}, machines: {}, localMachine: '#000' }),
         pullRequests: {
           forBranch: async () => ({ success: true, data: { prs: [] } }),
           create,

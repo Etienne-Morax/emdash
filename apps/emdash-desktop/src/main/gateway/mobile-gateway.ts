@@ -11,6 +11,7 @@ import { machinesContract } from '@core/features/machines/api/contract';
 import { mobileWireContract } from '@core/features/mobile-remote/api/mobile-contract';
 import type { MobileAppearance, MobileMachine } from '@core/features/mobile-remote/api/schemas';
 import { createMobileAuditLog } from '@core/features/mobile-remote/node/audit-log';
+import { resolveMobileColors } from '@core/features/mobile-remote/node/colors';
 import { createMobileDeviceRegistry } from '@core/features/mobile-remote/node/device-registry';
 import { startMobileHttpServer } from '@core/features/mobile-remote/node/mobile-http-server';
 import {
@@ -126,6 +127,17 @@ export function createMobileGateway(options: {
         branchPrefix: project.branchPrefix,
         appendRandomBranchSuffix: project.appendRandomBranchSuffix,
       };
+    },
+    async colors(request) {
+      const [settings, remote] = await Promise.all([
+        options.appSettings.get('interface'),
+        desktop.machines.getMachines(),
+      ]);
+      return resolveMobileColors({
+        request,
+        machineIds: remote.map((machine) => machine.id),
+        overrides: { projectColors: settings.projectColors, machineColors: settings.machineColors },
+      });
     },
     async appearance(): Promise<MobileAppearance> {
       const settings = await options.appSettings.get('interface');

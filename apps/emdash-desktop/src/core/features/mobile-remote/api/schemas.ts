@@ -114,3 +114,23 @@ export type MobilePullRequest = z.infer<typeof mobilePullRequestSchema>;
 export const mobilePullRequestErrorSchema = z.object({ message: z.string() });
 
 export type MobilePullRequestError = z.infer<typeof mobilePullRequestErrorSchema>;
+
+/** Most projects the phone may ask colours for in one call. */
+export const MOBILE_COLORS_MAX_PROJECTS = 500;
+
+/** Projects whose colours the phone needs (ids and paths from the live project list). */
+export const mobileColorsInputSchema = z.object({
+  projects: z
+    .array(z.object({ id: z.string().min(1).max(200), path: z.string().max(4_096).optional() }))
+    .max(MOBILE_COLORS_MAX_PROJECTS),
+});
+
+/** Resolved colours (CSS hex for dark surfaces), so the phone never re-implements the rules. */
+export const mobileColorsSchema = z.object({
+  projects: z.record(z.string(), z.string()),
+  machines: z.record(z.string(), z.string()),
+  localMachine: z.string(),
+});
+
+export type MobileColors = z.infer<typeof mobileColorsSchema>;
+export type MobileColorsInput = z.infer<typeof mobileColorsInputSchema>;

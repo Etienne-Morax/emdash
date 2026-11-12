@@ -1,0 +1,54 @@
+{
+  "endpoints": {
+    "procedures": [
+      "mobile.session",
+      "mobile.machines",
+      "mobile.appearance",
+      "mobile.taskDefaults",
+      "mobile.colors",
+      "mobile.pullRequests.forBranch",
+      "mobile.pullRequests.create",
+      "tasks.createTask",
+      "tasks.generateTaskName",
+      "agents.listMetadata",
+      "sourceControl.repository.getDefaultBranch",
+      "sourceControl.checkout.getChangedFiles",
+      "sourceControl.checkout.getFile",
+      "sourceControl.checkout.getLog",
+      "conversations.getConversationsForProject",
+      "conversations.markConversationSeen",
+      "conversations.hydrateConversation",
+      "conversations.tui.sendInput",
+      "conversations.tui.resize",
+      "conversations.tui.stop",
+      "conversations.acp.sendPrompt",
+      "conversations.acp.cancelTurn",
+      "conversations.acp.resolvePermission",
+      "conversations.acp.loadHistory"
+    ],
+    "liveStates": {
+      "projectList": "projects.projectList.list",
+      "taskList": "tasks.taskList.list",
+      "hostAvailability": "hosts.availability.state",
+      "branchRefs": "sourceControl.repository.model.refs",
+      "checkoutHead": "sourceControl.checkout.model.head",
+      "acpSession": "conversations.acp.session.state"
+    },
+    "liveLogs": {
+      "terminalOutput": "conversations.tui.output"
+    },
+    "eventStreams": {
+      "conversationEvents": "conversations.events"
+    },
+    "liveJobs": {
+      "provision": {
+        "path": "workspaces.provision",
+        "topic": "workspaces.provision"
+      },
+      "publish": {
+        "path": "sourceControl.checkout.publish",
+        "topic": "sourceControl.checkout.publish"
+      }
+    }
+  }
+}

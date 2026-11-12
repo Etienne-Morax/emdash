@@ -1,0 +1,6 @@
+*.xcodeproj
+.build/
+build/
+DerivedData/
+xcuserdata/
+Packages/MoraxWire/.swiftpm/

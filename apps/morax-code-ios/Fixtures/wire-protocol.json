@@ -1,0 +1,332 @@
+{
+  "session": [
+    {
+      "from": "client",
+      "message": {
+        "kind": "call",
+        "id": "id-1",
+        "path": "greet",
+        "input": {
+          "name": "phone"
+        }
+      },
+      "frame": "00000000437b226b696e64223a2263616c6c222c226964223a2269642d31222c2270617468223a226772656574222c22696e707574223a7b226e616d65223a2270686f6e65227d7d"
+    },
+    {
+      "from": "server",
+      "message": {
+        "kind": "result",
+        "id": "id-1",
+        "ok": true,
+        "value": "hello phone"
+      },
+      "frame": "000000003d7b226b696e64223a22726573756c74222c226964223a2269642d31222c226f6b223a747275652c2276616c7565223a2268656c6c6f2070686f6e65227d"
+    },
+    {
+      "from": "client",
+      "message": {
+        "kind": "call",
+        "id": "id-2",
+        "path": "greet",
+        "input": {
+          "name": ""
+        }
+      },
+      "frame": "000000003e7b226b696e64223a2263616c6c222c226964223a2269642d32222c2270617468223a226772656574222c22696e707574223a7b226e616d65223a22227d7d"
+    },
+    {
+      "from": "server",
+      "message": {
+        "kind": "result",
+        "id": "id-2",
+        "ok": true,
+        "value": "hello "
+      },
+      "frame": "00000000387b226b696e64223a22726573756c74222c226964223a2269642d32222c226f6b223a747275652c2276616c7565223a2268656c6c6f20227d"
+    },
+    {
+      "from": "client",
+      "message": {
+        "kind": "snapshot",
+        "id": "id-3",
+        "topic": "board.list|{\"id\":\"b1\"}"
+      },
+      "frame": "00000000447b226b696e64223a22736e617073686f74222c226964223a2269642d33222c22746f706963223a22626f6172642e6c6973747c7b5c2269645c223a5c2262315c227d227d"
+    },
+    {
+      "from": "server",
+      "message": {
+        "kind": "result",
+        "id": "id-3",
+        "ok": true,
+        "value": {
+          "generation": 0,
+          "sequence": 0,
+          "timestamp": 0,
+          "data": {
+            "items": [
+              {
+                "id": "a",
+                "title": "Read the plan",
+                "done": false
+              }
+            ]
+          }
+        }
+      },
+      "frame": "000000009e7b226b696e64223a22726573756c74222c226964223a2269642d33222c226f6b223a747275652c2276616c7565223a7b2267656e65726174696f6e223a302c2273657175656e6365223a302c2274696d657374616d70223a302c2264617461223a7b226974656d73223a5b7b226964223a2261222c227469746c65223a22526561642074686520706c616e222c22646f6e65223a66616c73657d5d7d7d7d"
+    },
+    {
+      "from": "client",
+      "message": {
+        "kind": "attach",
+        "id": "id-4",
+        "topic": "board.list|{\"id\":\"b1\"}"
+      },
+      "frame": "00000000427b226b696e64223a22617474616368222c226964223a2269642d34222c22746f706963223a22626f6172642e6c6973747c7b5c2269645c223a5c2262315c227d227d"
+    },
+    {
+      "from": "server",
+      "message": {
+        "kind": "result",
+        "id": "id-4",
+        "ok": true
+      },
+      "frame": "00000000277b226b696e64223a22726573756c74222c226964223a2269642d34222c226f6b223a747275657d"
+    },
+    {
+      "from": "server",
+      "message": {
+        "kind": "update",
+        "topic": "board.list|{\"id\":\"b1\"}",
+        "update": {
+          "generation": 0,
+          "baseSequence": 0,
+          "sequence": 1,
+          "timestamp": 0,
+          "delta": [
+            {
+              "op": "add",
+              "path": [
+                "items",
+                1
+              ],
+              "value": {
+                "id": "b",
+                "title": "Ship it",
+                "done": false
+              }
+            }
+          ]
+        }
+      },
+      "frame": "00000000d87b226b696e64223a22757064617465222c22746f706963223a22626f6172642e6c6973747c7b5c2269645c223a5c2262315c227d222c22757064617465223a7b2267656e65726174696f6e223a302c226261736553657175656e6365223a302c2273657175656e6365223a312c2274696d657374616d70223a302c2264656c7461223a5b7b226f70223a22616464222c2270617468223a5b226974656d73222c315d2c2276616c7565223a7b226964223a2262222c227469746c65223a2253686970206974222c22646f6e65223a66616c73657d7d5d7d7d"
+    },
+    {
+      "from": "server",
+      "message": {
+        "kind": "update",
+        "topic": "board.list|{\"id\":\"b1\"}",
+        "update": {
+          "generation": 0,
+          "baseSequence": 1,
+          "sequence": 2,
+          "timestamp": 0,
+          "delta": [
+            {
+              "op": "replace",
+              "path": [
+                "items",
+                0,
+                "done"
+              ],
+              "value": true
+            },
+            {
+              "op": "replace",
+              "path": [
+                "items",
+                1,
+                "title"
+              ],
+              "value": "Ship it — émoji 🚀"
+            }
+          ]
+        }
+      },
+      "frame": "000000010c7b226b696e64223a22757064617465222c22746f706963223a22626f6172642e6c6973747c7b5c2269645c223a5c2262315c227d222c22757064617465223a7b2267656e65726174696f6e223a302c226261736553657175656e6365223a312c2273657175656e6365223a322c2274696d657374616d70223a302c2264656c7461223a5b7b226f70223a227265706c616365222c2270617468223a5b226974656d73222c302c22646f6e65225d2c2276616c7565223a747275657d2c7b226f70223a227265706c616365222c2270617468223a5b226974656d73222c312c227469746c65225d2c2276616c7565223a225368697020697420e2809420c3a96d6f6a6920f09f9a80227d5d7d7d"
+    },
+    {
+      "from": "server",
+      "message": {
+        "kind": "update",
+        "topic": "board.list|{\"id\":\"b1\"}",
+        "update": {
+          "generation": 0,
+          "baseSequence": 2,
+          "sequence": 3,
+          "timestamp": 0,
+          "delta": [
+            {
+              "op": "replace",
+              "path": [
+                "items",
+                0
+              ],
+              "value": {
+                "id": "b",
+                "title": "Ship it — émoji 🚀",
+                "done": false
+              }
+            },
+            {
+              "op": "remove",
+              "path": [
+                "items",
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "frame": "000000010f7b226b696e64223a22757064617465222c22746f706963223a22626f6172642e6c6973747c7b5c2269645c223a5c2262315c227d222c22757064617465223a7b2267656e65726174696f6e223a302c226261736553657175656e6365223a322c2273657175656e6365223a332c2274696d657374616d70223a302c2264656c7461223a5b7b226f70223a227265706c616365222c2270617468223a5b226974656d73222c305d2c2276616c7565223a7b226964223a2262222c227469746c65223a225368697020697420e2809420c3a96d6f6a6920f09f9a80222c22646f6e65223a66616c73657d7d2c7b226f70223a2272656d6f7665222c2270617468223a5b226974656d73222c315d7d5d7d7d"
+    },
+    {
+      "from": "client",
+      "message": {
+        "kind": "snapshot",
+        "id": "id-5",
+        "topic": "output|{\"id\":\"t1\"}"
+      },
+      "frame": "00000000407b226b696e64223a22736e617073686f74222c226964223a2269642d35222c22746f706963223a226f75747075747c7b5c2269645c223a5c2274315c227d227d"
+    },
+    {
+      "from": "server",
+      "message": {
+        "kind": "result",
+        "id": "id-5",
+        "ok": true,
+        "value": {
+          "generation": 0,
+          "sequence": 1,
+          "timestamp": 0,
+          "data": {
+            "baseOffset": 0,
+            "text": "$ claude\r\n",
+            "truncated": false
+          }
+        }
+      },
+      "frame": "000000009b7b226b696e64223a22726573756c74222c226964223a2269642d35222c226f6b223a747275652c2276616c7565223a7b2267656e65726174696f6e223a302c2273657175656e6365223a312c2274696d657374616d70223a302c2264617461223a7b22626173654f6666736574223a302c2274657874223a222420636c617564655c725c6e222c227472756e6361746564223a66616c73657d7d7d"
+    },
+    {
+      "from": "client",
+      "message": {
+        "kind": "attach",
+        "id": "id-6",
+        "topic": "output|{\"id\":\"t1\"}"
+      },
+      "frame": "000000003e7b226b696e64223a22617474616368222c226964223a2269642d36222c22746f706963223a226f75747075747c7b5c2269645c223a5c2274315c227d227d"
+    },
+    {
+      "from": "server",
+      "message": {
+        "kind": "result",
+        "id": "id-6",
+        "ok": true
+      },
+      "frame": "00000000277b226b696e64223a22726573756c74222c226964223a2269642d36222c226f6b223a747275657d"
+    },
+    {
+      "from": "server",
+      "message": {
+        "kind": "update",
+        "topic": "output|{\"id\":\"t1\"}",
+        "update": {
+          "generation": 0,
+          "baseSequence": 1,
+          "sequence": 2,
+          "timestamp": 0,
+          "delta": {
+            "chunk": "\u001b[32mready\u001b[0m\r\n"
+          }
+        }
+      },
+      "frame": "00000000a97b226b696e64223a22757064617465222c22746f706963223a226f75747075747c7b5c2269645c223a5c2274315c227d222c22757064617465223a7b2267656e65726174696f6e223a302c226261736553657175656e6365223a312c2273657175656e6365223a322c2274696d657374616d70223a302c2264656c7461223a7b226368756e6b223a225c75303031625b33326d72656164795c75303031625b306d5c725c6e227d7d7d"
+    },
+    {
+      "from": "client",
+      "message": {
+        "kind": "attach",
+        "id": "id-7",
+        "topic": "events"
+      },
+      "frame": "000000002e7b226b696e64223a22617474616368222c226964223a2269642d37222c22746f706963223a226576656e7473227d"
+    },
+    {
+      "from": "server",
+      "message": {
+        "kind": "result",
+        "id": "id-7",
+        "ok": true
+      },
+      "frame": "00000000277b226b696e64223a22726573756c74222c226964223a2269642d37222c226f6b223a747275657d"
+    },
+    {
+      "from": "server",
+      "message": {
+        "kind": "update",
+        "topic": "events",
+        "update": {
+          "generation": 0,
+          "baseSequence": 0,
+          "sequence": 1,
+          "timestamp": 0,
+          "delta": {
+            "event": {
+              "type": "agent-status",
+              "id": "c1"
+            }
+          }
+        }
+      },
+      "frame": "000000009c7b226b696e64223a22757064617465222c22746f706963223a226576656e7473222c22757064617465223a7b2267656e65726174696f6e223a302c226261736553657175656e6365223a302c2273657175656e6365223a312c2274696d657374616d70223a302c2264656c7461223a7b226576656e74223a7b2274797065223a226167656e742d737461747573222c226964223a226331227d7d7d7d"
+    },
+    {
+      "from": "client",
+      "message": {
+        "kind": "detach",
+        "topic": "board.list|{\"id\":\"b1\"}"
+      },
+      "frame": "00000000367b226b696e64223a22646574616368222c22746f706963223a22626f6172642e6c6973747c7b5c2269645c223a5c2262315c227d227d"
+    },
+    {
+      "from": "client",
+      "message": {
+        "kind": "detach",
+        "topic": "output|{\"id\":\"t1\"}"
+      },
+      "frame": "00000000327b226b696e64223a22646574616368222c22746f706963223a226f75747075747c7b5c2269645c223a5c2274315c227d227d"
+    },
+    {
+      "from": "client",
+      "message": {
+        "kind": "detach",
+        "topic": "events"
+      },
+      "frame": "00000000227b226b696e64223a22646574616368222c22746f706963223a226576656e7473227d"
+    }
+  ],
+  "final": {
+    "board": {
+      "items": [
+        {
+          "id": "b",
+          "title": "Ship it — émoji 🚀",
+          "done": false
+        }
+      ]
+    },
+    "output": "$ claude\r\n\u001b[32mready\u001b[0m\r\n"
+  }
+}

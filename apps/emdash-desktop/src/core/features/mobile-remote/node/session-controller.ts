@@ -13,6 +13,8 @@ import {
 } from '../api/mobile-contract';
 import type {
   MobileAppearance,
+  MobileColors,
+  MobileColorsInput,
   MobileDevice,
   MobileDeviceSession,
   MobileMachine,
@@ -29,6 +31,7 @@ export type MobileLocalOperations = {
   machines(): Promise<MobileMachine[]>;
   appearance(): Promise<MobileAppearance>;
   taskDefaults(): Promise<MobileTaskDefaults>;
+  colors(input: MobileColorsInput): Promise<MobileColors>;
   pullRequests: {
     forBranch(input: {
       projectId: string;
@@ -74,6 +77,7 @@ export function createMobileSessionController(options: {
         machines: () => local.machines(),
         appearance: () => local.appearance(),
         taskDefaults: () => local.taskDefaults(),
+        colors: (input) => local.colors(input),
         pullRequests: {
           forBranch: (input) => local.pullRequests.forBranch(input),
           create: (input) => local.pullRequests.create(input),
