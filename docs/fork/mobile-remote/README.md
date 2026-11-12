@@ -28,7 +28,10 @@ iPhone (app sur l'écran d'accueil)
 4. **Appairer** : sur le bureau, *Pair a phone* affiche un code de 8 caractères (10 min,
    usage unique). Le saisir dans l'app. Le téléphone reçoit un jeton d'appareil (cookie
    `HttpOnly`) ; le bureau n'en garde que le hash, dans le stockage chiffré.
-5. **Révoquer** : *Revoke* à côté de l'appareil dans la même carte. Ses connexions ouvertes
+5. **Notifications** : dans l'app installée, *Turn on notifications* (iOS 16.4+, uniquement
+   depuis l'écran d'accueil). Une notification arrive quand un agent attend une réponse ou a
+   fini ; la toucher ouvre la tâche.
+6. **Révoquer** : *Revoke* à côté de l'appareil dans la même carte. Ses connexions ouvertes
    sont coupées immédiatement. Désactiver *Mobile access* arrête la passerelle.
 
 Pour couper la publication : `tailscale serve reset`.

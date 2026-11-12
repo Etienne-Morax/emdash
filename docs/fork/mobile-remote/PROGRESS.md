@@ -90,9 +90,28 @@ Worktree : `~/Developer/Projects/emdash-mobile`, branche `feat/mobile-remote` is
   le prompt. Non vérifié en réel : projet SSH (même appel `createTask`), ACP (aucun agent ACP
   connecté dans l'environnement de test).
 
+### Phase 4 — Notifications
+
+- Web Push VAPID implémenté sur `node:crypto` (`node/web-push.ts`) plutôt qu'avec `web-push`
+  (5 dépendances transitives pour ~150 lignes) : chiffrement aes128gcm RFC 8291 vérifié
+  **octet pour octet** contre le vecteur de l'annexe A, JWT ES256 vérifié.
+- Clés VAPID et abonnements dans le secret store chiffré ; abonnements liés à l'appareil,
+  supprimés à la révocation et quand le service push répond 404/410 ; 4 au plus par appareil.
+- Anti-SSRF : le bureau ne POSTe qu'aux services push connus (`*.push.apple.com`,
+  `fcm.googleapis.com`, `*.push.services.mozilla.com`, `*.notify.windows.com`), https, sans
+  port ni identifiants.
+- Sink `mobile-push` branché sur le domaine `notifications` existant : `agent-attention`
+  (en attente de réponse) et `agent-complete` (terminé), lien vers la tâche, `tag` par
+  conversation. Le service de notifications livre désormais aussi les sinks « distants »
+  indépendamment du focus et du son du bureau.
+- PWA : carte « Turn on notifications » (geste requis par iOS ; message dédié hors écran
+  d'accueil ou permission refusée), resynchronisation de l'abonnement à chaque démarrage,
+  `push` / `notificationclick` dans le service worker (ouvre la tâche).
+- Non vérifié en réel : réception sur un iPhone (WebKit headless n'a pas de service push).
+
 ## En cours
 
-- Phase 4 : notifications.
+- App iOS native (coque) et TestFlight.
 
 ## Reste
 

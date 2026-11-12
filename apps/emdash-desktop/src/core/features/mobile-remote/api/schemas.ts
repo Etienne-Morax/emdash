@@ -31,7 +31,6 @@ export const mobileRemoteStatusSchema = z.object({
   error: z.string().nullable(),
   pairing: mobilePairingSchema.nullable(),
   devices: z.array(mobileDeviceSchema),
-  pushConfigured: z.boolean(),
 });
 
 export type MobileRemoteStatus = z.infer<typeof mobileRemoteStatusSchema>;

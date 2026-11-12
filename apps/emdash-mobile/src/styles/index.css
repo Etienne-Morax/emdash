@@ -571,3 +571,16 @@ a {
   appearance: none;
   -webkit-appearance: none;
 }
+
+.push-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--morax-space-s);
+  border-radius: var(--morax-radius-tile);
+}
+
+.push-card p {
+  flex: 1 1 200px;
+  margin: 0;
+}

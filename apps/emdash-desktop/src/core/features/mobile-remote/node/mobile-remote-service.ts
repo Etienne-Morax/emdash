@@ -72,7 +72,6 @@ const INITIAL_STATUS: MobileRemoteStatus = {
   error: null,
   pairing: null,
   devices: [],
-  pushConfigured: false,
 };
 
 /**
