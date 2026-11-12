@@ -73,6 +73,11 @@ describe('mobile session controller', () => {
         desktopName: () => 'MacBook Pro',
         machines: async () => [{ id: 'local', kind: 'local', name: 'MacBook Pro' }],
         appearance: async () => ({ projectColors: {}, machineColors: {}, localMachineName: 'x' }),
+        taskDefaults: async () => ({
+          defaultAgent: 'claude',
+          branchPrefix: '',
+          appendRandomBranchSuffix: true,
+        }),
       },
     });
     return { controller, calls: desktop.calls, entries };
@@ -239,6 +244,11 @@ describe('mobile session controller', () => {
         desktopName: () => 'x',
         machines: async () => [],
         appearance: async () => ({ projectColors: {}, machineColors: {}, localMachineName: 'x' }),
+        taskDefaults: async () => ({
+          defaultAgent: 'claude',
+          branchPrefix: '',
+          appendRandomBranchSuffix: true,
+        }),
       },
     });
 

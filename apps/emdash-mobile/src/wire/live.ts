@@ -61,3 +61,18 @@ export function useBranchRefs(projectId: string | null) {
 }
 
 export type ProjectListModel = RemoteModel<typeof contract.projects.projectList>;
+
+const acpSessionModel = lazy(() =>
+  remote(contract.conversations.acp.session, getLink().client.conversations.acp.session, {
+    lingerMs: LINGER_MS,
+  })
+);
+
+export function useAcpSession(conversationId: string) {
+  return useRemoteModelState(
+    contract.conversations.acp.session,
+    acpSessionModel,
+    { conversationId },
+    'state'
+  );
+}

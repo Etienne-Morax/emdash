@@ -74,6 +74,17 @@ export function createMobileGateway(options: {
         })),
       ];
     },
+    async taskDefaults() {
+      const [defaultAgent, project] = await Promise.all([
+        options.appSettings.get('defaultAgent'),
+        options.appSettings.get('project'),
+      ]);
+      return {
+        defaultAgent,
+        branchPrefix: project.branchPrefix,
+        appendRandomBranchSuffix: project.appendRandomBranchSuffix,
+      };
+    },
     async appearance(): Promise<MobileAppearance> {
       const settings = await options.appSettings.get('interface');
       return {

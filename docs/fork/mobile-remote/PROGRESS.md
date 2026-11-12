@@ -67,9 +67,32 @@ Worktree : `~/Developer/Projects/emdash-mobile`, branche `feat/mobile-remote` is
   401 sans jeton / faux jeton / mauvaise origine, 200 après appairage ; WebKit iPhone 15 Pro :
   appairage puis liste. Captures dans `screenshots/`.
 
+### Phase 3 — Interagir et lancer
+
+- Terminal de l'agent : xterm.js + `ReplicaLog` sur `conversations.tui.output` (même chemin
+  que le bureau, `createXtermLogSink` réutilisé), `disableStdin` (pas de saisie directe : la
+  dictée iOS duplique des mots dans xterm), barre Esc/Tab/⇧Tab/flèches/^C/⏎, compositeur
+  séparé (texte puis Entrée à part, ponctuation iOS normalisée). Le téléphone prend la taille
+  du PTY tant qu'il le regarde (les TUI se redessinent).
+- Avant d'hydrater : job `workspaces.provision` (ce que fait `TaskManagerStore.provisionTask`
+  à l'ouverture d'une tâche) — sans lui `hydrateConversation` échoue.
+- Conversation par défaut = règle de la grille (`pickTaskGridConversation`), onglets si
+  plusieurs, « Stop agent » (`tui.stop`) / « Resume » (ré-hydratation).
+- ACP allégé : transcription récente (`loadHistory`), demandes de permission avec leurs
+  options (`resolvePermission`), envoi de prompt, Stop (`cancelTurn`).
+- Créer une tâche : projet (avec sa machine) → branche de base (refs live + branche par
+  défaut) → agent (`agents.listMetadata`, défaut du bureau) → prompt → `tasks.createTask`
+  (nouveau worktree sur nouvelle branche, nommage préfixe + suffixe comme le bureau,
+  `tasks.generateTaskName`) puis provisionnement. Contrat élargi : `mobile.taskDefaults`,
+  `agents.listMetadata`, `tasks.generateTaskName` (entrées bornées), `workspaces.provision`.
+- Vérifié (WebKit iPhone, tailnet) : terminal live d'une tâche existante, message envoyé et
+  soumis à Claude Code ; tâche créée depuis le téléphone → worktree + Claude Code lancé avec
+  le prompt. Non vérifié en réel : projet SSH (même appel `createTask`), ACP (aucun agent ACP
+  connecté dans l'environnement de test).
+
 ## En cours
 
-- Phase 3 : terminal + compositeur, ACP, création de tâche.
+- Phase 4 : notifications.
 
 ## Reste
 
