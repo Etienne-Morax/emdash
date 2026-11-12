@@ -24,6 +24,7 @@ struct NewTaskScreen: View {
   /// Bumped by each branch load; a slower, superseded load drops its result.
   @State private var branchLoad = 0
   private static let branchTimeout: Duration = .seconds(15)
+  private static let agentsError = "The agents did not load. Go back and open New task again."
   private let suffix = NewTask.randomSuffix()
   private static let maxFormWidth: CGFloat = 720
 
@@ -81,21 +82,34 @@ struct NewTaskScreen: View {
     .frame(maxWidth: .infinity)
     .background(QuietBackground().ignoresSafeArea())
     .navigationTitle("New task")
-    .task { await load() }
+    // Re-runs when the app comes back online (the screen can open before or while offline).
+    .task(id: model.phase) { await load() }
+    // Projects can arrive after the screen opens: pick the first one then.
+    .onChange(of: model.projects.map(\.id), initial: true) { _, ids in
+      if !ids.contains(projectId) { projectId = ids.first ?? "" }
+    }
     .onChange(of: projectId) { Task { await loadBranches() } }
     // The connection was replaced (reconnect): the branch follower died with the old one.
     .onChange(of: model.phase) { _, phase in
-      if phase == .online, refs == nil { Task { await loadBranches() } }
+      if phase == .online, refs == nil, !projectId.isEmpty { Task { await loadBranches() } }
     }
     .onDisappear { Task { await refsFollower?.stop() } }
   }
 
   private func load() async {
-    guard let connection = model.connection else { return }
-    if projectId.isEmpty, let first = model.projects.first { projectId = first.id }
-    agents = (try? await connection.call("agents.listMetadata").decode()) ?? []
-    defaults = try? await connection.call("mobile.taskDefaults").decode()
+    guard model.phase == .online, let connection = model.connection else { return }
+    if agents.isEmpty {
+      agents = (try? await connection.call("agents.listMetadata").decode()) ?? []
+    }
+    if defaults == nil {
+      defaults = try? await connection.call("mobile.taskDefaults").decode()
+    }
     if provider.isEmpty { provider = defaults?.defaultAgent ?? agents.first?.id ?? "" }
+    if defaults == nil || agents.isEmpty {
+      error = Self.agentsError
+    } else if error == Self.agentsError {
+      error = nil
+    }
   }
 
   private func loadBranches() async {
@@ -107,7 +121,8 @@ struct NewTaskScreen: View {
     defaultBranch = nil
     baseId = ""
     branchError = nil
-    guard let connection = model.connection, !projectId.isEmpty else {
+    guard !projectId.isEmpty else { return }  // Waiting for the project list.
+    guard let connection = model.connection else {
       branchError = "Emdash is out of reach. Try again once it is back."
       return
     }
