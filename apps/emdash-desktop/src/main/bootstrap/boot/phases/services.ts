@@ -181,7 +181,7 @@ export type ServicesBundle = {
   readonly account: ReturnType<typeof createEmdashAccountService>;
   readonly automations: AutomationsService;
   readonly fleet: ReturnType<typeof createFleetOverview>;
-  readonly mobileRemote: ReturnType<typeof createMobileGateway>;
+  readonly mobileRemote: ReturnType<typeof createMobileGateway>['source'];
   readonly github: {
     cliImport: GitHubCliAccountImportService;
     legacyTokenImport: GitHubLegacyTokenImportStep;
@@ -230,7 +230,7 @@ export async function bootServices(
     secrets: encryptedAppSecretsStore,
     logger: log,
   });
-  const mobileRemote = createMobileGateway({
+  const mobileGateway = createMobileGateway({
     scope: appScope,
     appSettings: appSettingsService,
     secrets: encryptedAppSecretsStore,
@@ -501,6 +501,7 @@ export async function bootServices(
     logger: log,
     createSystemSink: createSystemNotificationSink,
   });
+  notificationService.registerSink(mobileGateway.pushSink);
   const legacyAccountImports = new LegacyAccountImports(db, plaintextSecrets, log);
   const legacyIntegrationAccounts = new LegacyIntegrationAccountsMigration(
     db,
@@ -896,7 +897,7 @@ export async function bootServices(
     taskSessions: taskSessionManager,
     usage,
     fleet,
-    mobileRemote,
+    mobileRemote: mobileGateway.source,
     workspacePlacement,
     conversationSync,
     reconcileSweep,

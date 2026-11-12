@@ -174,6 +174,36 @@ describe('NotificationService', () => {
     );
   });
 
+  it('delivers to remote sinks even when the desktop routes nothing to system or sound', async () => {
+    const clock = new ManualClock();
+    const systemSink = { id: 'system', deliver: vi.fn() };
+    const failingSink = { id: 'broken', deliver: vi.fn(() => Promise.reject(new Error('down'))) };
+    const remoteSink = { id: 'mobile-push', deliver: vi.fn() };
+    service = new NotificationService({
+      store: new MemoryNotificationStore(),
+      clock,
+      routingContext: () => ({
+        ...routingContext(),
+        appFocused: true,
+        settings: { ...routingContext().settings, enabled: false },
+      }),
+      batchWindowMs: 1,
+    });
+    service.registerSink(systemSink);
+    service.registerSink(failingSink);
+    service.registerSink(remoteSink);
+
+    const id = service.publish(input());
+    clock.runAll();
+
+    await vi.waitFor(() =>
+      expect(remoteSink.deliver).toHaveBeenCalledWith(
+        expect.objectContaining({ notification: expect.objectContaining({ id }) })
+      )
+    );
+    expect(systemSink.deliver).not.toHaveBeenCalled();
+  });
+
   it('emits delivery stream events', () => {
     service = new NotificationService({
       store: new MemoryNotificationStore(),

@@ -20,12 +20,17 @@ import {
 } from '@core/features/mobile-remote/node/mobile-remote-service';
 import { createPairingManager } from '@core/features/mobile-remote/node/pairing';
 import {
+  createMobilePushService,
+  createMobilePushSink,
+} from '@core/features/mobile-remote/node/push-service';
+import {
   createMobileSessionController,
   type MobileLocalOperations,
 } from '@core/features/mobile-remote/node/session-controller';
 import { detectTailscaleIdentity } from '@core/features/mobile-remote/node/tailscale';
 import { shortComputerName } from '@core/primitives/color-coding/api/color-coding';
 import type { SecretStore } from '@core/primitives/secrets/api/secret-store';
+import type { NotificationSink } from '@core/services/notifications/api/ports';
 import type { AppSettingsService } from '@core/services/settings/node';
 import { createLazyRoutingController } from './desktop-wire';
 
@@ -47,7 +52,7 @@ export function createMobileGateway(options: {
   appSettings: AppSettingsService;
   secrets: SecretStore;
   logger: Logger;
-}): MobileRemoteSource {
+}): { source: MobileRemoteSource; pushSink: NotificationSink } {
   const scope = options.scope.child('mobile-gateway');
   const upstream = createInProcessWire(mobileWireContract, createLazyRoutingController());
   scope.add(() => upstream.dispose());
@@ -60,6 +65,25 @@ export function createMobileGateway(options: {
       options.logger.warn('mobile-remote: audit write failed', { error: String(error) }),
   });
   const computerName = readComputerName();
+  const push = createMobilePushService({
+    secrets: options.secrets,
+    devices,
+    logger: options.logger,
+  });
+  // A revoked phone stops receiving notifications at once.
+  let knownDeviceIds = new Set<string>();
+  scope.add(
+    devices.onChange(() => {
+      void devices.list().then((list) => {
+        const current = new Set(list.map((device) => device.id));
+        for (const id of knownDeviceIds) if (!current.has(id)) void push.removeDevice(id);
+        knownDeviceIds = current;
+      });
+    })
+  );
+  void devices.list().then((list) => {
+    knownDeviceIds = new Set(list.map((device) => device.id));
+  });
 
   const local: MobileLocalOperations = {
     desktopName: () => computerName.current,
@@ -73,6 +97,11 @@ export function createMobileGateway(options: {
           name: machine.name,
         })),
       ];
+    },
+    push: {
+      publicKey: () => push.publicKey(),
+      subscribe: (deviceId, subscription) => push.subscribe(deviceId, subscription),
+      unsubscribe: (deviceId, endpoint) => push.unsubscribe(deviceId, endpoint),
     },
     async taskDefaults() {
       const [defaultAgent, project] = await Promise.all([
@@ -95,7 +124,7 @@ export function createMobileGateway(options: {
     },
   };
 
-  return createMobileRemoteService({
+  const source = createMobileRemoteService({
     scope,
     settings: createMobileRemoteSettingsPort(options.appSettings),
     devices,
@@ -108,6 +137,12 @@ export function createMobileGateway(options: {
     startServer: startMobileHttpServer,
     logger: options.logger,
   });
+  const pushSink = createMobilePushSink({
+    push,
+    isEnabled: async () => (await options.appSettings.get('mobileRemote')).enabled,
+    logger: options.logger,
+  });
+  return { source, pushSink };
 }
 
 /**

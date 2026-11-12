@@ -11,6 +11,7 @@ import type {
   MobileDevice,
   MobileDeviceSession,
   MobileMachine,
+  MobilePushSubscription,
   MobileTaskDefaults,
 } from '../api/schemas';
 import type { MobileAuditLog } from './audit-log';
@@ -21,6 +22,11 @@ export type MobileLocalOperations = {
   machines(): Promise<MobileMachine[]>;
   appearance(): Promise<MobileAppearance>;
   taskDefaults(): Promise<MobileTaskDefaults>;
+  push: {
+    publicKey(): Promise<string>;
+    subscribe(deviceId: string, subscription: MobilePushSubscription): Promise<void>;
+    unsubscribe(deviceId: string, endpoint: string): Promise<void>;
+  };
 };
 
 /**
@@ -52,6 +58,11 @@ export function createMobileSessionController(options: {
         machines: () => local.machines(),
         appearance: () => local.appearance(),
         taskDefaults: () => local.taskDefaults(),
+        push: {
+          publicKey: async () => ({ publicKey: await local.push.publicKey() }),
+          subscribe: (subscription) => local.push.subscribe(device.id, subscription),
+          unsubscribe: ({ endpoint }) => local.push.unsubscribe(device.id, endpoint),
+        },
       },
     },
     // Inputs are always validated, in every environment: they come from the network.

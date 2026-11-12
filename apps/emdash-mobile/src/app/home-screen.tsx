@@ -10,6 +10,7 @@ import {
   ScreenHeader,
   StatusPill,
 } from './components';
+import { PushCard } from './push-card';
 import { navigate, routeHref } from './router';
 import { useDesktopInfo, useTaskBoard } from './use-board';
 import { useLinkState } from './use-link-state';
@@ -53,6 +54,7 @@ export function HomeScreen() {
         }
       />
       <LinkBanner link={link} />
+      {link === 'online' && <PushCard />}
 
       {machines.length > 0 && (
         <section aria-label="Machines">

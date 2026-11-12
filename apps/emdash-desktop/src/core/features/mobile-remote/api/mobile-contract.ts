@@ -13,6 +13,7 @@ import {
   mobileAppearanceSchema,
   mobileDeviceSessionSchema,
   mobileMachineSchema,
+  mobilePushSubscriptionSchema,
   mobileTaskDefaultsSchema,
 } from './schemas';
 
@@ -112,6 +113,18 @@ export const mobileWireContract = defineContract({
     machines: procedure({ input: z.void().optional(), output: z.array(mobileMachineSchema) }),
     appearance: procedure({ input: z.void().optional(), output: mobileAppearanceSchema }),
     taskDefaults: procedure({ input: z.void().optional(), output: mobileTaskDefaultsSchema }),
+    push: defineContract({
+      /** VAPID application server key for `pushManager.subscribe`. */
+      publicKey: procedure({
+        input: z.void().optional(),
+        output: z.object({ publicKey: z.string() }),
+      }),
+      subscribe: procedure({ input: mobilePushSubscriptionSchema, output: z.void() }),
+      unsubscribe: procedure({
+        input: z.object({ endpoint: z.string().url().max(2_048) }),
+        output: z.void(),
+      }),
+    }),
   }),
   projects: defineContract({
     projectList: liveModel({

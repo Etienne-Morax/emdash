@@ -78,6 +78,11 @@ describe('mobile session controller', () => {
           branchPrefix: '',
           appendRandomBranchSuffix: true,
         }),
+        push: {
+          publicKey: async () => 'k',
+          subscribe: async () => {},
+          unsubscribe: async () => {},
+        },
       },
     });
     return { controller, calls: desktop.calls, entries };
@@ -249,6 +254,11 @@ describe('mobile session controller', () => {
           branchPrefix: '',
           appendRandomBranchSuffix: true,
         }),
+        push: {
+          publicKey: async () => 'k',
+          subscribe: async () => {},
+          unsubscribe: async () => {},
+        },
       },
     });
 
