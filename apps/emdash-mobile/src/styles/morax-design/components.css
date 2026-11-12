@@ -1,0 +1,139 @@
+/* Morax components for the web. Requires tokens.css (imported by index.css). */
+.morax-root {
+  font-family: var(--morax-font);
+  color: var(--morax-ink);
+  background: var(--morax-quiet);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Signature backdrop for home / dashboard screens (static: CSS has no animated mesh). */
+.morax-mesh {
+  background: var(--morax-mesh);
+  background-attachment: fixed;
+  min-height: 100dvh;
+}
+
+.morax-quiet {
+  background: var(--morax-quiet);
+  min-height: 100dvh;
+}
+
+/* Liquid Glass approximation: translucent surface + blur + hairline + inner highlight. */
+.morax-glass {
+  background: var(--morax-glass);
+  border: 1px solid var(--morax-glass-border);
+  border-radius: var(--morax-radius-card);
+  box-shadow: var(--morax-glass-shadow);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  padding: var(--morax-spacing-card-padding);
+}
+
+/* Domain tints: add next to .morax-glass. */
+.morax-tint-accent {
+  background: color-mix(in srgb, var(--morax-accent) 16%, var(--morax-glass));
+  border-color: color-mix(in srgb, var(--morax-accent) 40%, transparent);
+}
+.morax-tint-danger {
+  background: color-mix(in srgb, var(--morax-danger) 16%, var(--morax-glass));
+  border-color: color-mix(in srgb, var(--morax-danger) 40%, transparent);
+}
+.morax-tint-caution {
+  background: color-mix(in srgb, var(--morax-caution) 14%, var(--morax-glass));
+  border-color: color-mix(in srgb, var(--morax-caution) 40%, transparent);
+}
+.morax-tint-success {
+  background: color-mix(in srgb, var(--morax-success) 14%, var(--morax-glass));
+  border-color: color-mix(in srgb, var(--morax-success) 40%, transparent);
+}
+.morax-tint-calm {
+  background: color-mix(in srgb, var(--morax-calm) 14%, var(--morax-glass));
+  border-color: color-mix(in srgb, var(--morax-calm) 40%, transparent);
+}
+.morax-tint-violet {
+  background: color-mix(in srgb, var(--morax-violet) 14%, var(--morax-glass));
+  border-color: color-mix(in srgb, var(--morax-violet) 40%, transparent);
+}
+
+.morax-hero {
+  font-size: var(--morax-type-hero);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.morax-title {
+  font-size: var(--morax-type-title);
+  font-weight: 700;
+}
+.morax-headline {
+  font-size: var(--morax-type-headline);
+  font-weight: 600;
+}
+.morax-caption {
+  font-size: var(--morax-type-caption);
+  color: var(--morax-ink-secondary);
+}
+.morax-eyebrow {
+  font-size: var(--morax-type-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--morax-type-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--morax-ink-secondary);
+}
+
+.morax-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--morax-radius-pill);
+  background: var(--morax-glass);
+  border: 1px solid var(--morax-glass-border);
+  font-size: var(--morax-type-caption);
+}
+
+.morax-button-primary {
+  background: var(--morax-danger);
+  color: #fff;
+  font-weight: 700;
+  border: 0;
+  border-radius: var(--morax-radius-pill);
+  padding: 10px 18px;
+  cursor: pointer;
+}
+.morax-button-approve {
+  background: var(--morax-success);
+  color: rgb(6 38 26);
+  font-weight: 700;
+  border: 0;
+  border-radius: var(--morax-radius-pill);
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.morax-button-glass {
+  background: var(--morax-glass);
+  color: inherit;
+  border: 1px solid var(--morax-glass-border);
+  border-radius: var(--morax-radius-pill);
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.morax-button-primary:focus-visible,
+.morax-button-approve:focus-visible,
+.morax-button-glass:focus-visible {
+  outline: 2px solid var(--morax-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .morax-glass,
+  .morax-pill,
+  [class^='morax-button'] {
+    transition:
+      transform 150ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 150ms;
+  }
+  [class^='morax-button']:active {
+    transform: scale(0.97);
+  }
+}

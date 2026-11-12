@@ -180,5 +180,5 @@ function useSecondsUntil(deadline: number | null): number {
     const timer = setInterval(() => setNow(Date.now()), SECOND_MS);
     return () => clearInterval(timer);
   }, [deadline]);
-  return deadline === null ? 0 : Math.max(0, Math.ceil((deadline - now) / SECOND_MS));
+  return deadline === null ? 0 : Math.max(0, Math.floor((deadline - now) / SECOND_MS));
 }

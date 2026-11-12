@@ -8,7 +8,7 @@ Worktree : `~/Developer/Projects/emdash-mobile`, branche `feat/mobile-remote` is
 
 ## Fait
 
-### Phase 1 — Transport et passerelle (en cours de livraison)
+### Phase 1 — Transport et passerelle — mergée (Etienne-Morax/emdash#3)
 
 - `packages/wire` : codec de trames partagé (`frame-codec.ts`, extrait de `stream.ts`, même
   format binaire) et `webSocketTransport` / `openWebSocketTransport` (WHATWG `WebSocket` côté
@@ -44,20 +44,42 @@ Worktree : `~/Developer/Projects/emdash-mobile`, branche `feat/mobile-remote` is
 - Réglage `mobileRemote` (off par défaut) + carte Settings → Interface → *Mobile access*
   (statut, commande `tailscale serve`, code d'appairage, appareils, révocation).
 
+### Phase 2 — PWA lecture
+
+- `apps/emdash-mobile` (Vite + React 19 + TS strict), DA Morax vendorisée
+  (`src/styles/morax-design`, via `morax-design/scripts/apply.sh`) : nuit bleu-violet, cartes
+  de verre, ambre réservé à « en attente de réponse ». `@emdash/ui` écarté : la PWA reste légère
+  (195 Kio gzip) et partage contrats et helpers purs via l'alias `@core`.
+- Un seul fil Wire (`reconnectingTransport` + `openWebSocketTransport`), replicas live
+  (`projects.projectList`, `tasks.taskList`, `hosts.availability`) avec le hook du bureau
+  `useRemoteModelState`, index des conversations alimenté par `conversations.events`.
+- Statuts : logique extraite en fonctions pures
+  `core/primitives/agents/api/agent-status-rollup.ts` (utilisées par le store du bureau **et**
+  la PWA, plus de duplication) ; tri « en attente » d'abord (`taskAttentionRank`).
+- Écrans : appairage, accueil (machines en ligne/hors ligne, tâches de toutes les machines avec
+  puce machine et couleur projet), détail tâche (conversations + statut).
+- Manifest, icônes (rendues depuis `public/icon.svg` par `scripts/render-icons.mjs`),
+  service worker (coquille hors ligne, jamais `/api` ni `/wire`), safe areas.
+- Empaquetage : le build du bureau copie `apps/emdash-mobile/dist` dans `out/mobile`
+  (`scripts/copy-mobile-app.mjs`) ; en dev la passerelle sert `../emdash-mobile/dist`.
+- Vérifié : base et profil isolés, `--use-mock-keychain` (trousseau verrouillé dans les shells
+  d'agent), `tailscale serve --bg --https=8443 http://127.0.0.1:7781`, VM Debian du tailnet :
+  401 sans jeton / faux jeton / mauvaise origine, 200 après appairage ; WebKit iPhone 15 Pro :
+  appairage puis liste. Captures dans `screenshots/`.
+
 ## En cours
 
-- Phase 1 : porte locale, revue sécurité, PR.
+- Phase 3 : terminal + compositeur, ACP, création de tâche.
 
 ## Reste
 
-- Phase 2 : `apps/emdash-mobile` (Vite + React), écrans machines / projets / tâches.
 - Phase 3 : terminal xterm + compositeur, ACP, création de tâche.
 - Phase 4 : Web Push (VAPID) + notifications natives.
 - App iOS native (coque SwiftUI + WKWebView) et TestFlight — demandé par Etienne en cours de
   mission (« jusqu'à la mise en ligne sur TestFlight »).
 - QR d'appairage (pas de dépendance QR dans la pile ; encodeur maison prévu).
-- Vérification réelle : dev isolé, Playwright WebKit iPhone, `tailscale serve` puis
-  `tailscale serve reset`.
+- Fin de mission : `tailscale serve reset`, révoquer l'appareil de test « debian-vm test »,
+  supprimer le worktree de démo `~/emdash/worktrees/demo-repo-*` créé par le test.
 
 ## Décisions
 
