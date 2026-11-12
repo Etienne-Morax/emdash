@@ -17,8 +17,13 @@ function isIos(): boolean {
   return /iPad|iPhone|iPod/.test(navigator.userAgent);
 }
 
+/** True inside the native iOS shell (apps/emdash-ios), whose web view has no Web Push. */
+export function isNativeShell(userAgent: string = navigator.userAgent): boolean {
+  return /\bEmdashMobile\b/.test(userAgent);
+}
+
 export async function readPushState(): Promise<PushState> {
-  if (!('serviceWorker' in navigator)) return 'unsupported';
+  if (isNativeShell() || !('serviceWorker' in navigator)) return 'unsupported';
   if (!('PushManager' in window) || !('Notification' in window)) {
     return isIos() && !isStandalone() ? 'needs-install' : 'unsupported';
   }
