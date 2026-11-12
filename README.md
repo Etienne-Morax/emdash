@@ -57,6 +57,14 @@ upstream releases and offered upstream unchanged:
   renderer. Read only, polled every 20 s and only while the view is open
   (`apps/emdash-desktop/src/core/features/fleet/`).
 
+- **Mobile access** (Settings → Interface → *Mobile access*, off by default; fork-only):
+  drive Emdash and every machine it manages from the phone. The desktop serves a small
+  installable web app and an allowlisted Wire endpoint on `127.0.0.1`, published on the
+  tailnet only with `tailscale serve` (never `funnel`); phones pair with a one-time code and
+  can be revoked. Setup, security model and limits:
+  [docs/fork/mobile-remote/README.md](docs/fork/mobile-remote/README.md)
+  (`apps/emdash-desktop/src/core/features/mobile-remote/`).
+
 ### Syncing with upstream
 
 ```bash
