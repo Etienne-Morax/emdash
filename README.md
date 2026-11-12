@@ -63,7 +63,8 @@ upstream releases and offered upstream unchanged:
   tailnet only with `tailscale serve` (never `funnel`); phones pair with a one-time code and
   can be revoked. Setup, security model and limits:
   [docs/fork/mobile-remote/README.md](docs/fork/mobile-remote/README.md)
-  (`apps/emdash-desktop/src/core/features/mobile-remote/`).
+  (`apps/emdash-desktop/src/core/features/mobile-remote/`). Phone app:
+  `apps/emdash-mobile` (PWA); native iOS shell for TestFlight: `apps/emdash-ios`.
 
 ### Syncing with upstream
 
