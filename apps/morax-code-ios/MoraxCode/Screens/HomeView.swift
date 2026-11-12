@@ -4,6 +4,9 @@ import SwiftUI
 
 /// Every machine and every task of every project, waiting-for-you first.
 struct HomeView: View {
+  /// The route shown next to the list on iPad; nil on iPhone (the stack covers the list).
+  let selection: Route?
+  let open: (Route) -> Void
   @Environment(AppModel.self) private var model
   @State private var confirmForget = false
 
@@ -22,10 +25,14 @@ struct HomeView: View {
               message: "Start an agent with New task.")
           }
           ForEach(rows) { row in
-            NavigationLink(value: Route.task(projectId: row.projectId, taskId: row.taskId)) {
-              TaskCard(row: row)
+            let route = Route.task(projectId: row.projectId, taskId: row.taskId)
+            Button { open(route) } label: {
+              TaskCard(row: row, isSelected: selection == route)
             }
             .buttonStyle(.plain)
+            .contentShape(.hoverEffect, .rect(cornerRadius: MoraxTokens.Radius.card))
+            .hoverEffect(.highlight)
+            .accessibilityAddTraits(selection == route ? .isSelected : [])
           }
         }
         .padding(20)
@@ -34,17 +41,17 @@ struct HomeView: View {
     }
     .toolbar {
       ToolbarItem(placement: .topBarTrailing) {
-        NavigationLink(value: Route.newTask) { Label("New task", systemImage: "plus") }
+        Button { open(.newTask) } label: { Label("New task", systemImage: "plus") }
       }
       ToolbarItem(placement: .topBarLeading) {
         Menu {
-          Button("Unpair this iPhone", role: .destructive) { confirmForget = true }
+          Button("Unpair this device", role: .destructive) { confirmForget = true }
         } label: {
           Label("Settings", systemImage: "ellipsis.circle")
         }
       }
     }
-    .confirmationDialog("Unpair this iPhone?", isPresented: $confirmForget) {
+    .confirmationDialog("Unpair this device?", isPresented: $confirmForget) {
       Button("Unpair", role: .destructive) { Task { await model.forget() } }
     } message: {
       Text("The Mac revokes this device. Pair again with a new code.")
@@ -79,6 +86,7 @@ struct HomeView: View {
 
 struct TaskCard: View {
   let row: TaskBoardRow
+  var isSelected = false
 
   var body: some View {
     HStack(spacing: 12) {
@@ -95,6 +103,12 @@ struct TaskCard: View {
     }
     .padding(14)
     .glassCard(tint: row.status == .awaitingInput ? Palette.accent : nil, interactive: true)
+    .overlay {
+      if isSelected {
+        RoundedRectangle(cornerRadius: MoraxTokens.Radius.card)
+          .strokeBorder(Palette.accent, lineWidth: 2)
+      }
+    }
     .accessibilityElement(children: .combine)
   }
 }

@@ -68,6 +68,20 @@ final class AppModel {
     }
   }
 
+  #if DEBUG
+    /// Sample board, offline, for screenshots and layout checks (see `DemoData`).
+    func loadDemo() {
+      projects = DemoData.projects
+      tasksByProject = DemoData.tasks
+      conversations = Dictionary(uniqueKeysWithValues: DemoData.conversations.map { ($0.id, $0) })
+      machines = DemoData.machines
+      machineOnline = ["m5": true]
+      colors = DemoData.colors
+      localName = "MacBook Pro"
+      phase = .offline
+    }
+  #endif
+
   func pair(_ link: PairingLink) async throws {
     let token = try await GatewayHTTP(gateway: link.gateway)
       .pair(code: link.code, label: UIDevice.current.name)
