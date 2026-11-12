@@ -19,6 +19,11 @@ struct NewTaskScreen: View {
   @State private var busy = false
   @State private var error: String?
   @State private var refsFollower: LiveStateFollower?
+  /// Why the branch list is missing (failed or timed out), with a Retry action.
+  @State private var branchError: String?
+  /// Bumped by each branch load; a slower, superseded load drops its result.
+  @State private var branchLoad = 0
+  private static let branchTimeout: Duration = .seconds(15)
   private let suffix = NewTask.randomSuffix()
   private static let maxFormWidth: CGFloat = 720
 
@@ -40,9 +45,17 @@ struct NewTaskScreen: View {
         }
       }
       Section("Base branch") {
-        Picker("Base branch", selection: Binding(get: { base?.id ?? "" }, set: { baseId = $0 })) {
-          if options.isEmpty { Text(refs == nil ? "Loading…" : "No branch").tag("") }
-          ForEach(options) { option in Text(option.label).tag(option.id) }
+        if let branchError {
+          Text(branchError).foregroundStyle(Palette.dangerText)
+          Button("Retry") { Task { await loadBranches() } }
+        } else if options.isEmpty {
+          LabeledContent("Base branch") {
+            if refs == nil { ProgressView() } else { Text("No branch") }
+          }
+        } else {
+          Picker("Base branch", selection: Binding(get: { base?.id ?? "" }, set: { baseId = $0 })) {
+            ForEach(options) { option in Text(option.label).tag(option.id) }
+          }
         }
       }
       Section("Agent") {
@@ -70,6 +83,11 @@ struct NewTaskScreen: View {
     .navigationTitle("New task")
     .task { await load() }
     .onChange(of: projectId) { Task { await loadBranches() } }
+    // The connection was replaced (reconnect): the branch follower died with the old one.
+    .onChange(of: model.phase) { _, phase in
+      if phase == .online, refs == nil { Task { await loadBranches() } }
+    }
+    .onDisappear { Task { await refsFollower?.stop() } }
   }
 
   private func load() async {
@@ -81,20 +99,40 @@ struct NewTaskScreen: View {
   }
 
   private func loadBranches() async {
+    branchLoad += 1
+    let load = branchLoad
     await refsFollower?.stop()
+    refsFollower = nil
     refs = nil
     defaultBranch = nil
     baseId = ""
-    guard let connection = model.connection, !projectId.isEmpty else { return }
+    branchError = nil
+    guard let connection = model.connection, !projectId.isEmpty else {
+      branchError = "Emdash is out of reach. Try again once it is back."
+      return
+    }
     let follower = LiveStateFollower(
       connection: connection,
       topic: WireTopic.encode(MobileEndpoints.branchRefs, key: ["projectId": .string(projectId)])
-    ) { value in Task { @MainActor in refs = value } }
+    ) { value in Task { @MainActor in if load == branchLoad { refs = value } } }
     refsFollower = follower
-    try? await follower.start()
+    // The list arrives through the follower; a load that never answers ends in an error.
+    Task {
+      try? await Task.sleep(for: Self.branchTimeout)
+      if load == branchLoad, refs == nil, branchError == nil {
+        branchError = "The branches did not load."
+      }
+    }
+    do {
+      try await follower.start()
+    } catch {
+      if load == branchLoad { branchError = "The branches did not load: \(error.localizedDescription)" }
+      return
+    }
     if let data = try? await connection.callResult(
       "sourceControl.repository.getDefaultBranch",
-      ["projectId": .string(projectId), "remote": "origin"])
+      ["projectId": .string(projectId), "remote": "origin"]),
+      load == branchLoad
     {
       defaultBranch = data["branch"]?.stringValue
     }

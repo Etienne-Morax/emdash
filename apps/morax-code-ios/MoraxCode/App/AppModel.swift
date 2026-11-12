@@ -38,6 +38,19 @@ final class AppModel {
   private var eventsToken: UUID?
   private var retryDelay: Duration = .seconds(1)
   private var retryTask: Task<Void, Never>?
+  /// Bumped by every `connect()`; only the latest attempt may change the connection state.
+  private var connectAttempt = 0
+  private let makeTransport: @Sendable (URL, String) -> WireTransport
+
+  init(
+    pairing: Keychain.Pairing? = nil,
+    makeTransport: @escaping @Sendable (URL, String) -> WireTransport = {
+      WebSocketTransport(gateway: $0, token: $1)
+    }
+  ) {
+    self.pairing = pairing
+    self.makeTransport = makeTransport
+  }
 
   var board: [TaskBoardRow] {
     TaskBoard.rows(
@@ -60,7 +73,9 @@ final class AppModel {
   // MARK: Pairing
 
   func boot() async {
-    if let saved = Keychain.load() {
+    if pairing != nil {
+      await connect()
+    } else if let saved = Keychain.load() {
       pairing = saved
       await connect()
     } else {
@@ -92,6 +107,7 @@ final class AppModel {
   }
 
   func forget() async {
+    connectAttempt += 1  // The connection closed below must not trigger a reconnect.
     if let pairing { await GatewayHTTP(gateway: pairing.gateway).logout(token: pairing.token) }
     await teardown()
     Keychain.clear()
@@ -105,15 +121,25 @@ final class AppModel {
   func connect() async {
     retryTask?.cancel()
     guard let pairing else { return }
+    // Each attempt supersedes the previous ones: a slower attempt that resumes after a newer
+    // one started must not touch the state (two attempts run at launch: boot and foreground).
+    connectAttempt += 1
+    let attempt = connectAttempt
     await teardown()
-    let transport = WebSocketTransport(gateway: pairing.gateway, token: pairing.token)
-    let connection = WireConnection(transport: transport) { [weak self] in
-      Task { @MainActor in self?.connectionClosed() }
+    guard attempt == connectAttempt else { return }
+    let connection = WireConnection(transport: makeTransport(pairing.gateway, pairing.token)) {
+      [weak self] in
+      Task { @MainActor in self?.connectionClosed(attempt: attempt) }
     }
     await connection.start()
+    guard attempt == connectAttempt else {
+      await connection.close()
+      return
+    }
     self.connection = connection
     do {
       session = try await connection.call("mobile.session").decode()
+      guard attempt == connectAttempt else { return }
       retryDelay = .seconds(1)
       phase = .online
       await loadDesktopInfo()
@@ -129,12 +155,14 @@ final class AppModel {
         onGap: { [weak self] in Task { @MainActor in await self?.reloadConversations() } })
     } catch {
       // A refused upgrade closes the socket; the session check tells revoked from offline.
-      connectionClosed()
+      connectionClosed(attempt: attempt)
     }
   }
 
-  private func connectionClosed() {
-    guard pairing != nil, phase != .unpaired else { return }
+  /// The connection of `attempt` closed or failed. A connection this app closed itself (a
+  /// newer attempt replaced it) is ignored: reacting to it would start a reconnect loop.
+  private func connectionClosed(attempt: Int) {
+    guard attempt == connectAttempt, pairing != nil, phase != .unpaired else { return }
     connection = nil
     followers.removeAll()
     phase = .offline
@@ -168,7 +196,8 @@ final class AppModel {
 
   /// Reconnects at once when the app returns to the foreground.
   func resume() async {
-    guard pairing != nil, phase != .online else { return }
+    // Only from offline: at launch, `boot()` is already connecting (phase `.loading`).
+    guard pairing != nil, phase == .offline else { return }
     retryDelay = .seconds(1)
     await connect()
   }

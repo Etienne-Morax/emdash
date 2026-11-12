@@ -47,8 +47,11 @@ public enum ImmerPatch {
       if head.stringValue == "length", rest.isEmpty, op == "replace",
         let length = value?.numberValue
       {
+        // Bounded before converting: `Int(_:)` traps on NaN, infinity or an out-of-range value.
+        guard length >= 0, length <= Double(array.count), length.rounded() == length else {
+          throw PatchError.badPath
+        }
         let count = Int(length)
-        guard count >= 0, count <= array.count else { throw PatchError.badPath }
         return .array(Array(array.prefix(count)))
       }
       guard let index = arrayIndex(head, count: array.count, op: op, isLeaf: rest.isEmpty) else {
@@ -80,9 +83,9 @@ public enum ImmerPatch {
   private static func arrayIndex(_ key: JSONValue, count: Int, op: String, isLeaf: Bool) -> Int? {
     if key.stringValue == "-" { return count }
     let raw: Double? = key.numberValue ?? key.stringValue.flatMap(Double.init)
-    guard let raw, raw >= 0, raw.rounded() == raw else { return nil }
-    let index = Int(raw)
     let limit = (isLeaf && op == "add") ? count : count - 1
-    return index <= limit ? index : nil
+    // Bounded before converting: `Int(_:)` traps on an out-of-range value (e.g. 1e300).
+    guard let raw, raw >= 0, raw.rounded() == raw, raw <= Double(limit) else { return nil }
+    return Int(raw)
   }
 }
