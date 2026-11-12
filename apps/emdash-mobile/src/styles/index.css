@@ -379,3 +379,195 @@ a {
 .empty-state p {
   margin: 0;
 }
+
+/* Task screen: terminal, chat, composer */
+
+.task-screen {
+  min-height: 100dvh;
+}
+
+.session-actions,
+.conversation-tabs {
+  display: flex;
+  gap: var(--morax-space-s);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.conversation-tab {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--morax-space-s);
+  padding: 6px 12px;
+  border-radius: var(--morax-radius-pill);
+  border: 1px solid var(--morax-glass-border);
+  background: var(--morax-glass);
+  color: var(--morax-ink-secondary);
+}
+
+.conversation-tab.is-active {
+  color: var(--morax-ink);
+  border-color: color-mix(in srgb, var(--morax-accent) 55%, transparent);
+}
+
+.terminal-panel,
+.acp-panel {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--morax-space-s);
+  min-height: 0;
+}
+
+.terminal-host {
+  flex: 1;
+  min-height: 46dvh;
+  overflow: hidden;
+  border-radius: var(--morax-radius-tile);
+  background: #0e0b24;
+  border: 1px solid var(--morax-glass-border);
+}
+
+.terminal-host .xterm {
+  height: 100%;
+  padding: 6px;
+}
+
+.terminal-overlay {
+  position: absolute;
+  top: var(--morax-space-m);
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+}
+
+.key-bar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.key-button {
+  flex: none;
+  min-width: 44px;
+  min-height: 40px;
+  padding: 0 10px;
+  border-radius: var(--morax-radius-chip);
+  border: 1px solid var(--morax-glass-border);
+  background: var(--morax-glass);
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.key-button:active {
+  background: color-mix(in srgb, var(--morax-accent) 25%, var(--morax-glass));
+}
+
+.composer {
+  position: sticky;
+  bottom: calc(env(safe-area-inset-bottom) + 4px);
+  display: flex;
+  align-items: flex-end;
+  gap: var(--morax-space-s);
+}
+
+.composer-input {
+  flex: 1;
+  max-height: 30dvh;
+  resize: none;
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.prompt-input {
+  max-height: none;
+}
+
+/* Chat */
+
+.chat-lines {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--morax-space-s);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chat-message {
+  max-width: 88%;
+  padding: 10px 14px;
+  border-radius: var(--morax-radius-tile);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.chat-user {
+  align-self: flex-end;
+  background: color-mix(in srgb, var(--morax-calm) 22%, var(--morax-glass));
+}
+
+.chat-assistant {
+  align-self: flex-start;
+  background: var(--morax-glass);
+  border: 1px solid var(--morax-glass-border);
+}
+
+.chat-live {
+  opacity: 0.85;
+}
+
+.chat-tool {
+  padding-left: var(--morax-space-s);
+}
+
+.permission-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--morax-space-s);
+}
+
+.permission-card p {
+  margin: 0;
+}
+
+.permission-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--morax-space-s);
+}
+
+.button-approve {
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: var(--morax-radius-pill);
+  background: var(--morax-success);
+  color: rgb(6 38 26);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* New task */
+
+.new-task-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--morax-space-m);
+}
+
+.field-inline {
+  display: flex;
+  align-items: center;
+  gap: var(--morax-space-s);
+}
+
+.select-input {
+  appearance: none;
+  -webkit-appearance: none;
+}

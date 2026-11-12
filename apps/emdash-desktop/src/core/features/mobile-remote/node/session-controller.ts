@@ -11,6 +11,7 @@ import type {
   MobileDevice,
   MobileDeviceSession,
   MobileMachine,
+  MobileTaskDefaults,
 } from '../api/schemas';
 import type { MobileAuditLog } from './audit-log';
 
@@ -19,6 +20,7 @@ export type MobileLocalOperations = {
   desktopName(): string;
   machines(): Promise<MobileMachine[]>;
   appearance(): Promise<MobileAppearance>;
+  taskDefaults(): Promise<MobileTaskDefaults>;
 };
 
 /**
@@ -49,6 +51,7 @@ export function createMobileSessionController(options: {
         }),
         machines: () => local.machines(),
         appearance: () => local.appearance(),
+        taskDefaults: () => local.taskDefaults(),
       },
     },
     // Inputs are always validated, in every environment: they come from the network.

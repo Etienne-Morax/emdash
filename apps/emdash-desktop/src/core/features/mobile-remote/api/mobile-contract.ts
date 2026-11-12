@@ -1,13 +1,20 @@
 import { hostRefSchema } from '@emdash/core/primitives/host/api';
 import { defineContract, liveModel, procedure } from '@emdash/wire/rpc';
 import { z } from 'zod';
+import { agentsContract } from '@core/features/agents/api/contract';
 import { conversationsContract } from '@core/features/conversations/api/contract';
 import { projectsWireContract } from '@core/features/projects/api/wire-contract';
 import { sourceControlContract } from '@core/features/source-control/api/contract';
 import { tasksWireContract } from '@core/features/tasks/api/wire-contract';
+import { workspacesWireContract } from '@core/features/workspaces/api/wire-contract';
 import { hostsContract } from '@core/services/hosts/api/contract';
 import { notificationsContract } from '@core/services/notifications/api/contract';
-import { mobileAppearanceSchema, mobileDeviceSessionSchema, mobileMachineSchema } from './schemas';
+import {
+  mobileAppearanceSchema,
+  mobileDeviceSessionSchema,
+  mobileMachineSchema,
+  mobileTaskDefaultsSchema,
+} from './schemas';
 
 /**
  * The Wire contract the phone may call: an allowlist by construction.
@@ -104,6 +111,7 @@ export const mobileWireContract = defineContract({
     session: procedure({ input: z.void().optional(), output: mobileDeviceSessionSchema }),
     machines: procedure({ input: z.void().optional(), output: z.array(mobileMachineSchema) }),
     appearance: procedure({ input: z.void().optional(), output: mobileAppearanceSchema }),
+    taskDefaults: procedure({ input: z.void().optional(), output: mobileTaskDefaultsSchema }),
   }),
   projects: defineContract({
     projectList: liveModel({
@@ -122,10 +130,28 @@ export const mobileWireContract = defineContract({
       key: z.object({ projectId: z.string() }),
       states: { list: tasksWireContract.taskList.states.list },
     }),
+    generateTaskName: procedure({
+      input: z.object({
+        title: z.string().max(NAME_MAX_LENGTH).optional(),
+        description: z.string().max(MOBILE_PROMPT_MAX_LENGTH).optional(),
+      }),
+      output: tasksWireContract.generateTaskName.output,
+    }),
     createTask: procedure({
       input: mobileCreateTaskInputSchema,
       output: tasksWireContract.createTask.output,
     }),
+  }),
+  workspaces: defineContract({
+    /**
+     * Activates a task's workspace and session on its host, as the desktop does when a task
+     * is opened. Required before an agent can be hydrated.
+     */
+    provision: workspacesWireContract.provision,
+  }),
+  agents: defineContract({
+    /** Static plugin metadata (names, icons); identical on every host. */
+    listMetadata: agentsContract.listMetadata,
   }),
   sourceControl: defineContract({
     repository: defineContract({

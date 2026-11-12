@@ -76,6 +76,15 @@ export const mobileAppearanceSchema = z.object({
 
 export type MobileAppearance = z.infer<typeof mobileAppearanceSchema>;
 
+/** Desktop defaults the phone needs to fill the New task form like the desktop does. */
+export const mobileTaskDefaultsSchema = z.object({
+  defaultAgent: z.string(),
+  branchPrefix: z.string(),
+  appendRandomBranchSuffix: z.boolean(),
+});
+
+export type MobileTaskDefaults = z.infer<typeof mobileTaskDefaultsSchema>;
+
 /** Standard `PushSubscription.toJSON()` shape. */
 export const mobilePushSubscriptionSchema = z.object({
   endpoint: z
