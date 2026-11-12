@@ -1,6 +1,6 @@
 import { err, ok, type Result } from '@emdash/shared';
 
-/** HttpOnly cookie carrying the device token for the PWA (HTTP and WebSocket alike). */
+/** HttpOnly cookie the pairing response sets; the app reads it once and then sends `Bearer`. */
 export const DEVICE_TOKEN_COOKIE = 'emdash_mobile_token';
 /** Header `tailscale serve` adds with the tailnet user's login name. */
 export const TAILSCALE_USER_LOGIN_HEADER = 'tailscale-user-login';

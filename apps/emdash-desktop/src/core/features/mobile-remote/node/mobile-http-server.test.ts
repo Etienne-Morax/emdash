@@ -1,4 +1,4 @@
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { secret, type Secret } from '@emdash/shared';
@@ -16,11 +16,7 @@ import { z } from 'zod';
 import type { SecretStore } from '@core/primitives/secrets/api/secret-store';
 import { createMobileAuditLog, type MobileAuditLog } from './audit-log';
 import { createMobileDeviceRegistry, type MobileDeviceRegistry } from './device-registry';
-import {
-  startMobileHttpServer,
-  type MobileHttpServer,
-  resolveStaticFile,
-} from './mobile-http-server';
+import { startMobileHttpServer, type MobileHttpServer } from './mobile-http-server';
 import { createPairingManager, type PairingManager } from './pairing';
 
 const LOGIN = 'me@example.com';
@@ -56,11 +52,6 @@ describe('mobile HTTP gateway', () => {
 
   beforeEach(async () => {
     dir = await mkdtemp(join(tmpdir(), 'emdash-mobile-gateway-'));
-    const root = join(dir, 'app');
-    await mkdir(join(root, 'assets'), { recursive: true });
-    await writeFile(join(root, 'index.html'), '<!doctype html><title>Emdash</title>');
-    await writeFile(join(root, 'assets', 'app.js'), 'console.log(1)');
-    await writeFile(join(dir, 'secret.txt'), 'top secret');
     devices = createMobileDeviceRegistry({ secrets: memorySecrets() });
     pairing = createPairingManager();
     audit = createMobileAuditLog({ filePath: join(dir, 'audit.jsonl') });
@@ -75,7 +66,6 @@ describe('mobile HTTP gateway', () => {
       devices,
       pairing,
       audit,
-      staticRoot: root,
       createSessionController: (device) =>
         createController(probeContract, { whoami: () => device.label }),
     });
@@ -115,31 +105,16 @@ describe('mobile HTTP gateway', () => {
     });
   }
 
-  it('serves the app shell to the tailnet user only', async () => {
-    expect((await fetch(`${base}/`, { headers: tailnet })).status).toBe(200);
+  it('serves no page, and answers only the tailnet user', async () => {
+    const page = await fetch(`${base}/`, { headers: tailnet });
+    expect(page.status).toBe(404);
+    expect(page.headers.get('content-security-policy')).toContain("default-src 'none'");
+    expect((await fetch(`${base}/index.html`, { headers: tailnet })).status).toBe(404);
     expect((await fetch(`${base}/`)).status).toBe(401);
     expect(
       (await fetch(`${base}/`, { headers: { 'Tailscale-User-Login': 'intruder@example.com' } }))
         .status
     ).toBe(401);
-    const shell = await fetch(`${base}/tasks/abc`, { headers: tailnet });
-    expect(await shell.text()).toContain('<title>Emdash</title>');
-    expect(shell.headers.get('content-security-policy')).toContain("frame-ancestors 'none'");
-  });
-
-  it('never serves files outside the app directory', async () => {
-    const root = join(dir, 'app');
-    for (const path of [
-      '/../secret.txt',
-      '/%2e%2e/secret.txt',
-      '/assets/../../secret.txt',
-      '/.env',
-    ]) {
-      const file = await resolveStaticFile(root, path);
-      expect(file?.path ?? '').not.toContain('secret.txt');
-    }
-    const response = await fetch(`${base}/%2e%2e/secret.txt`, { headers: tailnet });
-    expect(await response.text()).not.toContain('top secret');
   });
 
   it('pairs a device with a one-time code and opens an authenticated Wire session', async () => {

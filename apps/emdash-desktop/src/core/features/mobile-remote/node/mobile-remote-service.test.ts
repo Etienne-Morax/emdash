@@ -62,7 +62,6 @@ describe('mobile remote service', () => {
       devices,
       pairing: createPairingManager(),
       audit,
-      staticRoot: () => null,
       createSessionController: () => {
         throw new Error('unused');
       },
@@ -109,7 +108,6 @@ describe('mobile remote service', () => {
       devices,
       pairing: createPairingManager(),
       audit,
-      staticRoot: () => null,
       createSessionController: () => {
         throw new Error('unused');
       },

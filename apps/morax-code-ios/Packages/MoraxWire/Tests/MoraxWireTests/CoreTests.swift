@@ -139,7 +139,8 @@ final class ScriptedTransport: WireTransport, @unchecked Sendable {
     }
     transport.deliver(WireFrameCodec.encode(update(5, 6, 6)))
     transport.deliver(WireFrameCodec.encode(update(9, 10, 10)))  // gap: resync to n = 5
-    try await Task.sleep(for: .milliseconds(200))
+    // The gap resyncs to the server's snapshot (n = 5) after the patched value (n = 6).
+    try await waitUntil { values.all.count >= 3 }
     #expect(values.all.first == ["n": 5])
     #expect(values.all.contains(["n": 6]))
     #expect(values.all.last == ["n": 5])
@@ -159,5 +160,16 @@ final class Recorder: @unchecked Sendable {
     lock.lock()
     defer { lock.unlock() }
     return values
+  }
+}
+
+/// Polls `condition` until it holds or `timeout` passes (CI and simulators are slow).
+func waitUntil(
+  timeout: Duration = .seconds(5), _ condition: @Sendable () -> Bool
+) async throws {
+  let deadline = ContinuousClock.now + timeout
+  while !condition() {
+    guard ContinuousClock.now < deadline else { return }
+    try await Task.sleep(for: .milliseconds(20))
   }
 }

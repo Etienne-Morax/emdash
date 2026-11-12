@@ -1,5 +1,4 @@
 import { execFile } from 'node:child_process';
-import { existsSync } from 'node:fs';
 import { hostname } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
@@ -155,7 +154,6 @@ export function createMobileGateway(options: {
     devices,
     pairing: createPairingManager(),
     audit,
-    staticRoot: resolveMobileAppRoot,
     createSessionController: (device) =>
       createMobileSessionController({ upstream: upstream.client, device, local, audit }),
     detectTailscale: detectTailscaleIdentity,
@@ -168,22 +166,6 @@ export function createMobileGateway(options: {
     logger: options.logger,
   });
   return { source, pushSink };
-}
-
-/**
- * Built PWA location: `EMDASH_MOBILE_APP_DIR`, then the copy bundled next to the desktop
- * build (`out/mobile`), then the workspace build in development.
- */
-function resolveMobileAppRoot(): string | null {
-  const candidates = [
-    process.env['EMDASH_MOBILE_APP_DIR'],
-    join(app.getAppPath(), 'out', 'mobile'),
-    join(app.getAppPath(), '..', 'emdash-mobile', 'dist'),
-  ];
-  for (const candidate of candidates) {
-    if (candidate && existsSync(join(candidate, 'index.html'))) return candidate;
-  }
-  return null;
 }
 
 function readComputerName(): { current: string } {
