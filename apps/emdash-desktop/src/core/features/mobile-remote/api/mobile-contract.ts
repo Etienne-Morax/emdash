@@ -1,5 +1,6 @@
 import { hostRefSchema } from '@emdash/core/primitives/host/api';
-import { defineContract, liveModel, procedure } from '@emdash/wire/rpc';
+import { gitFilePathSchema } from '@emdash/core/runtimes/git/api';
+import { defineContract, fallible, liveJob, liveModel, procedure } from '@emdash/wire/rpc';
 import { z } from 'zod';
 import { agentsContract } from '@core/features/agents/api/contract';
 import { conversationsContract } from '@core/features/conversations/api/contract';
@@ -11,8 +12,12 @@ import { hostsContract } from '@core/services/hosts/api/contract';
 import { notificationsContract } from '@core/services/notifications/api/contract';
 import {
   mobileAppearanceSchema,
+  mobileColorsInputSchema,
+  mobileColorsSchema,
   mobileDeviceSessionSchema,
   mobileMachineSchema,
+  mobilePullRequestErrorSchema,
+  mobilePullRequestSchema,
   mobilePushSubscriptionSchema,
   mobileTaskDefaultsSchema,
 } from './schemas';
@@ -47,7 +52,18 @@ export const mobileBranchNameSchema = z
   .regex(/^[A-Za-z0-9._/+-]+$/)
   .refine((name) => !name.startsWith('-') && !name.includes('..'), 'invalid branch name');
 
-const remoteSchema = z.object({ name: mobileBranchNameSchema, url: z.string().max(2_048) });
+/**
+ * A git remote name. Never a path or URL: git reads an unknown `<remote>` argument as a
+ * repository location, so `/`, `:` and a leading `.` are refused.
+ */
+export const mobileRemoteNameSchema = z
+  .string()
+  .min(1)
+  .max(100)
+  .regex(/^[A-Za-z0-9_][A-Za-z0-9._-]*$/)
+  .refine((name) => !name.includes('..') && !name.endsWith('.lock'), 'invalid remote name');
+
+const remoteSchema = z.object({ name: mobileRemoteNameSchema, url: z.string().max(2_048) });
 
 /** The only workspace shape the phone creates: a new worktree on a new branch. */
 const mobileWorkspaceConfigSchema = z.object({
@@ -95,6 +111,47 @@ export const mobileCreateTaskInputSchema = z.object({
 
 export type MobileCreateTaskInput = z.infer<typeof mobileCreateTaskInputSchema>;
 
+/** Longest pull request title and description accepted from the phone. */
+export const MOBILE_PR_TITLE_MAX_LENGTH = 256;
+export const MOBILE_PR_BODY_MAX_LENGTH = 20_000;
+/** Most commits the phone may list in one call (to find a branch's merge base). */
+export const MOBILE_LOG_LIMIT_MAX = 500;
+
+/** A full or abbreviated commit id: never an option, a range or a revision expression. */
+const commitShaSchema = z.string().regex(/^[0-9a-f]{7,64}$/);
+
+/** A branch name only: not a full ref (`refs/tags/…`, `refs/stash`) nor a symbolic ref. */
+const reviewBranchNameSchema = mobileBranchNameSchema.refine(
+  (name) => !name.startsWith('refs/') && !/^(?:[A-Z_]*HEAD)$/.test(name),
+  'not a branch name'
+);
+
+/** The refs the phone may name when reading a checkout: branches and commits, no tags. */
+const mobileObjectRefSchema = z.discriminatedUnion('kind', [
+  z.object({
+    kind: z.literal('branch'),
+    branch: z.discriminatedUnion('type', [
+      z.object({ type: z.literal('local'), branch: reviewBranchNameSchema }),
+      z.object({ type: z.literal('remote'), branch: reviewBranchNameSchema, remote: remoteSchema }),
+    ]),
+  }),
+  z.object({ kind: z.literal('commit'), sha: commitShaSchema }),
+]);
+
+const workspaceKeySchema = z.object({ workspaceId: z.string().min(1) });
+
+/** Opens a pull request for a task branch; the repository is resolved by the desktop. */
+export const mobileCreatePullRequestInputSchema = z.object({
+  projectId: z.string().min(1),
+  head: mobileBranchNameSchema,
+  base: mobileBranchNameSchema,
+  title: z.string().trim().min(1).max(MOBILE_PR_TITLE_MAX_LENGTH),
+  body: z.string().max(MOBILE_PR_BODY_MAX_LENGTH).optional(),
+  draft: z.boolean(),
+});
+
+export type MobileCreatePullRequestInput = z.infer<typeof mobileCreatePullRequestInputSchema>;
+
 const conversationKeySchema = z.object({ conversationId: z.string().min(1) });
 const terminalSizeSchema = z.object({
   cols: z.number().int().min(1).max(TERMINAL_MAX_DIMENSION),
@@ -105,6 +162,7 @@ const HISTORY_PAGE_MAX = 200;
 const tui = conversationsContract.tui;
 const acp = conversationsContract.acp;
 const repository = sourceControlContract.repository;
+const checkout = sourceControlContract.checkout;
 
 export const mobileWireContract = defineContract({
   /** Served by the gateway itself, per paired device. */
@@ -113,6 +171,21 @@ export const mobileWireContract = defineContract({
     machines: procedure({ input: z.void().optional(), output: z.array(mobileMachineSchema) }),
     appearance: procedure({ input: z.void().optional(), output: mobileAppearanceSchema }),
     taskDefaults: procedure({ input: z.void().optional(), output: mobileTaskDefaultsSchema }),
+    /** Project and machine colours, resolved by the desktop (rules and Settings overrides). */
+    colors: procedure({ input: mobileColorsInputSchema, output: mobileColorsSchema }),
+    pullRequests: defineContract({
+      /** Pull requests whose head is `branch` in the project's repository. */
+      forBranch: fallible({
+        input: z.object({ projectId: z.string().min(1), branch: mobileBranchNameSchema }),
+        data: z.object({ prs: z.array(mobilePullRequestSchema) }),
+        error: mobilePullRequestErrorSchema,
+      }),
+      create: fallible({
+        input: mobileCreatePullRequestInputSchema,
+        data: z.object({ url: z.string(), number: z.number().int().positive() }),
+        error: mobilePullRequestErrorSchema,
+      }),
+    }),
     push: defineContract({
       /** VAPID application server key for `pushManager.subscribe`. */
       publicKey: procedure({
@@ -173,6 +246,51 @@ export const mobileWireContract = defineContract({
         states: { refs: repository.model.states.refs },
       }),
       getDefaultBranch: repository.getDefaultBranch,
+    }),
+    /** A task checkout, read-only except for publishing (never force-pushing) its branch. */
+    checkout: defineContract({
+      model: liveModel({ key: workspaceKeySchema, states: { head: checkout.model.states.head } }),
+      getChangedFiles: procedure({
+        input: workspaceKeySchema.extend({
+          target: z.discriminatedUnion('kind', [
+            z.object({ kind: z.literal('working-vs-head') }),
+            z.object({
+              kind: z.literal('merge-base'),
+              base: mobileObjectRefSchema,
+              head: mobileObjectRefSchema,
+            }),
+          ]),
+        }),
+        output: checkout.getChangedFiles.output,
+      }),
+      /** Committed content only (a git object): working-tree files are never read. */
+      getFile: procedure({
+        input: workspaceKeySchema.extend({
+          path: gitFilePathSchema,
+          source: z.discriminatedUnion('kind', [
+            z.object({ kind: z.literal('head') }),
+            z.object({ kind: z.literal('revision'), revision: mobileObjectRefSchema }),
+          ]),
+        }),
+        output: checkout.getFile.output,
+      }),
+      getLog: procedure({
+        input: workspaceKeySchema.extend({
+          options: z.object({
+            limit: z.number().int().min(1).max(MOBILE_LOG_LIMIT_MAX),
+            base: mobileObjectRefSchema,
+            head: mobileObjectRefSchema,
+          }),
+        }),
+        output: checkout.getLog.output,
+      }),
+      /** Pushes the task branch to `remote` under its own name and tracks it. Never forced. */
+      publish: liveJob({
+        input: workspaceKeySchema.extend({ remote: mobileRemoteNameSchema }).strict(),
+        progress: checkout.publish.progress,
+        result: checkout.publish.result,
+        error: checkout.publish.error,
+      }),
     }),
   }),
   conversations: defineContract({

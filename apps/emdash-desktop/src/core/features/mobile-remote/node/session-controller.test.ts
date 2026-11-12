@@ -78,6 +78,11 @@ describe('mobile session controller', () => {
           branchPrefix: '',
           appendRandomBranchSuffix: true,
         }),
+        colors: async () => ({ projects: {}, machines: {}, localMachine: '#000' }),
+        pullRequests: {
+          forBranch: async () => ({ success: true, data: { prs: [] } }),
+          create: async () => ({ success: true, data: { url: 'u', number: 1 } }),
+        },
         push: {
           publicKey: async () => 'k',
           subscribe: async () => {},
@@ -126,6 +131,11 @@ describe('mobile session controller', () => {
     ['conversations.tui.kill', { conversationId: 'c' }],
     ['updates.install', undefined],
     ['mcp.saveServer', {}],
+    ['pullRequests.createPullRequest', { repositoryUrl: 'https://github.com/x/y' }],
+    ['pullRequests.mergePullRequest', { repositoryUrl: 'https://github.com/x/y', number: 1 }],
+    ['sourceControl.checkout.blame', { workspaceId: 'w', path: 'a' }],
+    ['sourceControl.repository.listWorktrees', { projectId: 'p' }],
+    ['files.fs.readText', { uri: 'file:///etc/passwd' }],
   ])('refuses %s, which is outside the allowlist', async (path, input) => {
     const { controller, calls, entries } = setup();
 
@@ -146,6 +156,8 @@ describe('mobile session controller', () => {
       'mobileRemote.status.current',
       'tasks.taskList.rename',
       'agents.loginOutput|{"id":"x"}',
+      'sourceControl.checkout.model.commit',
+      'sourceControl.checkout.model.discardChanges',
     ]) {
       expect(() => controller.acquireLive(topic) ?? raise(topic)).toThrow();
     }
@@ -254,6 +266,11 @@ describe('mobile session controller', () => {
           branchPrefix: '',
           appendRandomBranchSuffix: true,
         }),
+        colors: async () => ({ projects: {}, machines: {}, localMachine: '#000' }),
+        pullRequests: {
+          forBranch: async () => ({ success: true, data: { prs: [] } }),
+          create: async () => ({ success: true, data: { url: 'u', number: 1 } }),
+        },
         push: {
           publicKey: async () => 'k',
           subscribe: async () => {},
@@ -272,3 +289,183 @@ describe('mobile session controller', () => {
 function raise(topic: string): never {
   throw new Error(`no lease for ${topic}`);
 }
+
+describe('mobile review endpoints', () => {
+  const disposers: Array<() => Promise<void>> = [];
+  afterEach(async () => {
+    for (const dispose of disposers.splice(0)) await dispose();
+  });
+
+  function setup() {
+    const desktop = fakeDesktop();
+    const upstream = createInProcessWire(mobileWireContract, desktop.controller);
+    disposers.push(() => upstream.dispose());
+    const { audit } = memoryAudit();
+    const create = vi.fn(async () => ({
+      success: true as const,
+      data: { url: 'https://github.com/o/r/pull/7', number: 7 },
+    }));
+    const controller = createMobileSessionController({
+      upstream: upstream.client,
+      device,
+      audit,
+      local: {
+        desktopName: () => 'Mac',
+        machines: async () => [],
+        appearance: async () => ({ projectColors: {}, machineColors: {}, localMachineName: 'x' }),
+        taskDefaults: async () => ({
+          defaultAgent: 'claude',
+          branchPrefix: '',
+          appendRandomBranchSuffix: true,
+        }),
+        colors: async () => ({ projects: {}, machines: {}, localMachine: '#000' }),
+        pullRequests: {
+          forBranch: async () => ({ success: true, data: { prs: [] } }),
+          create,
+        },
+        push: {
+          publicKey: async () => 'k',
+          subscribe: async () => {},
+          unsubscribe: async () => {},
+        },
+      },
+    });
+    return { controller, calls: desktop.calls, create };
+  }
+
+  const mainBranch = {
+    kind: 'branch',
+    branch: { type: 'remote', branch: 'main', remote: { name: 'origin', url: 'git@x:o/r' } },
+  };
+
+  it('forwards read-only checkout calls', async () => {
+    const { controller, calls } = setup();
+
+    await controller.call('sourceControl.checkout.getChangedFiles', {
+      workspaceId: 'w1',
+      target: { kind: 'merge-base', base: mainBranch, head: { kind: 'commit', sha: 'abc1234' } },
+    });
+    await controller.call('sourceControl.checkout.getFile', {
+      workspaceId: 'w1',
+      path: 'src/app.ts',
+      source: { kind: 'revision', revision: { kind: 'commit', sha: 'abc1234' } },
+    });
+
+    expect(calls.map((call) => call.path)).toEqual([
+      'sourceControl.checkout.getChangedFiles',
+      'sourceControl.checkout.getFile',
+    ]);
+  });
+
+  it.each([
+    ['a path leaving the checkout', { path: '../../etc/passwd', source: { kind: 'head' } }],
+    ['an absolute path', { path: '/etc/passwd', source: { kind: 'head' } }],
+    [
+      'a revision that reads as an option',
+      {
+        path: 'a.ts',
+        source: { kind: 'revision', revision: { kind: 'commit', sha: '--output=x' } },
+      },
+    ],
+    [
+      'a full ref as a branch',
+      {
+        path: 'a.ts',
+        source: {
+          kind: 'revision',
+          revision: { kind: 'branch', branch: { type: 'local', branch: 'refs/stash' } },
+        },
+      },
+    ],
+    [
+      'a symbolic ref as a branch',
+      {
+        path: 'a.ts',
+        source: {
+          kind: 'revision',
+          revision: { kind: 'branch', branch: { type: 'local', branch: 'FETCH_HEAD' } },
+        },
+      },
+    ],
+    [
+      'a tag revision',
+      { path: 'a.ts', source: { kind: 'revision', revision: { kind: 'tag', name: 'v1' } } },
+    ],
+  ])('rejects getFile with %s before it reaches the desktop', async (_name, input) => {
+    const { controller, calls } = setup();
+
+    await expect(
+      controller.call('sourceControl.checkout.getFile', { workspaceId: 'w1', ...input })
+    ).rejects.toBeDefined();
+    expect(calls).toEqual([]);
+  });
+
+  it('rejects a working-tree diff against an arbitrary ref', async () => {
+    const { controller, calls } = setup();
+
+    await expect(
+      controller.call('sourceControl.checkout.getChangedFiles', {
+        workspaceId: 'w1',
+        target: { kind: 'working-vs-ref', ref: mainBranch },
+      })
+    ).rejects.toBeDefined();
+    expect(calls).toEqual([]);
+  });
+
+  it('never lets the phone force a push or pass credentials', () => {
+    const input = mobileWireContract.sourceControl.checkout.publish.input;
+
+    expect(input.safeParse({ workspaceId: 'w1', remote: 'origin' }).success).toBe(true);
+    for (const remote of ['--mirror', '/tmp/x', './x', '.', 'a/b', '../r', 'host:path']) {
+      expect(input.safeParse({ workspaceId: 'w1', remote }).success).toBe(false);
+    }
+    expect(input.safeParse({ workspaceId: 'w1', remote: 'origin', force: true }).success).toBe(
+      false
+    );
+    expect(
+      input.safeParse({ workspaceId: 'w1', remote: 'origin', credentialAccount: { id: 'a' } })
+        .success
+    ).toBe(false);
+    expect('push' in mobileWireContract.sourceControl.checkout).toBe(false);
+  });
+
+  it('serves pull request creation locally, never forwarding a repository URL', async () => {
+    const { controller, calls, create } = setup();
+    const input = {
+      projectId: 'p1',
+      head: 'emdash/fix',
+      base: 'main',
+      title: 'Fix',
+      draft: false,
+      repositoryUrl: 'https://github.com/attacker/repo',
+    };
+
+    await expect(controller.call('mobile.pullRequests.create', input)).resolves.toEqual({
+      success: true,
+      data: { url: 'https://github.com/o/r/pull/7', number: 7 },
+    });
+    expect(create).toHaveBeenCalledWith({
+      projectId: 'p1',
+      head: 'emdash/fix',
+      base: 'main',
+      title: 'Fix',
+      draft: false,
+    });
+    expect(calls).toEqual([]);
+  });
+
+  it('rejects a pull request head that reads as an option', async () => {
+    const { controller, create } = setup();
+
+    await expect(
+      controller.call('mobile.pullRequests.create', {
+        projectId: 'p1',
+        head: '--force',
+        base: 'main',
+        title: 'Fix',
+        draft: false,
+      })
+    ).rejects.toBeDefined();
+    expect(create).not.toHaveBeenCalled();
+  });
+});

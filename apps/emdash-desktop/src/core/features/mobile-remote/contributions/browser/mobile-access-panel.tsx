@@ -2,9 +2,7 @@ import { Button } from '@emdash/ui/react/primitives';
 import { useEffect, useState } from 'react';
 import { getMobileRemoteClient, useMobileRemoteStatus } from '../../api/browser/client';
 import type { MobileDevice, MobileRemoteStatus } from '../../api/schemas';
-
-/** `tailscale serve` HTTPS port the docs and the command below use. */
-const SERVE_HTTPS_PORT = 8443;
+import { gatewayAddress, pairingLink, qrSvg, SERVE_HTTPS_PORT } from './pairing-qr';
 const SECOND_MS = 1_000;
 
 /**
@@ -116,13 +114,15 @@ function PairingBlock(props: {
           Pair a phone
         </Button>
         <span className="text-foreground-muted">
-          Open the Emdash app on the phone, then enter the code.
+          Open Morax Code on the iPhone, then scan the code.
         </span>
       </div>
     );
   }
+  const gateway = gatewayAddress(props.status.allowedOrigins);
   return (
     <div className="flex items-center gap-3">
+      {gateway && <PairingQr text={pairingLink(gateway, pairing.code)} />}
       <span
         className="font-mono text-2xl tracking-[0.3em] text-foreground"
         aria-label={`Pairing code ${pairing.code.split('').join(' ')}`}
@@ -137,6 +137,26 @@ function PairingBlock(props: {
         Cancel
       </Button>
     </div>
+  );
+}
+
+/** Scanned by Morax Code: carries the Mac's tailnet address and the one-time code. */
+function PairingQr({ text }: { text: string }) {
+  const { size, path } = qrSvg(text);
+  const quiet = 4;
+  return (
+    <svg
+      role="img"
+      aria-label="Pairing QR code for Morax Code"
+      width={176}
+      height={176}
+      viewBox={`${-quiet} ${-quiet} ${size + quiet * 2} ${size + quiet * 2}`}
+      shapeRendering="crispEdges"
+      className="shrink-0 rounded-md"
+    >
+      <rect x={-quiet} y={-quiet} width={size + quiet * 2} height={size + quiet * 2} fill="#fff" />
+      <path d={path} fill="#000" />
+    </svg>
   );
 }
 

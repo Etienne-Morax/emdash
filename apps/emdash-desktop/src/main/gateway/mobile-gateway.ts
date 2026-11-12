@@ -1,5 +1,4 @@
 import { execFile } from 'node:child_process';
-import { existsSync } from 'node:fs';
 import { hostname } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
@@ -11,6 +10,7 @@ import { machinesContract } from '@core/features/machines/api/contract';
 import { mobileWireContract } from '@core/features/mobile-remote/api/mobile-contract';
 import type { MobileAppearance, MobileMachine } from '@core/features/mobile-remote/api/schemas';
 import { createMobileAuditLog } from '@core/features/mobile-remote/node/audit-log';
+import { resolveMobileColors } from '@core/features/mobile-remote/node/colors';
 import { createMobileDeviceRegistry } from '@core/features/mobile-remote/node/device-registry';
 import { startMobileHttpServer } from '@core/features/mobile-remote/node/mobile-http-server';
 import {
@@ -19,6 +19,7 @@ import {
   type MobileRemoteSource,
 } from '@core/features/mobile-remote/node/mobile-remote-service';
 import { createPairingManager } from '@core/features/mobile-remote/node/pairing';
+import { createMobilePullRequestOperations } from '@core/features/mobile-remote/node/pull-requests';
 import {
   createMobilePushService,
   createMobilePushSink,
@@ -28,18 +29,25 @@ import {
   type MobileLocalOperations,
 } from '@core/features/mobile-remote/node/session-controller';
 import { detectTailscaleIdentity } from '@core/features/mobile-remote/node/tailscale';
+import { repositoryContract } from '@core/features/repository/api/contract';
 import { shortComputerName } from '@core/primitives/color-coding/api/color-coding';
 import type { SecretStore } from '@core/primitives/secrets/api/secret-store';
 import type { NotificationSink } from '@core/services/notifications/api/ports';
+import { pullRequestsContract } from '@core/services/pull-requests/api/contract';
 import type { AppSettingsService } from '@core/services/settings/node';
 import { createLazyRoutingController } from './desktop-wire';
 
 const execFileAsync = promisify(execFile);
 const AUDIT_LOG_FILE = 'mobile-remote-audit.jsonl';
 
-/** The one desktop endpoint the gateway itself reads, outside the phone's contract. */
+/** The desktop endpoints the gateway itself calls, outside the phone's contract. */
 const gatewayDesktopContract = defineContract({
   machines: defineContract({ getMachines: machinesContract.getMachines }),
+  repository: defineContract({ resolveProvider: repositoryContract.resolveProvider }),
+  pullRequests: defineContract({
+    getPullRequestsForBranch: pullRequestsContract.getPullRequestsForBranch,
+    createPullRequest: pullRequestsContract.createPullRequest,
+  }),
 });
 
 /**
@@ -98,6 +106,11 @@ export function createMobileGateway(options: {
         })),
       ];
     },
+    pullRequests: createMobilePullRequestOperations({
+      resolveProvider: (input) => desktop.repository.resolveProvider(input),
+      getPullRequestsForBranch: (input) => desktop.pullRequests.getPullRequestsForBranch(input),
+      createPullRequest: (input) => desktop.pullRequests.createPullRequest(input),
+    }),
     push: {
       publicKey: () => push.publicKey(),
       subscribe: (deviceId, subscription) => push.subscribe(deviceId, subscription),
@@ -113,6 +126,17 @@ export function createMobileGateway(options: {
         branchPrefix: project.branchPrefix,
         appendRandomBranchSuffix: project.appendRandomBranchSuffix,
       };
+    },
+    async colors(request) {
+      const [settings, remote] = await Promise.all([
+        options.appSettings.get('interface'),
+        desktop.machines.getMachines(),
+      ]);
+      return resolveMobileColors({
+        request,
+        machineIds: remote.map((machine) => machine.id),
+        overrides: { projectColors: settings.projectColors, machineColors: settings.machineColors },
+      });
     },
     async appearance(): Promise<MobileAppearance> {
       const settings = await options.appSettings.get('interface');
@@ -130,7 +154,6 @@ export function createMobileGateway(options: {
     devices,
     pairing: createPairingManager(),
     audit,
-    staticRoot: resolveMobileAppRoot,
     createSessionController: (device) =>
       createMobileSessionController({ upstream: upstream.client, device, local, audit }),
     detectTailscale: detectTailscaleIdentity,
@@ -143,22 +166,6 @@ export function createMobileGateway(options: {
     logger: options.logger,
   });
   return { source, pushSink };
-}
-
-/**
- * Built PWA location: `EMDASH_MOBILE_APP_DIR`, then the copy bundled next to the desktop
- * build (`out/mobile`), then the workspace build in development.
- */
-function resolveMobileAppRoot(): string | null {
-  const candidates = [
-    process.env['EMDASH_MOBILE_APP_DIR'],
-    join(app.getAppPath(), 'out', 'mobile'),
-    join(app.getAppPath(), '..', 'emdash-mobile', 'dist'),
-  ];
-  for (const candidate of candidates) {
-    if (candidate && existsSync(join(candidate, 'index.html'))) return candidate;
-  }
-  return null;
 }
 
 function readComputerName(): { current: string } {

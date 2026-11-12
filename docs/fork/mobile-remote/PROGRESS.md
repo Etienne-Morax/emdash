@@ -1,4 +1,4 @@
-# Emdash Mobile — journal de progression
+# Morax Code (ex-Emdash Mobile) — journal de progression
 
 Mémoire de travail de la mission « Emdash Mobile » (piloter Emdash et toutes ses machines
 depuis l'iPhone). Relire en reprenant une session compactée.
@@ -117,16 +117,95 @@ Worktree : `~/Developer/Projects/emdash-mobile`, branche `feat/mobile-remote` is
 - Vérifié : tests Swift (3), simulateur chargeant la passerelle via le tailnet, archive Release
   et export `.ipa` signé. Bundle ID enregistré par l'API.
 
+### Phase 5 — Revue et pull request (branche `feat/mobile-review`)
+
+- Contrat mobile élargi, entrées strictes : `sourceControl.checkout.model` (état `head` seul,
+  sans mutations), `getChangedFiles` (`working-vs-head` ou `merge-base` seulement), `getFile`
+  (objets git commités seulement : `head` ou commit/branche, jamais l'arbre de travail ni un
+  tag), `getLog` (≤ 500 commits), `publish` (push `--set-upstream` sous le même nom, jamais
+  forcé, sans identifiants : `.strict()`). Commits = hex 7-64, branches = `mobileBranchNameSchema`,
+  chemins relatifs sans remontée.
+- `mobile.pullRequests.forBranch` / `create` servis par la passerelle : le téléphone donne
+  projet, branches, titre, description, brouillon ; l'URL du dépôt vient toujours de
+  `repository.resolveProvider` côté bureau (jamais du téléphone), puis
+  `pullRequests.getPullRequestsForBranch` / `createPullRequest` (mêmes appels que la modale
+  *Create PR* du bureau).
+- PWA : bouton *Changes* sur la tâche → écran de revue (commités depuis la base de fusion
+  avec `origin/<défaut>`, diff ligne à ligne Myers borné calculé sur le téléphone ;
+  non commités en compteurs seulement), lien vers la PR ouverte sinon formulaire
+  (publication si la branche manque ou est en avance, puis création).
+- Revue sécurité (agent `security-reviewer`) : `publish` acceptait un chemin comme remote
+  (git pousse alors vers n'importe quel dépôt local, hooks compris). Corrigé : nom de remote
+  sans `/`, `:` ni `.` initial (`mobileRemoteNameSchema`) ; les refs de revue refusent
+  `refs/*` (`refs/stash`, tags) et `*HEAD`. Tests de refus ajoutés.
+- `git push` sans upstream échoue : on publie (`publish`) plutôt que pousser, ce qui corrige
+  aussi une branche qui suit sa base (`origin/main`).
+- Vérifié (build, WebKit iPhone, tailnet `tailscale serve` puis `reset`) : tâche créée depuis
+  le téléphone, commit dans son worktree, revue : 2 fichiers commités, diff d'un fichier,
+  1 fichier non commité, erreur PR explicite (dépôt de démo à remote local, sans hôte GitHub).
+  Captures `screenshots/phone-review*.png`. Worktree de test retiré.
+- Non vérifié en réel : publication et création d'une vraie PR (évite une PR parasite sur un
+  vrai dépôt) — couvert par tests unitaires et appels identiques à ceux du bureau.
+- Porte : format, lint, typecheck verts ; tests : échecs préexistants seulement
+  (`tmux.test.ts`, `open-in-apps`, `machine-details-page.browser.test.tsx` qui importe
+  `getProjectSshConnectionId` absent de la base), tests navigateur instables relancés verts.
+
+### Changement de cap (2026-11-12) : app iOS native « Morax Code »
+
+Demande d'Etienne (relayée par la session parente) : remplacer la PWA par une vraie app iOS
+native. Garder la phase 1 (transport WebSocket, passerelle, `tailscale serve`, jeton +
+`Tailscale-User-Login`, audit) ; la passerelle ne sert plus la PWA.
+
+Fait (branche `feat/morax-code-ios`) :
+- `apps/morax-code-ios` : SwiftUI iOS 26, Swift 6 strict, XcodeGen. Package local
+  `MoraxWire` (client Wire : trames, appels, états live + patches Immer, logs live, flux
+  d'événements, jobs) et `MoraxCodeKit` (adresse/appairage, modèles, tableau des tâches,
+  règles de statut, création de tâche, compositeur). SwiftTerm 1.18.0 (MIT ; 1.99 ajoute un
+  plugin de build à approuver), MoraxDesign. Icône 1024 depuis `Logo/Coding center.png`
+  (sips).
+- Fixtures partagées TS ↔ Swift : session Wire enregistrée (trames exactes) depuis
+  `packages/wire`, table des endpoints du contrat mobile, règles de statut évaluées par les
+  fonctions TS du bureau sur tous les petits cas. Tests des deux côtés.
+- Couleurs projet/machine résolues par le bureau (`mobile.colors`) : l'app ne réimplémente
+  pas les règles.
+- Appairage par QR (`moraxcode://pair?gateway=…&code=…`) dans Settings → Mobile access :
+  générateur QR de Nayuki vendorisé (MIT, fichier unique, aucune dépendance npm), QR décodé
+  par CoreImage pour vérifier. Jeton dans le Trousseau, envoyé en `Bearer`.
+- Notifications locales tant que l'app est connectée ; APNs laissé en TODO documenté.
+- PWA (`apps/emdash-mobile`), coquille WKWebView (`apps/emdash-ios`) et service statique de
+  la passerelle retirés (CSP `default-src 'none'`, toute page → 404).
+- Vérifié sur simulateur (iPhone 18 Pro, iOS 27.2) contre l'instance de dev isolée via
+  `tailscale serve` : appairage par lien QR, accueil live, tâche créée depuis l'app
+  (`polite-news-film`), terminal Claude Code en direct, message envoyé et soumis, statut
+  « Waiting for you » (`MoraxCodeUITests`, opt-in `MORAX_LIVE_DESKTOP=1`). Captures
+  `screenshots/ios-*.png`. Ensuite : `tailscale serve reset`, instance arrêtée, worktrees
+  de test retirés.
+
+Reste :
+- Écran de revue (diff + PR) dans l'app native (contrat déjà prêt côté bureau).
+- APNs (compte payant + expéditeur) ; le service Web Push VAPID du bureau n'a plus de client.
+- Installation sur l'iPhone réel (Xcode, équipe personnelle) et vérification sur l'appareil.
+
+### iPad et TestFlight (2026-11-12, branche `feat/morax-code-ipad`)
+
+- App universelle : `NavigationSplitView` en largeur régulière (liste des tâches en barre
+  latérale, tâche ou nouvelle tâche en détail), pile inchangée sur iPhone ; un seul état de
+  navigation, donc redimensionner une fenêtre iPad garde la tâche ouverte. Formulaires en
+  colonne lisible, terminal en 13 pt sur iPad, ⌘N (menu) et ⌘↩ (envoi), survol pointeur.
+- `PrivacyInfo.xcprivacy` (UserDefaults, CA92.1) : seul bloquant de `/ios-audit`, corrigé.
+- Mode démo debug `-MoraxDemo YES` (tableau d'exemple sans Mac appairé) ; captures
+  `screenshots/ipad-*.png`. `scripts/test.sh` (paquet + iPhone + iPad), `scripts/archive.sh`.
+- Bundle `com.morax.emdashmobile` : reprend la fiche App Store Connect de l'ancienne coque
+  web (renommée « Morax Code » par l'API). Le jeton d'un appareil appairé avec l'ancien bundle
+  `com.morax.moraxcode` (simulateur seulement) n'est pas repris : réappairer.
+
 ## Reste (bloqué / suites)
 
-- **TestFlight** : l'API App Store Connect refuse la création d'app (`apps` sans CREATE) et Chrome
-  n'a pas de session App Store Connect (pas de saisie d'identifiants par l'agent). Etienne crée
-  l'enregistrement une fois (Apps → + → Nouvelle app : iOS, nom « Emdash Mobile », bundle
-  `com.morax.emdashmobile`, SKU `emdashmobile`), puis
-  `cd apps/emdash-ios && scripts/archive.sh --upload`.
 - Notifications dans l'app native : APNs (clé APNs du compte développeur) ; d'ici là, la PWA
   sur l'écran d'accueil reçoit les notifications.
 - Réception push réelle sur iPhone, projet SSH et ACP à confirmer sur l'appareil.
+- PR depuis un fork (push vers un autre dépôt que la cible) et diff de l'arbre de travail :
+  non gérés sur le téléphone.
 - QR d'appairage (non fait : saisir le code suffit, la caméra ouvrirait Safari et non l'app).
 - Passerelle directe sur le workspace-server de chaque machine pour ne plus dépendre du Mac.
 

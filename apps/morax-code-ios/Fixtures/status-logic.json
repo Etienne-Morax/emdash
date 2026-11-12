@@ -1,0 +1,3378 @@
+{
+  "indicator": [
+    {
+      "status": "idle",
+      "seen": true,
+      "result": null
+    },
+    {
+      "status": "idle",
+      "seen": false,
+      "result": null
+    },
+    {
+      "status": "working",
+      "seen": true,
+      "result": "working"
+    },
+    {
+      "status": "working",
+      "seen": false,
+      "result": "working"
+    },
+    {
+      "status": "awaiting-input",
+      "seen": true,
+      "result": null
+    },
+    {
+      "status": "awaiting-input",
+      "seen": false,
+      "result": "awaiting-input"
+    },
+    {
+      "status": "error",
+      "seen": true,
+      "result": null
+    },
+    {
+      "status": "error",
+      "seen": false,
+      "result": "error"
+    },
+    {
+      "status": "completed",
+      "seen": true,
+      "result": null
+    },
+    {
+      "status": "completed",
+      "seen": false,
+      "result": "completed"
+    }
+  ],
+  "rollup": [
+    {
+      "conversations": [],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": false
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": false
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": false
+        }
+      ],
+      "result": "completed"
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": true
+        },
+        {
+          "status": "idle",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": true
+        },
+        {
+          "status": "idle",
+          "seen": false
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": true
+        },
+        {
+          "status": "working",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": true
+        },
+        {
+          "status": "working",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": true
+        },
+        {
+          "status": "awaiting-input",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": true
+        },
+        {
+          "status": "awaiting-input",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": true
+        },
+        {
+          "status": "error",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": true
+        },
+        {
+          "status": "error",
+          "seen": false
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": true
+        },
+        {
+          "status": "completed",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": true
+        },
+        {
+          "status": "completed",
+          "seen": false
+        }
+      ],
+      "result": "completed"
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": false
+        },
+        {
+          "status": "idle",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": false
+        },
+        {
+          "status": "idle",
+          "seen": false
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": false
+        },
+        {
+          "status": "working",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": false
+        },
+        {
+          "status": "working",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": false
+        },
+        {
+          "status": "awaiting-input",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": false
+        },
+        {
+          "status": "awaiting-input",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": false
+        },
+        {
+          "status": "error",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": false
+        },
+        {
+          "status": "error",
+          "seen": false
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": false
+        },
+        {
+          "status": "completed",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "idle",
+          "seen": false
+        },
+        {
+          "status": "completed",
+          "seen": false
+        }
+      ],
+      "result": "completed"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": true
+        },
+        {
+          "status": "idle",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": true
+        },
+        {
+          "status": "idle",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": true
+        },
+        {
+          "status": "working",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": true
+        },
+        {
+          "status": "working",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": true
+        },
+        {
+          "status": "awaiting-input",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": true
+        },
+        {
+          "status": "awaiting-input",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": true
+        },
+        {
+          "status": "error",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": true
+        },
+        {
+          "status": "error",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": true
+        },
+        {
+          "status": "completed",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": true
+        },
+        {
+          "status": "completed",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": false
+        },
+        {
+          "status": "idle",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": false
+        },
+        {
+          "status": "idle",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": false
+        },
+        {
+          "status": "working",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": false
+        },
+        {
+          "status": "working",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": false
+        },
+        {
+          "status": "awaiting-input",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": false
+        },
+        {
+          "status": "awaiting-input",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": false
+        },
+        {
+          "status": "error",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": false
+        },
+        {
+          "status": "error",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": false
+        },
+        {
+          "status": "completed",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "working",
+          "seen": false
+        },
+        {
+          "status": "completed",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": true
+        },
+        {
+          "status": "idle",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": true
+        },
+        {
+          "status": "idle",
+          "seen": false
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": true
+        },
+        {
+          "status": "working",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": true
+        },
+        {
+          "status": "working",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": true
+        },
+        {
+          "status": "awaiting-input",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": true
+        },
+        {
+          "status": "awaiting-input",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": true
+        },
+        {
+          "status": "error",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": true
+        },
+        {
+          "status": "error",
+          "seen": false
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": true
+        },
+        {
+          "status": "completed",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": true
+        },
+        {
+          "status": "completed",
+          "seen": false
+        }
+      ],
+      "result": "completed"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": false
+        },
+        {
+          "status": "idle",
+          "seen": true
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": false
+        },
+        {
+          "status": "idle",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": false
+        },
+        {
+          "status": "working",
+          "seen": true
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": false
+        },
+        {
+          "status": "working",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": false
+        },
+        {
+          "status": "awaiting-input",
+          "seen": true
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": false
+        },
+        {
+          "status": "awaiting-input",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": false
+        },
+        {
+          "status": "error",
+          "seen": true
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": false
+        },
+        {
+          "status": "error",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": false
+        },
+        {
+          "status": "completed",
+          "seen": true
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "awaiting-input",
+          "seen": false
+        },
+        {
+          "status": "completed",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": true
+        },
+        {
+          "status": "idle",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": true
+        },
+        {
+          "status": "idle",
+          "seen": false
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": true
+        },
+        {
+          "status": "working",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": true
+        },
+        {
+          "status": "working",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": true
+        },
+        {
+          "status": "awaiting-input",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": true
+        },
+        {
+          "status": "awaiting-input",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": true
+        },
+        {
+          "status": "error",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": true
+        },
+        {
+          "status": "error",
+          "seen": false
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": true
+        },
+        {
+          "status": "completed",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": true
+        },
+        {
+          "status": "completed",
+          "seen": false
+        }
+      ],
+      "result": "completed"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": false
+        },
+        {
+          "status": "idle",
+          "seen": true
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": false
+        },
+        {
+          "status": "idle",
+          "seen": false
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": false
+        },
+        {
+          "status": "working",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": false
+        },
+        {
+          "status": "working",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": false
+        },
+        {
+          "status": "awaiting-input",
+          "seen": true
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": false
+        },
+        {
+          "status": "awaiting-input",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": false
+        },
+        {
+          "status": "error",
+          "seen": true
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": false
+        },
+        {
+          "status": "error",
+          "seen": false
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": false
+        },
+        {
+          "status": "completed",
+          "seen": true
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "error",
+          "seen": false
+        },
+        {
+          "status": "completed",
+          "seen": false
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": true
+        },
+        {
+          "status": "idle",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": true
+        },
+        {
+          "status": "idle",
+          "seen": false
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": true
+        },
+        {
+          "status": "working",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": true
+        },
+        {
+          "status": "working",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": true
+        },
+        {
+          "status": "awaiting-input",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": true
+        },
+        {
+          "status": "awaiting-input",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": true
+        },
+        {
+          "status": "error",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": true
+        },
+        {
+          "status": "error",
+          "seen": false
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": true
+        },
+        {
+          "status": "completed",
+          "seen": true
+        }
+      ],
+      "result": null
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": true
+        },
+        {
+          "status": "completed",
+          "seen": false
+        }
+      ],
+      "result": "completed"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": false
+        },
+        {
+          "status": "idle",
+          "seen": true
+        }
+      ],
+      "result": "completed"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": false
+        },
+        {
+          "status": "idle",
+          "seen": false
+        }
+      ],
+      "result": "completed"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": false
+        },
+        {
+          "status": "working",
+          "seen": true
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": false
+        },
+        {
+          "status": "working",
+          "seen": false
+        }
+      ],
+      "result": "working"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": false
+        },
+        {
+          "status": "awaiting-input",
+          "seen": true
+        }
+      ],
+      "result": "completed"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": false
+        },
+        {
+          "status": "awaiting-input",
+          "seen": false
+        }
+      ],
+      "result": "awaiting-input"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": false
+        },
+        {
+          "status": "error",
+          "seen": true
+        }
+      ],
+      "result": "completed"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": false
+        },
+        {
+          "status": "error",
+          "seen": false
+        }
+      ],
+      "result": "error"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": false
+        },
+        {
+          "status": "completed",
+          "seen": true
+        }
+      ],
+      "result": "completed"
+    },
+    {
+      "conversations": [
+        {
+          "status": "completed",
+          "seen": false
+        },
+        {
+          "status": "completed",
+          "seen": false
+        }
+      ],
+      "result": "completed"
+    }
+  ],
+  "attentionRank": [
+    {
+      "status": "idle",
+      "rank": 4
+    },
+    {
+      "status": "working",
+      "rank": 2
+    },
+    {
+      "status": "awaiting-input",
+      "rank": 0
+    },
+    {
+      "status": "error",
+      "rank": 1
+    },
+    {
+      "status": "completed",
+      "rank": 3
+    },
+    {
+      "status": null,
+      "rank": 4
+    }
+  ],
+  "picks": [
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "idle",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "working",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "awaiting-input",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": true,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "error",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T11:00:00.000Z",
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": true,
+          "lastInteractedAt": null,
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "a"
+    },
+    {
+      "candidates": [
+        {
+          "id": "a",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": null,
+          "isInitialConversation": true
+        },
+        {
+          "id": "b",
+          "status": "completed",
+          "seen": false,
+          "lastInteractedAt": "2026-11-12T10:00:00.000Z",
+          "isInitialConversation": false
+        }
+      ],
+      "picked": "b"
+    }
+  ]
+}
