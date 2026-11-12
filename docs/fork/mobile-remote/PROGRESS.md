@@ -1,0 +1,85 @@
+# Emdash Mobile — journal de progression
+
+Mémoire de travail de la mission « Emdash Mobile » (piloter Emdash et toutes ses machines
+depuis l'iPhone). Relire en reprenant une session compactée.
+
+Worktree : `~/Developer/Projects/emdash-mobile`, branche `feat/mobile-remote` issue de
+`origin/feat/multi-task-grid`. Chaque phase part en PR vers `feat/multi-task-grid`.
+
+## Fait
+
+### Phase 1 — Transport et passerelle (en cours de livraison)
+
+- `packages/wire` : codec de trames partagé (`frame-codec.ts`, extrait de `stream.ts`, même
+  format binaire) et `webSocketTransport` / `openWebSocketTransport` (WHATWG `WebSocket` côté
+  navigateur, `ws` côté Node). Une trame par message WebSocket, texte refusé, pair trop lent
+  coupé (32 Mio en attente), compatible `reconnectingTransport`. Tests : aller-retour, 4 Mio,
+  binaire, déconnexion, trame corrompue, reconnexion.
+- Slice `apps/emdash-desktop/src/core/features/mobile-remote/` :
+  - `api/mobile-contract.ts` : **contrat mobile = liste blanche par construction**. Mêmes
+    chemins que le bureau, modèles live redéclarés sans mutations, entrées strictes là où le
+    bureau a `z.custom` (`tasks.createTask`, saisie terminal plafonnée à 64 Kio, branches qui ne
+    commencent pas par `-` et sans `..`).
+  - `api/contract.ts` : domaine bureau `mobileRemote` (statut live, appairage, révocation,
+    journal d'audit, détection Tailscale). Jamais exposé au téléphone.
+  - `node/device-registry.ts` : jetons 256 bits, seul le sha256 est stocké dans le secret
+    store chiffré (`mobile-remote.devices`), comparaison à temps constant, révocation.
+  - `node/pairing.ts` : code 8 caractères sans ambiguïté, TTL 10 min, usage unique, brûlé
+    après 5 erreurs, 10 tentatives/min au plus.
+  - `node/request-auth.ts` : `Tailscale-User-Login` = login configuré (sinon détecté via
+    `tailscale status --json`), `Origin` = `https://<MagicDNS de ce Mac>[:port]` ou liste
+    explicite, jeton en cookie `HttpOnly; Secure; SameSite=Strict` (ou `Bearer`).
+  - `node/mobile-http-server.ts` : HTTP + upgrade WebSocket sur **127.0.0.1 uniquement**,
+    PWA statique (anti-traversée, CSP stricte), `/api/pair`, `/api/session`, `/api/logout`,
+    `/wire`. Refus = 401 nu, raison dans l'audit. Ping 30 s.
+  - `node/session-controller.ts` : un contrôleur par session téléphone,
+    `createController(mobileWireContract, forwardContractImpl(...))` en validation `inputs`
+    dans tous les environnements, audit de chaque appel (`denied` hors liste).
+  - `node/audit-log.ts` : JSONL `userData/mobile-remote-audit.jsonl` (qui, quoi, quand,
+    résultat ; jamais d'entrée, de jeton ni de code), rotation 5 Mio, saisies terminal
+    échantillonnées 1/min.
+  - `node/mobile-remote-service.ts` : démarre/arrête le serveur selon le réglage.
+- `src/main/gateway/mobile-gateway.ts` : branche le service sur le contrôleur de routage du
+  bureau (`createLazyRoutingController`, désormais exporté) via un fil Wire en mémoire.
+- Réglage `mobileRemote` (off par défaut) + carte Settings → Interface → *Mobile access*
+  (statut, commande `tailscale serve`, code d'appairage, appareils, révocation).
+
+## En cours
+
+- Phase 1 : porte locale, revue sécurité, PR.
+
+## Reste
+
+- Phase 2 : `apps/emdash-mobile` (Vite + React), écrans machines / projets / tâches.
+- Phase 3 : terminal xterm + compositeur, ACP, création de tâche.
+- Phase 4 : Web Push (VAPID) + notifications natives.
+- App iOS native (coque SwiftUI + WKWebView) et TestFlight — demandé par Etienne en cours de
+  mission (« jusqu'à la mise en ligne sur TestFlight »).
+- QR d'appairage (pas de dépendance QR dans la pile ; encodeur maison prévu).
+- Vérification réelle : dev isolé, Playwright WebKit iPhone, `tailscale serve` puis
+  `tailscale serve reset`.
+
+## Décisions
+
+- **Réutiliser Wire de bout en bout** : la passerelle sert un contrat Wire restreint, pas un
+  pont maison. La liste blanche est le contrat lui-même (pas de filtre de chaînes à part).
+- `ws@8.21.0` ajouté au bureau (déjà présent en transitif, MIT, sans script d'installation) ;
+  `@types/ws` en dev. L'ajout d'un importeur fait ré-résoudre le pair optionnel `prettier` de
+  Storybook (2.8.8 → 3.9.9) dans `pnpm-lock.yaml` : bénin, inévitable avec `pnpm install`.
+- Jeton en cookie HttpOnly plutôt qu'en `localStorage` : inaccessible au JS (XSS), envoyé
+  aussi sur l'upgrade WebSocket (le navigateur ne permet pas d'en-tête custom).
+- Origine acceptée = https sur le nom MagicDNS de ce Mac, quel que soit le port
+  `tailscale serve`.
+- `tui.startSession` / `resume` (cwd, args, shellSetup arbitraires) **jamais** exposés :
+  démarrer/reprendre passe par `conversations.hydrateConversation` (config résolue côté bureau).
+- Les mutations des modèles live (renommer, archiver, branches…) ne sont pas exposées.
+
+## Idées reprises (lecture, pas de code copié)
+
+- `AltanS/collie` (MIT) : code d'appairage court à usage unique, 5 essais, limitation de
+  débit, seul le hash du jeton stocké, journal d'audit sans code ni jeton, `tailscale serve`
+  jamais `funnel`, appairer dans l'app installée (stockage séparé de Safari).
+
+## Blocages
+
+- Aucun.

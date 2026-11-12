@@ -157,6 +157,7 @@ import { getTerminalColorEnv } from '@main/core/terminal-shell/color-env';
 import { runLocalCommand } from '@main/core/utils/exec';
 import { cleanupLegacyOperationsDatabases } from '@main/db/legacy-operations-cleanup';
 import type { DesktopRuntimes } from '@main/gateway/desktop-runtimes';
+import { createMobileGateway } from '@main/gateway/mobile-gateway';
 import { createDesktopWorkspaceRuntimeAcquirer } from '@main/gateway/workspace-runtime';
 import { setBrowserCorsRelaxationSettings } from '@main/host/browser/browser-profile-session';
 import { browserWebContentsRegistry } from '@main/host/browser/browser-webcontents-registry';
@@ -180,6 +181,7 @@ export type ServicesBundle = {
   readonly account: ReturnType<typeof createEmdashAccountService>;
   readonly automations: AutomationsService;
   readonly fleet: ReturnType<typeof createFleetOverview>;
+  readonly mobileRemote: ReturnType<typeof createMobileGateway>;
   readonly github: {
     cliImport: GitHubCliAccountImportService;
     legacyTokenImport: GitHubLegacyTokenImportStep;
@@ -225,6 +227,12 @@ export async function bootServices(
   const fleet = createFleetOverview({
     scope: appScope,
     settings: createFleetSettingsPort(appSettingsService),
+    secrets: encryptedAppSecretsStore,
+    logger: log,
+  });
+  const mobileRemote = createMobileGateway({
+    scope: appScope,
+    appSettings: appSettingsService,
     secrets: encryptedAppSecretsStore,
     logger: log,
   });
@@ -888,6 +896,7 @@ export async function bootServices(
     taskSessions: taskSessionManager,
     usage,
     fleet,
+    mobileRemote,
     workspacePlacement,
     conversationSync,
     reconcileSweep,

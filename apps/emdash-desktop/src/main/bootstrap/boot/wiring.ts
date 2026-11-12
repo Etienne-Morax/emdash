@@ -137,6 +137,7 @@ export function createDesktopWireOptions(
     usage: services.usage,
     waitlistOperations,
     fleet: services.fleet,
+    mobileRemote: services.mobileRemote,
     workspaceIdentity: database.workspaceIdentity,
     workspacePlacement: services.workspacePlacement,
     workspaces: {

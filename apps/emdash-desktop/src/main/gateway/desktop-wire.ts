@@ -45,7 +45,12 @@ function createMessageChannel() {
   return { port1: channel.port1, port2: channel.port2 };
 }
 
-function createLazyRoutingController(): Controller {
+/**
+ * A controller over every desktop domain, routing `domain.path` to that domain's controller.
+ * Traffic that arrives before the controllers bundle is registered waits for it. In-process
+ * consumers (the mobile gateway) use it like a renderer port does.
+ */
+export function createLazyRoutingController(): Controller {
   return {
     async call(path, input, meta) {
       const controllers = registeredControllers ?? (await controllersPromise);

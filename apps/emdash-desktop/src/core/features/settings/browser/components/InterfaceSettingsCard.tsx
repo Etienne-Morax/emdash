@@ -1,6 +1,7 @@
 import { SettingsCard } from '@emdash/ui/react/patterns';
 import { SeparatedList, Switch } from '@emdash/ui/react/primitives';
 import React from 'react';
+import { MobileAccessPanel } from '@core/features/mobile-remote/contributions/browser/mobile-access-panel';
 import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
 import { LocalMachineIconSetting } from '@core/features/workbench/contributions/browser/color-coding/color-code-settings';
 import { ResetToDefaultButton } from './ResetToDefaultButton';
@@ -22,6 +23,9 @@ const InterfaceSettingsCard: React.FC = () => {
   const fleet = useAppSettingsKey('fleet');
   const showFleet = fleet.value?.showInSidebar ?? false;
   const isFleetBusy = fleet.isLoading || fleet.isSaving;
+  const mobileRemote = useAppSettingsKey('mobileRemote');
+  const isMobileEnabled = mobileRemote.value?.enabled ?? false;
+  const isMobileBusy = mobileRemote.isLoading || mobileRemote.isSaving;
 
   return (
     <SettingsCard>
@@ -103,6 +107,26 @@ const InterfaceSettingsCard: React.FC = () => {
           }
         />
         {colorCodeProjects && <LocalMachineIconSetting />}
+        <SettingRow
+          title="Mobile access"
+          description="Control Emdash and every machine it manages from your phone, over your tailnet only."
+          control={
+            <>
+              <ResetToDefaultButton
+                visible={mobileRemote.isFieldOverridden('enabled')}
+                defaultLabel="off"
+                onReset={() => mobileRemote.resetField('enabled')}
+                disabled={isMobileBusy}
+              />
+              <Switch
+                checked={isMobileEnabled}
+                disabled={isMobileBusy}
+                onCheckedChange={(checked) => mobileRemote.update({ enabled: checked })}
+              />
+            </>
+          }
+        />
+        {isMobileEnabled && <MobileAccessPanel />}
       </SeparatedList>
     </SettingsCard>
   );
