@@ -17,7 +17,12 @@ import type { ProjectHostAccess } from '@core/features/projects/api/browser/stor
 import type { FrontendPtyConnector } from '@core/features/terminals/api/browser/pty/pty';
 import { PtySession } from '@core/features/terminals/api/browser/pty/pty-session';
 import { createXtermLogSink } from '@core/features/terminals/api/browser/pty/xterm-log-sink';
-import { type AgentStatus, type NotificationType } from '@core/primitives/agents/api';
+import {
+  conversationIndicatorStatus,
+  rollupTaskStatus,
+  type AgentStatus,
+  type NotificationType,
+} from '@core/primitives/agents/api';
 import { Resource } from '@core/primitives/async-resource/browser/resource';
 import {
   type Conversation,
@@ -332,19 +337,7 @@ export class ConversationManagerStore implements Disposable {
   }
 
   get taskStatus(): AgentStatus | null {
-    let hasWorking = false;
-    let hasUnseenError = false;
-    let hasUnseenCompleted = false;
-    for (const conversation of this.conversations.values()) {
-      if (!conversation.seen && conversation.status === 'awaiting-input') return 'awaiting-input';
-      if (conversation.status === 'working') hasWorking = true;
-      if (!conversation.seen && conversation.status === 'error') hasUnseenError = true;
-      if (!conversation.seen && conversation.status === 'completed') hasUnseenCompleted = true;
-    }
-    if (hasWorking) return 'working';
-    if (hasUnseenError) return 'error';
-    if (hasUnseenCompleted) return 'completed';
-    return null;
+    return rollupTaskStatus(this.conversations.values());
   }
 
   get activeSessionIds(): Set<string> {
@@ -668,12 +661,7 @@ export class ConversationStore {
   }
 
   get indicatorStatus(): AgentStatus | null {
-    if (this.status === 'working') return 'working';
-    if (this.seen) return null;
-    if (this.status === 'awaiting-input') return 'awaiting-input';
-    if (this.status === 'error') return 'error';
-    if (this.status === 'completed') return 'completed';
-    return null;
+    return conversationIndicatorStatus(this);
   }
 
   setStatus(status: AgentStatus) {

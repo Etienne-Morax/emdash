@@ -1,0 +1,50 @@
+{
+  "name": "@emdash/emdash-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Phone app (PWA) that drives Emdash desktop over the tailnet",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "pnpm exec nx test @emdash/emdash-mobile",
+    "lint": "oxlint .",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "typecheck": "tsgo --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@emdash/core": "workspace:*",
+    "@emdash/plugins": "workspace:*",
+    "@emdash/shared": "workspace:*",
+    "@emdash/wire": "workspace:*",
+    "@xterm/xterm": "^6.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@typescript/native-preview": "7.0.0-dev.20260609.1",
+    "@vitejs/plugin-react": "^4.7.0",
+    "oxfmt": "^0.51.0",
+    "oxlint": "^1.66.0",
+    "typescript": "6.0.3",
+    "vite": "^7.1.11",
+    "vitest": "^4.1.0"
+  },
+  "nx": {
+    "targets": {
+      "test": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm exec vitest run",
+          "cwd": "apps/emdash-mobile"
+        }
+      }
+    }
+  }
+}
