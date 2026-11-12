@@ -2,6 +2,7 @@ import { Spinner, toast } from '@emdash/ui/react/primitives';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { openFileStore } from '@core/features/editor/api/browser/open-file-store/open-file-store';
 import { useOpenModal } from '@core/manifests/browser/modal-api';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import type { ActiveSessionSummary } from '@core/primitives/desktop-host/api/host-contract';
 import { log } from '@core/primitives/logging/browser/logger';
 import { useMementoClient } from '@core/primitives/mementos/react';
@@ -49,7 +50,7 @@ export function AppShutdownLifecycle() {
 
       if (activeRequestId.current !== requestId) return false;
       const confirmation = await openConfirmQuitModal({
-        title: 'Quit Emdash?',
+        title: `Quit ${PRODUCT_NAME}?`,
         description: describeShutdownImpact(summary),
         confirmLabel: 'Quit',
       });
@@ -143,7 +144,7 @@ function ShutdownOverlay() {
       ref={overlay}
       role="alertdialog"
       aria-modal="true"
-      aria-label="Shutting down Emdash"
+      aria-label={`Shutting down ${PRODUCT_NAME}`}
       tabIndex={-1}
       className="fixed inset-0 z-9999 flex items-center justify-center bg-background/95"
     >

@@ -4,6 +4,7 @@ import React from 'react';
 import { MobileAccessPanel } from '@core/features/mobile-remote/contributions/browser/mobile-access-panel';
 import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
 import { LocalMachineIconSetting } from '@core/features/workbench/contributions/browser/color-coding/color-code-settings';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { ResetToDefaultButton } from './ResetToDefaultButton';
 import { SettingRow } from './SettingRow';
 
@@ -109,7 +110,7 @@ const InterfaceSettingsCard: React.FC = () => {
         {colorCodeProjects && <LocalMachineIconSetting />}
         <SettingRow
           title="Mobile access"
-          description="Control Emdash and every machine it manages from your phone, over your tailnet only."
+          description={`Control ${PRODUCT_NAME} and every machine it manages from your phone, over your tailnet only.`}
           control={
             <>
               <ResetToDefaultButton

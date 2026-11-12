@@ -16,6 +16,7 @@ import { taskTabView } from '@core/features/workbench/api/browser/task-tab-regis
 import { useWorkspaceLayoutContext } from '@core/features/workbench/contributions/browser/layout-provider';
 import { getWorkspacesWireClient } from '@core/features/workspaces/api/browser/client';
 import { projectAvailabilityUi } from '@core/manifests/browser/project-availability-ui';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { createLayoutStorage } from '@core/primitives/mementos/browser';
 import { TaskMainColumn } from './view/task-main-column';
 import { TaskSidebar } from './view/task-sidebar';
@@ -146,7 +147,7 @@ const TaskMainPanelContent = observer(function TaskMainPanelContent() {
 
 function MissingWorkspaceState({
   title = 'Workspace is missing',
-  description = 'Emdash could not activate this workspace. Re-provision it or remove the task.',
+  description = `${PRODUCT_NAME} could not activate this workspace. Re-provision it or remove the task.`,
   actionDisabledReason,
   reprovision,
   removeAndReprovision,

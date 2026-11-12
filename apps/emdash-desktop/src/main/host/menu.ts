@@ -1,6 +1,7 @@
 import { app, clipboard, Menu, shell } from 'electron';
 import { desktopHostEvents } from '@core/features/workbench/node';
 import { MENU_ITEMS } from '@core/manifests/shared/menu-items';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import {
   resolveEffectiveChord,
   toElectronAccelerator,
@@ -40,7 +41,7 @@ function emitCommand(commandId: string): void {
 function copyInstallationId(): void {
   const instanceId = telemetryService.getInstanceId() ?? 'unavailable';
   const lines = [
-    `Emdash ${app.getVersion()}`,
+    `${PRODUCT_NAME} ${app.getVersion()}`,
     `Installation ID: ${instanceId}`,
     `Platform: ${process.platform} ${process.arch}`,
     `Electron: ${process.versions.electron}`,
@@ -61,10 +62,10 @@ export function setupApplicationMenu(
     ...(isMac
       ? [
           {
-            label: app.name,
+            label: PRODUCT_NAME,
             submenu: [
               {
-                label: `About ${app.name}`,
+                label: `About ${PRODUCT_NAME}`,
                 click: () => app.showAboutPanel(),
               },
               { type: 'separator' as const },
@@ -80,12 +81,12 @@ export function setupApplicationMenu(
               { type: 'separator' as const },
               { role: 'services' as const },
               { type: 'separator' as const },
-              { role: 'hide' as const },
+              { role: 'hide' as const, label: `Hide ${PRODUCT_NAME}` },
               { role: 'hideOthers' as const },
               { role: 'unhide' as const },
               { type: 'separator' as const },
               {
-                label: `Quit ${app.name}`,
+                label: `Quit ${PRODUCT_NAME}`,
                 accelerator: 'CmdOrCtrl+Q',
                 click: () => app.quit(),
               },

@@ -3,6 +3,7 @@ import { Info } from 'lucide-react';
 import React from 'react';
 import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
 import { useTaskSettings } from '@core/features/tasks/api/browser/hooks/useTaskSettings';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { detectPlatformContext } from '@core/primitives/keybindings/api';
 import { ResetToDefaultButton } from './ResetToDefaultButton';
 import { SettingRow } from './SettingRow';
@@ -64,7 +65,7 @@ export const AutoTrustWorktreesRow: React.FC = () => {
           Auto-trust worktree directories
           <InfoTooltip
             label="More info about auto-trust worktrees"
-            content="For agents that support workspace trust, Emdash writes trust entries before launching."
+            content={`For agents that support workspace trust, ${PRODUCT_NAME} writes trust entries before launching.`}
           />
         </div>
       }

@@ -1,6 +1,7 @@
 import { SelectableCard } from '@emdash/ui/react/primitives';
 import { Monitor, Moon, Sun, type LucideIcon } from 'lucide-react';
 import React from 'react';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import type { Theme } from '@core/primitives/app-settings/api';
 import { captureTelemetry } from '@core/primitives/telemetry/browser/telemetry-client';
 import { useTheme } from '@core/primitives/theme/browser';
@@ -12,8 +13,18 @@ const themeOptions: Array<{
   icon: LucideIcon;
 }> = [
   { value: null, label: 'System', ariaLabel: 'Set theme to system preference', icon: Monitor },
-  { value: 'emlight', label: 'Emdash Light', ariaLabel: 'Set theme to Emdash Light', icon: Sun },
-  { value: 'emdark', label: 'Emdash Dark', ariaLabel: 'Set theme to Emdash Dark', icon: Moon },
+  {
+    value: 'emlight',
+    label: `${PRODUCT_NAME} Light`,
+    ariaLabel: `Set theme to ${PRODUCT_NAME} Light`,
+    icon: Sun,
+  },
+  {
+    value: 'emdark',
+    label: `${PRODUCT_NAME} Dark`,
+    ariaLabel: `Set theme to ${PRODUCT_NAME} Dark`,
+    icon: Moon,
+  },
 ];
 
 const ThemeCard: React.FC = () => {

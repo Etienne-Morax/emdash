@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useImportGitHubCliAccounts } from '@core/features/github/api/browser/use-github-auth';
 import type { IntegrationAuthUiProps } from '@core/features/integrations/api/browser/integration-auth-ui';
 import { StandardIntegrationAuth } from '@core/features/integrations/contributions/browser/standard-integration-auth';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 
 export function GitHubIntegrationAuth(props: IntegrationAuthUiProps) {
   const { toast } = useToast();
@@ -30,8 +31,8 @@ export function GitHubIntegrationAuth(props: IntegrationAuthUiProps) {
       toast('GitHub CLI accounts imported', {
         description:
           result.importedAccountIds.length === 1
-            ? '1 account is available in Emdash.'
-            : `${result.importedAccountIds.length} accounts are available in Emdash.`,
+            ? `1 account is available in ${PRODUCT_NAME}.`
+            : `${result.importedAccountIds.length} accounts are available in ${PRODUCT_NAME}.`,
       });
       onSuccess();
     } finally {

@@ -10,6 +10,7 @@ import { getTaskManagerStore } from '@core/features/tasks/api/browser/task-state
 import { taskViewDef } from '@core/features/tasks/contributions/views';
 import { getTaskComposition } from '@core/features/workbench/api/browser/task-composition-selectors';
 import { useModalController } from '@core/manifests/browser/modal-api';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import type { ResumableClaudeSession } from '@core/primitives/claude-sessions/api/claude-sessions';
 import { defineModal } from '@core/primitives/modals/react';
 import { useNavigate } from '@core/primitives/navigation/browser/navigation-hooks';
@@ -124,7 +125,7 @@ export const ResumeClaudeSessionModal = observer(function ResumeClaudeSessionMod
       </Dialog.Header>
       <Dialog.Body className="flex flex-col gap-3 pt-0">
         <p className="text-sm text-foreground-muted">
-          Claude Code sessions for {projectName} started outside Emdash (Claude Desktop, a
+          Claude Code sessions for {projectName} started outside {PRODUCT_NAME} (Claude Desktop, a
           terminal). Resuming opens a task in the session&apos;s folder and runs{' '}
           <code>claude --resume</code> there.
         </p>

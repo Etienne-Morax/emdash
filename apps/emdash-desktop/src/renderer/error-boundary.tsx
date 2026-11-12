@@ -1,6 +1,7 @@
 import { Button, Collapsible } from '@emdash/ui/react/primitives';
 import { ChevronRight, RotateCw } from 'lucide-react';
 import React from 'react';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { getMementoClient } from '@core/primitives/mementos/browser';
 
 type ErrorBoundaryState = {
@@ -31,7 +32,9 @@ function ErrorFallback({
     <div className="flex min-h-screen w-full items-center justify-center bg-background p-6">
       <div className="w-full max-w-xl overflow-hidden rounded-xl border border-border bg-background-1 text-foreground shadow-sm">
         <div className="p-7">
-          <h1 className="text-xl font-medium tracking-tight">Emdash couldn’t display that view</h1>
+          <h1 className="text-xl font-medium tracking-tight">
+            {PRODUCT_NAME} couldn’t display that view
+          </h1>
           <p className="mt-2 text-sm text-foreground-muted">
             Reload to try again with your saved layout.
           </p>

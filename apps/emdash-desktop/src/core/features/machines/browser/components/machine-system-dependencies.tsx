@@ -5,6 +5,7 @@ import { CheckCircle2, Loader2 } from 'lucide-react';
 import { useMemo } from 'react';
 import type { MachineSystemDependencyStatus } from '@core/features/machines/api';
 import { SudoRetryPanel } from '@core/primitives/agents/browser/SudoRetryPanel';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import type { DependencyOperationFailure } from '@core/primitives/host-dependencies/browser/use-dependency-operation-failures';
 import type { SystemDependenciesStore } from '../machines-store';
 import { useSystemDependencies } from '../use-system-dependencies';
@@ -61,7 +62,7 @@ export function MachineSystemDependenciesCard({
         <Field.Root>
           <Field.Label>System dependencies</Field.Label>
           <Field.Description>
-            Host tools used by Emdash and coding-agent workflows.
+            Host tools used by {PRODUCT_NAME} and coding-agent workflows.
           </Field.Description>
         </Field.Root>
         <Button
