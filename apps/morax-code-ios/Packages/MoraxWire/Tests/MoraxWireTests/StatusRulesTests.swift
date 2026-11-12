@@ -46,4 +46,13 @@ struct StatusRulesTests {
       #expect(StatusRules.pickConversation(candidates) == entry["picked"]?.stringValue, "\(entry)")
     }
   }
+
+  @Test("time parses ISO dates with and without fractional seconds, 0 otherwise")
+  func timeParsesIsoDates() {
+    #expect(StatusRules.time("2026-11-12T10:00:00.250Z") == 1_794_477_600_250)
+    #expect(StatusRules.time("2026-11-12T10:00:00Z") == 1_794_477_600_000)
+    #expect(StatusRules.time("2026-11-12T11:00:00+01:00") == 1_794_477_600_000)
+    #expect(StatusRules.time("not a date") == 0)
+    #expect(StatusRules.time(nil) == 0)
+  }
 }
