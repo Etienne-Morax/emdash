@@ -109,19 +109,32 @@ Worktree : `~/Developer/Projects/emdash-mobile`, branche `feat/mobile-remote` is
   `push` / `notificationclick` dans le service worker (ouvre la tâche).
 - Non vérifié en réel : réception sur un iPhone (WebKit headless n'a pas de service push).
 
-## En cours
+### App iOS native (Etienne-Morax/emdash#7)
 
-- App iOS native (coque) et TestFlight.
+- `apps/emdash-ios` : SwiftUI + `WKWebView` autour de la PWA, adresse tailnet `https://*.ts.net`
+  seulement, navigation bornée à l'origine, erreurs explicites, DA Morax, bundle
+  `com.morax.emdashmobile`, `scripts/archive.sh [--upload]` (clé API d'équipe, signature cloud).
+- Vérifié : tests Swift (3), simulateur chargeant la passerelle via le tailnet, archive Release
+  et export `.ipa` signé. Bundle ID enregistré par l'API.
 
-## Reste
+## Reste (bloqué / suites)
 
-- Phase 3 : terminal xterm + compositeur, ACP, création de tâche.
-- Phase 4 : Web Push (VAPID) + notifications natives.
-- App iOS native (coque SwiftUI + WKWebView) et TestFlight — demandé par Etienne en cours de
-  mission (« jusqu'à la mise en ligne sur TestFlight »).
-- QR d'appairage (pas de dépendance QR dans la pile ; encodeur maison prévu).
-- Fin de mission : `tailscale serve reset`, révoquer l'appareil de test « debian-vm test »,
-  supprimer le worktree de démo `~/emdash/worktrees/demo-repo-*` créé par le test.
+- **TestFlight** : l'API App Store Connect refuse la création d'app (`apps` sans CREATE) et Chrome
+  n'a pas de session App Store Connect (pas de saisie d'identifiants par l'agent). Etienne crée
+  l'enregistrement une fois (Apps → + → Nouvelle app : iOS, nom « Emdash Mobile », bundle
+  `com.morax.emdashmobile`, SKU `emdashmobile`), puis
+  `cd apps/emdash-ios && scripts/archive.sh --upload`.
+- Notifications dans l'app native : APNs (clé APNs du compte développeur) ; d'ici là, la PWA
+  sur l'écran d'accueil reçoit les notifications.
+- Réception push réelle sur iPhone, projet SSH et ACP à confirmer sur l'appareil.
+- QR d'appairage (non fait : saisir le code suffit, la caméra ouvrirait Safari et non l'app).
+- Passerelle directe sur le workspace-server de chaque machine pour ne plus dépendre du Mac.
+
+## Nettoyage fait (2026-11-12)
+
+- `tailscale serve reset` (plus aucune config serve), app de dev et simulateur arrêtés,
+  worktrees du dépôt de démo retirés de `~/emdash/worktrees`. La base et le profil de test
+  restent dans `/tmp/emdash-mobile*` (jetables).
 
 ## Décisions
 
