@@ -19,6 +19,7 @@ public struct WireCallError: Error, Equatable, Sendable, LocalizedError {
   }
 
   public static let disconnected = WireCallError(code: "DISCONNECTED", message: "Disconnected")
+  public static let timeout = WireCallError(code: "TIMEOUT", message: "The Mac did not answer in time.")
   public var errorDescription: String? { message }
 }
 
@@ -44,13 +45,22 @@ public actor WireConnection {
 
   private let transport: WireTransport
   private var pending: [String: CheckedContinuation<JSONValue, Error>] = [:]
+  private var timers: [String: Task<Void, Never>] = [:]
+  private let requestTimeout: Duration
   private var subscribers: [String: [UUID: Subscriber]] = [:]
   private var closed = false
   private var reader: Task<Void, Never>?
   private let onClose: @Sendable () -> Void
 
-  public init(transport: WireTransport, onClose: @escaping @Sendable () -> Void = {}) {
+  /// Long enough for slow git operations on the Mac; a lost reply must not hang a screen forever.
+  public static let defaultRequestTimeout: Duration = .seconds(60)
+
+  public init(
+    transport: WireTransport, requestTimeout: Duration = defaultRequestTimeout,
+    onClose: @escaping @Sendable () -> Void = {}
+  ) {
     self.transport = transport
+    self.requestTimeout = requestTimeout
     self.onClose = onClose
   }
 
@@ -121,19 +131,42 @@ public actor WireConnection {
 
   // MARK: Internals
 
+  /// Sends one request and waits for its result. Fails with `timeout` when no reply comes in
+  /// time, and with `CancellationError` when the calling task is cancelled.
   private func request(_ message: [String: JSONValue]) async throws -> JSONValue {
     guard !closed else { throw WireCallError.disconnected }
     let id = message["id"]!.stringValue!
-    return try await withCheckedThrowingContinuation { continuation in
-      pending[id] = continuation
-      Task { [weak self] in
-        do {
-          try await self?.send(message)
-        } catch {
-          await self?.fail(id: id, error: error)
+    let timeout = requestTimeout
+    return try await withTaskCancellationHandler {
+      try await withCheckedThrowingContinuation { continuation in
+        pending[id] = continuation
+        // Cancelled before the handler could see the pending id: fail now.
+        if Task.isCancelled {
+          fail(id: id, error: CancellationError())
+          return
+        }
+        timers[id] = Task { [weak self] in
+          try? await Task.sleep(for: timeout)
+          guard !Task.isCancelled else { return }
+          await self?.fail(id: id, error: WireCallError.timeout)
+        }
+        Task { [weak self] in
+          do {
+            try await self?.send(message)
+          } catch {
+            await self?.fail(id: id, error: error)
+          }
         }
       }
+    } onCancel: {
+      Task { [weak self] in await self?.fail(id: id, error: CancellationError()) }
     }
+  }
+
+  /// Removes a pending request and its timer; nil when it was already resolved.
+  private func takePending(_ id: String) -> CheckedContinuation<JSONValue, Error>? {
+    timers.removeValue(forKey: id)?.cancel()
+    return pending.removeValue(forKey: id)
   }
 
   private func send(_ message: [String: JSONValue]) async throws {
@@ -141,7 +174,7 @@ public actor WireConnection {
   }
 
   private func fail(id: String, error: Error) {
-    pending.removeValue(forKey: id)?.resume(throwing: error)
+    takePending(id)?.resume(throwing: error)
   }
 
   private func readLoop() async {
@@ -161,7 +194,7 @@ public actor WireConnection {
     switch message["kind"]?.stringValue {
     case "result":
       guard let id = message["id"]?.stringValue,
-        let continuation = pending.removeValue(forKey: id)
+        let continuation = takePending(id)
       else { return }
       if message["ok"]?.boolValue == true {
         continuation.resume(returning: message["value"] ?? .null)
@@ -188,6 +221,8 @@ public actor WireConnection {
     reader?.cancel()
     for continuation in pending.values { continuation.resume(throwing: WireCallError.disconnected) }
     pending.removeAll()
+    for timer in timers.values { timer.cancel() }
+    timers.removeAll()
     subscribers.removeAll()
     onClose()
   }
