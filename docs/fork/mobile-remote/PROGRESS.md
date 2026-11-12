@@ -199,6 +199,18 @@ Reste :
   web (renommée « Morax Code » par l'API). Le jeton d'un appareil appairé avec l'ancien bundle
   `com.morax.moraxcode` (simulateur seulement) n'est pas repris : réappairer.
 
+### Correctif « Nouvelle tâche » (build TestFlight suivant 10658)
+
+- Boucle de reconnexion : chaque `connect()` fermait l'ancienne connexion, dont le rappel
+  `onClose` repassait l'app hors ligne et relançait une connexion 1 s plus tard, sans fin
+  (journal d'audit : « wire connect » toutes les ~2 s). Au lancement, `boot()` et `resume()`
+  se chevauchaient aussi. L'écran Nouvelle tâche suivait les branches sur une connexion déjà
+  fermée : « Loading… » sans fin, puis crash signalé sur iPhone. Correctif : chaque tentative a
+  un numéro, seule la dernière agit ; `resume()` seulement hors ligne. Test
+  `ConnectionTests` (échoue sans le correctif).
+- Branches : erreur + Réessayer (échec ou 15 s sans réponse), rechargement au retour en ligne.
+- `ImmerPatch` : index/longueur hors bornes refusés au lieu de piéger `Int(_:)`.
+
 ## Reste (bloqué / suites)
 
 - Notifications dans l'app native : APNs (clé APNs du compte développeur) ; d'ici là, la PWA

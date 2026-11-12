@@ -20,6 +20,22 @@ import Testing
       try ImmerPatch.apply([["op": "replace", "path": ["x", "y"], "value": 1]], to: ["a": 1])
     }
   }
+
+  @Test(arguments: [1e300, -1, 1.5, Double.infinity])
+  func rejectsAnOutOfRangeIndexWithoutTrapping(index: Double) {
+    #expect(throws: ImmerPatch.PatchError.badPath) {
+      try ImmerPatch.apply(
+        [["op": "replace", "path": ["a", .number(index)], "value": 1]], to: ["a": [1, 2]])
+    }
+  }
+
+  @Test(arguments: [1e300, -1, 1.5, Double.nan])
+  func rejectsAnOutOfRangeLengthWithoutTrapping(length: Double) {
+    #expect(throws: ImmerPatch.PatchError.badPath) {
+      try ImmerPatch.apply(
+        [["op": "replace", "path": ["a", "length"], "value": .number(length)]], to: ["a": [1, 2]])
+    }
+  }
 }
 
 @Suite struct FrameCodecTests {
