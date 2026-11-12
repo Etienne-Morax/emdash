@@ -97,10 +97,17 @@ public enum StatusRules {
   /// Epoch milliseconds of an ISO date, 0 when absent or invalid (like `Date.parse`).
   public static func time(_ iso: String?) -> Double {
     guard let iso else { return 0 }
-    let withFraction = ISO8601DateFormatter()
-    withFraction.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    if let date = withFraction.date(from: iso) { return date.timeIntervalSince1970 * 1000 }
-    if let date = ISO8601DateFormatter().date(from: iso) { return date.timeIntervalSince1970 * 1000 }
+    if let date = fractionalFormatter.date(from: iso) { return date.timeIntervalSince1970 * 1000 }
+    if let date = plainFormatter.date(from: iso) { return date.timeIntervalSince1970 * 1000 }
     return 0
   }
+
+  // Cached: `time` runs for every date of every task each time the board is built.
+  // ISO8601DateFormatter is thread-safe once configured; these are never mutated after init.
+  nonisolated(unsafe) private static let fractionalFormatter: ISO8601DateFormatter = {
+    let formatter = ISO8601DateFormatter()
+    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    return formatter
+  }()
+  nonisolated(unsafe) private static let plainFormatter = ISO8601DateFormatter()
 }
