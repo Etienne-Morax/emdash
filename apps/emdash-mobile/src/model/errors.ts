@@ -7,3 +7,12 @@ export function errorMessage(
     ? error.message
     : `${fallback} (${error.type})`;
 }
+
+/** A human message for anything a Wire call or job may throw or reject with. */
+export function describeError(error: unknown, fallback: string): string {
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    const message = (error as { message: unknown }).message;
+    if (typeof message === 'string' && message.length > 0) return message;
+  }
+  return fallback;
+}

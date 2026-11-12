@@ -98,3 +98,19 @@ export const mobilePushSubscriptionSchema = z.object({
 });
 
 export type MobilePushSubscription = z.infer<typeof mobilePushSubscriptionSchema>;
+
+/** A pull request as the phone shows it. */
+export const mobilePullRequestSchema = z.object({
+  number: z.number().int().positive().nullable(),
+  url: z.string(),
+  title: z.string(),
+  status: z.enum(['open', 'closed', 'merged']),
+  isDraft: z.boolean(),
+});
+
+export type MobilePullRequest = z.infer<typeof mobilePullRequestSchema>;
+
+/** Why a pull request lookup or creation failed, in words the phone can show. */
+export const mobilePullRequestErrorSchema = z.object({ message: z.string() });
+
+export type MobilePullRequestError = z.infer<typeof mobilePullRequestErrorSchema>;

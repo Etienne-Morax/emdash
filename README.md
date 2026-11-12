@@ -58,10 +58,11 @@ upstream releases and offered upstream unchanged:
   (`apps/emdash-desktop/src/core/features/fleet/`).
 
 - **Mobile access** (Settings → Interface → *Mobile access*, off by default; fork-only):
-  drive Emdash and every machine it manages from the phone. The desktop serves a small
-  installable web app and an allowlisted Wire endpoint on `127.0.0.1`, published on the
-  tailnet only with `tailscale serve` (never `funnel`); phones pair with a one-time code and
-  can be revoked. Setup, security model and limits:
+  drive Emdash and every machine it manages from the phone (watch and answer agents, start
+  tasks in any repository, review a task's diff and open its pull request). The desktop
+  serves a small installable web app and an allowlisted Wire endpoint on `127.0.0.1`,
+  published on the tailnet only with `tailscale serve` (never `funnel`); phones pair with a
+  one-time code and can be revoked. Setup, security model and limits:
   [docs/fork/mobile-remote/README.md](docs/fork/mobile-remote/README.md)
   (`apps/emdash-desktop/src/core/features/mobile-remote/`). Phone app:
   `apps/emdash-mobile` (PWA); native iOS shell for TestFlight: `apps/emdash-ios`.

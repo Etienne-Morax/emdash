@@ -117,6 +117,39 @@ Worktree : `~/Developer/Projects/emdash-mobile`, branche `feat/mobile-remote` is
 - Vérifié : tests Swift (3), simulateur chargeant la passerelle via le tailnet, archive Release
   et export `.ipa` signé. Bundle ID enregistré par l'API.
 
+### Phase 5 — Revue et pull request (branche `feat/mobile-review`)
+
+- Contrat mobile élargi, entrées strictes : `sourceControl.checkout.model` (état `head` seul,
+  sans mutations), `getChangedFiles` (`working-vs-head` ou `merge-base` seulement), `getFile`
+  (objets git commités seulement : `head` ou commit/branche, jamais l'arbre de travail ni un
+  tag), `getLog` (≤ 500 commits), `publish` (push `--set-upstream` sous le même nom, jamais
+  forcé, sans identifiants : `.strict()`). Commits = hex 7-64, branches = `mobileBranchNameSchema`,
+  chemins relatifs sans remontée.
+- `mobile.pullRequests.forBranch` / `create` servis par la passerelle : le téléphone donne
+  projet, branches, titre, description, brouillon ; l'URL du dépôt vient toujours de
+  `repository.resolveProvider` côté bureau (jamais du téléphone), puis
+  `pullRequests.getPullRequestsForBranch` / `createPullRequest` (mêmes appels que la modale
+  *Create PR* du bureau).
+- PWA : bouton *Changes* sur la tâche → écran de revue (commités depuis la base de fusion
+  avec `origin/<défaut>`, diff ligne à ligne Myers borné calculé sur le téléphone ;
+  non commités en compteurs seulement), lien vers la PR ouverte sinon formulaire
+  (publication si la branche manque ou est en avance, puis création).
+- Revue sécurité (agent `security-reviewer`) : `publish` acceptait un chemin comme remote
+  (git pousse alors vers n'importe quel dépôt local, hooks compris). Corrigé : nom de remote
+  sans `/`, `:` ni `.` initial (`mobileRemoteNameSchema`) ; les refs de revue refusent
+  `refs/*` (`refs/stash`, tags) et `*HEAD`. Tests de refus ajoutés.
+- `git push` sans upstream échoue : on publie (`publish`) plutôt que pousser, ce qui corrige
+  aussi une branche qui suit sa base (`origin/main`).
+- Vérifié (build, WebKit iPhone, tailnet `tailscale serve` puis `reset`) : tâche créée depuis
+  le téléphone, commit dans son worktree, revue : 2 fichiers commités, diff d'un fichier,
+  1 fichier non commité, erreur PR explicite (dépôt de démo à remote local, sans hôte GitHub).
+  Captures `screenshots/phone-review*.png`. Worktree de test retiré.
+- Non vérifié en réel : publication et création d'une vraie PR (évite une PR parasite sur un
+  vrai dépôt) — couvert par tests unitaires et appels identiques à ceux du bureau.
+- Porte : format, lint, typecheck verts ; tests : échecs préexistants seulement
+  (`tmux.test.ts`, `open-in-apps`, `machine-details-page.browser.test.tsx` qui importe
+  `getProjectSshConnectionId` absent de la base), tests navigateur instables relancés verts.
+
 ## Reste (bloqué / suites)
 
 - **TestFlight** : l'API App Store Connect refuse la création d'app (`apps` sans CREATE) et Chrome
@@ -127,6 +160,8 @@ Worktree : `~/Developer/Projects/emdash-mobile`, branche `feat/mobile-remote` is
 - Notifications dans l'app native : APNs (clé APNs du compte développeur) ; d'ici là, la PWA
   sur l'écran d'accueil reçoit les notifications.
 - Réception push réelle sur iPhone, projet SSH et ACP à confirmer sur l'appareil.
+- PR depuis un fork (push vers un autre dépôt que la cible) et diff de l'arbre de travail :
+  non gérés sur le téléphone.
 - QR d'appairage (non fait : saisir le code suffit, la caméra ouvrirait Safari et non l'app).
 - Passerelle directe sur le workspace-server de chaque machine pour ne plus dépendre du Mac.
 

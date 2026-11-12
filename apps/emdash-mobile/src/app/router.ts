@@ -3,12 +3,16 @@ import { useEffect, useState } from 'react';
 export type Route =
   | { name: 'home' }
   | { name: 'task'; projectId: string; taskId: string }
+  | { name: 'review'; projectId: string; taskId: string }
   | { name: 'new' };
 
 export function parseRoute(hash: string): Route {
   const parts = hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
   if (parts[0] === 'task' && parts[1] && parts[2]) {
     return { name: 'task', projectId: parts[1], taskId: parts[2] };
+  }
+  if (parts[0] === 'review' && parts[1] && parts[2]) {
+    return { name: 'review', projectId: parts[1], taskId: parts[2] };
   }
   if (parts[0] === 'new') return { name: 'new' };
   return { name: 'home' };
@@ -21,7 +25,8 @@ export function routeHref(route: Route): string {
     case 'new':
       return '#/new';
     case 'task':
-      return `#/task/${encodeURIComponent(route.projectId)}/${encodeURIComponent(route.taskId)}`;
+    case 'review':
+      return `#/${route.name}/${encodeURIComponent(route.projectId)}/${encodeURIComponent(route.taskId)}`;
   }
 }
 

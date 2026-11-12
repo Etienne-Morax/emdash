@@ -76,3 +76,20 @@ export function useAcpSession(conversationId: string) {
     'state'
   );
 }
+
+const checkoutModel = lazy(() =>
+  remote(contract.sourceControl.checkout.model, getLink().client.sourceControl.checkout.model, {
+    lingerMs: LINGER_MS,
+  })
+);
+
+/** The task checkout's HEAD (branch, commit, upstream) while a review screen shows it. */
+export function useCheckoutHead(workspaceId: string | null) {
+  return useRemoteModelState(
+    contract.sourceControl.checkout.model,
+    checkoutModel,
+    { workspaceId: workspaceId ?? 'none' },
+    'head',
+    { enabled: workspaceId !== null }
+  );
+}
