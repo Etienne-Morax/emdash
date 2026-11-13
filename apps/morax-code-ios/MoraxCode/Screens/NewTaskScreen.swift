@@ -9,7 +9,10 @@ struct NewTaskScreen: View {
   let onCreated: (String, String) -> Void
   @Environment(AppModel.self) private var model
   @State private var projectId = ""
-  @State private var refs: JSONValue?
+  /// Base branch options, parsed once per refs update (nil until the first list arrives).
+  /// The picker must not rebuild them from raw refs in its body: with thousands of branches
+  /// that is quadratic work on the main thread and the watchdog kills the app.
+  @State private var options: [BaseBranch]?
   @State private var defaultBranch: String?
   @State private var baseId = ""
   @State private var agents: [AgentInfo] = []
@@ -28,10 +31,7 @@ struct NewTaskScreen: View {
   private let suffix = NewTask.randomSuffix()
   private static let maxFormWidth: CGFloat = 720
 
-  private var options: [BaseBranch] { NewTask.baseBranches(refs: refs) }
-  private var base: BaseBranch? {
-    options.first { $0.id == baseId } ?? NewTask.defaultBase(options, defaultBranch: defaultBranch)
-  }
+  private var base: BaseBranch? { options?.first { $0.id == baseId } }
 
   var body: some View {
     Form {
@@ -49,13 +49,13 @@ struct NewTaskScreen: View {
         if let branchError {
           Text(branchError).foregroundStyle(Palette.dangerText)
           Button("Retry") { Task { await loadBranches() } }
-        } else if options.isEmpty {
-          LabeledContent("Base branch") {
-            if refs == nil { ProgressView() } else { Text("No branch") }
+        } else if let options, !options.isEmpty {
+          Picker("Base branch", selection: $baseId) {
+            ForEach(options) { option in Text(option.label).tag(option.id) }
           }
         } else {
-          Picker("Base branch", selection: Binding(get: { base?.id ?? "" }, set: { baseId = $0 })) {
-            ForEach(options) { option in Text(option.label).tag(option.id) }
+          LabeledContent("Base branch") {
+            if options == nil { ProgressView() } else { Text("No branch") }
           }
         }
       }
@@ -89,9 +89,11 @@ struct NewTaskScreen: View {
       if !ids.contains(projectId) { projectId = ids.first ?? "" }
     }
     .onChange(of: projectId) { Task { await loadBranches() } }
+    .onChange(of: options) { selectDefaultBase() }
+    .onChange(of: defaultBranch) { selectDefaultBase() }
     // The connection was replaced (reconnect): the branch follower died with the old one.
     .onChange(of: model.phase) { _, phase in
-      if phase == .online, refs == nil, !projectId.isEmpty { Task { await loadBranches() } }
+      if phase == .online, options == nil, !projectId.isEmpty { Task { await loadBranches() } }
     }
     .onDisappear { Task { await refsFollower?.stop() } }
   }
@@ -112,12 +114,16 @@ struct NewTaskScreen: View {
     }
   }
 
+  private func selectDefaultBase() {
+    baseId = NewTask.selectedBaseId(baseId, options: options ?? [], defaultBranch: defaultBranch)
+  }
+
   private func loadBranches() async {
     branchLoad += 1
     let load = branchLoad
     await refsFollower?.stop()
     refsFollower = nil
-    refs = nil
+    options = nil
     defaultBranch = nil
     baseId = ""
     branchError = nil
@@ -129,12 +135,16 @@ struct NewTaskScreen: View {
     let follower = LiveStateFollower(
       connection: connection,
       topic: WireTopic.encode(MobileEndpoints.branchRefs, key: ["projectId": .string(projectId)])
-    ) { value in Task { @MainActor in if load == branchLoad { refs = value } } }
+    ) { value in
+      // Parsed off the main actor; the screen only stores the result.
+      let parsed = NewTask.baseBranches(refs: value)
+      Task { @MainActor in if load == branchLoad { options = parsed } }
+    }
     refsFollower = follower
     // The list arrives through the follower; a load that never answers ends in an error.
     Task {
       try? await Task.sleep(for: Self.branchTimeout)
-      if load == branchLoad, refs == nil, branchError == nil {
+      if load == branchLoad, options == nil, branchError == nil {
         branchError = "The branches did not load."
       }
     }

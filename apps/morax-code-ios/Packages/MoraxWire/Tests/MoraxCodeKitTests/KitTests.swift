@@ -94,6 +94,15 @@ import Testing
     #expect(NewTask.defaultBase(options, defaultBranch: "main")?.label == "main")
   }
 
+  @Test func keepsAValidBaseChoiceAndFallsBackToTheDefault() {
+    let options = NewTask.baseBranches(refs: refs)
+    let dev = "refs/remotes/origin/dev"
+    #expect(NewTask.selectedBaseId(dev, options: options, defaultBranch: "main") == dev)
+    #expect(NewTask.selectedBaseId("", options: options, defaultBranch: "main") == "refs/heads/main")
+    #expect(NewTask.selectedBaseId("gone", options: options, defaultBranch: "dev") == dev)
+    #expect(NewTask.selectedBaseId(dev, options: [], defaultBranch: "main") == "")
+  }
+
   @Test func namesBranchesLikeTheDesktop() {
     let defaults = TaskDefaults(defaultAgent: "claude", branchPrefix: "/emdash/", appendRandomBranchSuffix: true)
     #expect(NewTask.branchName(taskName: "fix-login", defaults: defaults, suffix: "ab12c") == "emdash/fix-login-ab12c")
