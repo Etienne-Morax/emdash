@@ -103,6 +103,27 @@ import Testing
     #expect(NewTask.selectedBaseId(dev, options: [], defaultBranch: "main") == "")
   }
 
+  @Test func suggestsTheDefaultThenLocalBranchesOnly() {
+    let refs: JSONValue = [
+      "branches": [
+        ["type": "local", "ref": "refs/heads/feature"],
+        ["type": "local", "ref": "refs/heads/main"],
+        ["type": "remote", "ref": "refs/remotes/origin/dev", "remote": ["name": "origin", "url": "u"]],
+      ]
+    ]
+    let options = NewTask.baseBranches(refs: refs)
+    #expect(NewTask.suggestedBranches(options, defaultBranch: "main").map(\.label) == ["main", "feature"])
+    #expect(NewTask.suggestedBranches(options, defaultBranch: "dev").map(\.label) == ["origin/dev", "feature", "main"])
+  }
+
+  @Test func searchesBranchesByEveryWordAndCapsTheResults() {
+    let options = NewTask.baseBranches(refs: refs)
+    #expect(NewTask.searchBranches(options, query: "  ").isEmpty)
+    #expect(NewTask.searchBranches(options, query: "ORIGIN dev").map(\.label) == ["origin/dev"])
+    let many = (0..<500).map { BaseBranch(id: "\($0)", label: "fix-\($0)", branch: "fix-\($0)", remote: nil) }
+    #expect(NewTask.searchBranches(many, query: "fix", limit: 50).count == 50)
+  }
+
   @Test func namesBranchesLikeTheDesktop() {
     let defaults = TaskDefaults(defaultAgent: "claude", branchPrefix: "/emdash/", appendRandomBranchSuffix: true)
     #expect(NewTask.branchName(taskName: "fix-login", defaults: defaults, suffix: "ab12c") == "emdash/fix-login-ab12c")

@@ -67,6 +67,32 @@ public enum NewTask {
     return options.first
   }
 
+  /// What the branch chooser shows before any search: the default base, then the local
+  /// branches. Remote-only branches (often thousands) appear only through `searchBranches`.
+  public static func suggestedBranches(
+    _ options: [BaseBranch], defaultBranch: String?
+  ) -> [BaseBranch] {
+    let preferred = defaultBase(options, defaultBranch: defaultBranch)
+    let locals = options.filter { $0.remote == nil && $0.id != preferred?.id }
+    return (preferred.map { [$0] } ?? []) + locals
+  }
+
+  /// Branches whose label contains every word of `query` (case-insensitive), local first,
+  /// at most `limit` of them.
+  public static func searchBranches(
+    _ options: [BaseBranch], query: String, limit: Int = 50
+  ) -> [BaseBranch] {
+    let words = query.lowercased().split(whereSeparator: \.isWhitespace)
+    guard !words.isEmpty else { return [] }
+    return Array(
+      options.lazy
+        .filter { option in
+          let label = option.label.lowercased()
+          return words.allSatisfy { label.contains($0) }
+        }
+        .prefix(limit))
+  }
+
   /// The base to keep selected once the options or the default branch change: the current
   /// choice while it is still offered, else the default base, else none (empty id).
   public static func selectedBaseId(

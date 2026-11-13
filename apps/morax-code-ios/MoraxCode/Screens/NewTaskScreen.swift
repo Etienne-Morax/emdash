@@ -45,19 +45,25 @@ struct NewTaskScreen: View {
           }
         }
       }
-      Section("Base branch") {
+      Section {
         if let branchError {
           Text(branchError).foregroundStyle(Palette.dangerText)
           Button("Retry") { Task { await loadBranches() } }
         } else if let options, !options.isEmpty {
-          Picker("Base branch", selection: $baseId) {
-            ForEach(options) { option in Text(option.label).tag(option.id) }
+          NavigationLink {
+            BaseBranchChooser(options: options, defaultBranch: defaultBranch, selection: $baseId)
+          } label: {
+            LabeledContent("Branch", value: base?.branch ?? "Choose")
           }
         } else {
-          LabeledContent("Base branch") {
+          LabeledContent("Branch") {
             if options == nil { ProgressView() } else { Text("No branch") }
           }
         }
+      } header: {
+        Text("Start from")
+      } footer: {
+        Text("The agent works on a new branch made from this one. Keep the main branch unless you continue other work.")
       }
       Section("Agent") {
         Picker("Agent", selection: $provider) {
