@@ -225,6 +225,16 @@ export class NotificationService {
     if (decision.sound) {
       await this.sinks.get('sound')?.deliver(deliveryBatch);
     }
+    // Remote sinks (e.g. phone push) are not gated by desktop focus or sound routing: they
+    // exist to reach someone away from this screen. One failing sink never blocks another.
+    for (const sink of this.sinks.values()) {
+      if (sink.id === 'system' || sink.id === 'sound') continue;
+      try {
+        await sink.deliver(deliveryBatch);
+      } catch {
+        // Sinks own their error reporting.
+      }
+    }
   }
 
   private async persistInsert(notification: AppNotification): Promise<void> {

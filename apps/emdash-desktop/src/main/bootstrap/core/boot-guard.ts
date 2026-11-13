@@ -1,6 +1,7 @@
 import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { app } from 'electron';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { log } from '@main/lib/logger';
 import { getAppConfig, type AppConfig } from './config';
 
@@ -38,7 +39,7 @@ export function observePreviousBoot(config: AppConfig): BootState {
 }
 
 export function describeCrashLoop(state: BootState): string {
-  const summary = `Emdash entered recovery mode after ${state.failures} consecutive failed launches`;
+  const summary = `${PRODUCT_NAME} entered recovery mode after ${state.failures} consecutive failed launches`;
   if (!state.lastFailure) return summary;
   return `${summary}.\n\nMost recent failure:\n${state.lastFailure}`;
 }

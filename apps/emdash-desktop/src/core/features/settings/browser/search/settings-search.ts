@@ -1,5 +1,6 @@
 import type { SettingsPageTab } from '@core/features/settings/contributions/views';
 import { settingsPageContributions } from '@core/manifests/browser/settings-page-contributions';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { detectPlatformContext } from '@core/primitives/keybindings/api';
 
 export type SettingsSearchEntry = {
@@ -23,8 +24,8 @@ export function slugifySettingLabel(label: string): string {
 
 const trayIconLabel =
   detectPlatformContext().os === 'mac'
-    ? 'Show Emdash in the menu bar'
-    : 'Show Emdash in the system tray';
+    ? `Show ${PRODUCT_NAME} in the menu bar`
+    : `Show ${PRODUCT_NAME} in the system tray`;
 
 export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   // General
@@ -39,7 +40,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
     id: 'privacy-telemetry',
     label: 'Privacy & Telemetry',
     tab: 'general',
-    description: 'Help improve Emdash by sending anonymous usage data.',
+    description: `Help improve ${PRODUCT_NAME} by sending anonymous usage data.`,
     keywords: ['analytics', 'posthog', 'usage data', 'tracking'],
   },
   {
@@ -237,14 +238,14 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
     id: slugifySettingLabel(trayIconLabel),
     label: trayIconLabel,
     tab: 'interface',
-    description: 'Keep quick access to Emdash while agents run in the background.',
+    description: `Keep quick access to ${PRODUCT_NAME} while agents run in the background.`,
     keywords: ['menu bar', 'system tray', 'task bar', 'icon', 'hide', 'disable'],
   },
   {
     id: 'color-mode',
     label: 'Color mode',
     tab: 'interface',
-    description: 'Choose how Emdash looks.',
+    description: `Choose how ${PRODUCT_NAME} looks.`,
     keywords: ['theme', 'dark mode', 'light mode', 'appearance', 'system'],
   },
   {
@@ -342,7 +343,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
     id: 'disable-cors-for-localhost',
     label: 'Disable CORS for localhost',
     tab: 'browser',
-    description: 'Allow localhost pages in Emdash browser tabs to call APIs without CORS headers.',
+    description: `Allow localhost pages in ${PRODUCT_NAME} browser tabs to call APIs without CORS headers.`,
     keywords: ['cross-origin'],
   },
   {

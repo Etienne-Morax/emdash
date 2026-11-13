@@ -55,6 +55,16 @@ export type InterfaceSettings = {
   showLeftSidebarPrStatus: boolean;
   showLeftSidebarTimestamps: boolean;
   hideContextBar: boolean;
+  /** Shows the cross-task grid entry point (one live agent pane per task). */
+  enableTaskGrid: boolean;
+  /** Shows a colour per project and a machine chip on tasks (sidebar, task header, grid). */
+  colorCodeProjects: boolean;
+  /** Explicit project colours, keyed by project id (values are colour-coding keys). */
+  projectColors: Record<string, string>;
+  /** Explicit SSH machine colours, keyed by connection id. */
+  machineColors: Record<string, string>;
+  /** Machine chip icons, keyed by connection id, plus `local` for this computer. */
+  machineIcons: Record<string, string>;
 };
 
 export type ProviderCustomConfig = {

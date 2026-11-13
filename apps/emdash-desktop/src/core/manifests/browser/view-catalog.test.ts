@@ -14,6 +14,8 @@ describe('viewCatalog', () => {
       'project',
       'task',
       'settings',
+      'task-grid',
+      'fleet',
     ]);
   });
 
@@ -63,6 +65,8 @@ describe('viewCatalog', () => {
       project: 'project_viewed',
       task: 'task_viewed',
       settings: 'settings_viewed',
+      'task-grid': 'task_grid_viewed',
+      fleet: 'fleet_viewed',
     });
   });
 });

@@ -3,6 +3,7 @@ import type { Result } from '@emdash/shared';
 import { Alert, Button } from '@emdash/ui/react/primitives';
 import { useState, type ReactNode } from 'react';
 import { CopyButton } from '@core/primitives/agents/browser/install-command-row';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 
 export type TrustRepositoryConfirmation = {
   title: string;
@@ -39,7 +40,9 @@ export function UntrustedRepositoryNotice({
       title: 'Trust this repository?',
       description: (
         <div className="flex flex-col gap-3">
-          <p>Emdash will run this command on {hostLabel}:</p>
+          <p>
+            {PRODUCT_NAME} will run this command on {hostLabel}:
+          </p>
           <CommandBlock command={command} />
           <p className="text-foreground-muted">
             This changes your global Git config, so Git, agents, and your terminal will open this

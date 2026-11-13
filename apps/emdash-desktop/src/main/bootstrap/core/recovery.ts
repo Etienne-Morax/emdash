@@ -1,4 +1,5 @@
 import { app, dialog } from 'electron';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { initializeFileLogger } from '@main/host/file-logger';
 import { showRecoveryWindow } from '@main/host/recovery/recovery-window';
 import { log } from '@main/lib/logger';
@@ -30,7 +31,7 @@ export async function enterSafeMode(error: unknown): Promise<void> {
     log.error('Failed to open recovery window', { error: windowError });
     dialog.showErrorBox(
       'Something went wrong',
-      `Emdash could not start or open recovery mode.\n\n${errorMessage}`
+      `${PRODUCT_NAME} could not start or open recovery mode.\n\n${errorMessage}`
     );
   }
 }

@@ -21,3 +21,10 @@ export {
   type ReconnectingTransportOptions,
 } from './reconnecting';
 export { streamTransport } from './stream';
+export {
+  openWebSocketTransport,
+  webSocketTransport,
+  type OpenWebSocketOptions,
+  type WebSocketLike,
+  type WebSocketTransportOptions,
+} from './websocket';

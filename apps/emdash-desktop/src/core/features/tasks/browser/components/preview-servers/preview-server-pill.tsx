@@ -14,6 +14,7 @@ import {
   useTaskComposition,
 } from '@core/features/workbench/api/browser/task-composition-context';
 import { projectAvailabilityUi } from '@core/manifests/browser/project-availability-ui';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import {
   copyTextToClipboard,
   openExternal,
@@ -106,7 +107,7 @@ export const PreviewServerPill = observer(function PreviewServerPill({
           }}
         >
           <Globe className="size-3.5" />
-          Open in Emdash Browser
+          Open in {PRODUCT_NAME} Browser
         </DropdownMenu.Item>
         <DropdownMenu.Item
           disabled={!canOpen || Boolean(liveActionDisabledReason)}

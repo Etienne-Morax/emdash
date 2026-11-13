@@ -1,5 +1,6 @@
 import { join } from 'node:path';
 import { app, BrowserWindow, shell } from 'electron';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { clearBootFailureMarker } from '@main/bootstrap/core/boot-guard';
 import { getLogFilePath } from '@main/host/file-logger';
 import { log } from '@main/lib/logger';
@@ -82,7 +83,7 @@ export async function showRecoveryWindow(options: RecoveryWindowOptions): Promis
     height: 480,
     minWidth: 440,
     minHeight: 380,
-    title: 'Emdash Recovery',
+    title: `${PRODUCT_NAME} Recovery`,
     show: false,
     autoHideMenuBar: true,
     webPreferences: {

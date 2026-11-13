@@ -29,6 +29,8 @@ import {
 import type { EditorBufferService } from '@core/features/editor/node/editor-buffer-service';
 import { createEditorWireController } from '@core/features/editor/node/wire-controller';
 import { createFilesWireController } from '@core/features/files/node/wire-controller';
+import type { FleetOverviewSource } from '@core/features/fleet/node/fleet-overview';
+import { createFleetWireController } from '@core/features/fleet/node/wire-controller';
 import type { GitCredentialsService } from '@core/features/github/api/node/services/git-credentials-service';
 import { createGithubWireController } from '@core/features/github/node/wire-controller';
 import { createIntegrationsWireController } from '@core/features/integrations/node/wire-controller';
@@ -42,6 +44,8 @@ import type { PromptLibraryService } from '@core/features/library/node/prompt-li
 import { createPromptLibraryWireController } from '@core/features/library/node/wire-controller';
 import { createMachinesWireController } from '@core/features/machines/node/wire-controller';
 import { createMcpWireController } from '@core/features/mcp/node/wire-controller';
+import type { MobileRemoteSource } from '@core/features/mobile-remote/node/mobile-remote-service';
+import { createMobileRemoteWireController } from '@core/features/mobile-remote/node/wire-controller';
 import type { PreviewServerAccessOperations } from '@core/features/preview-servers/node/preview-server-access-service';
 import { createPreviewServersWireController } from '@core/features/preview-servers/node/wire-controller';
 import type { ProjectAttachmentManager } from '@core/features/projects/api/node/project-attachment-manager';
@@ -133,6 +137,8 @@ export type DesktopControllerContext = {
   readonly db: AppDb;
   readonly devPerfOperations: DevPerfOperations;
   readonly editorBuffer: EditorBufferService;
+  readonly fleet: FleetOverviewSource;
+  readonly mobileRemote: MobileRemoteSource;
   readonly github: Omit<Parameters<typeof createGithubWireController>[0], 'logger'>;
   readonly gitlabRepositories: GitLabRepositoryService;
   readonly gitCredentials: GitCredentialsService;
@@ -443,6 +449,12 @@ export const desktopNodeControllers = {
   },
   usage: {
     create: ({ scope, usage }) => createUsageWireController({ scope, usage }),
+  },
+  fleet: {
+    create: ({ fleet, scope }) => createFleetWireController({ scope, fleet }),
+  },
+  mobileRemote: {
+    create: ({ mobileRemote, scope }) => createMobileRemoteWireController({ scope, mobileRemote }),
   },
   hosts: {
     create: ({ hostAvailability, hosts, ssh }) =>

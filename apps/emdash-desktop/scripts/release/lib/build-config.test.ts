@@ -15,47 +15,58 @@ const packageFile = fileURLToPath(new URL('../../../package.json', import.meta.u
 const projectDir = dirname(packageFile);
 
 describe.each([
-  { channel: 'stable', baseConfig: stableConfig, desktopId: 'Emdash', productName: 'Emdash' },
+  {
+    channel: 'stable',
+    baseConfig: stableConfig,
+    desktopId: 'Emdash',
+    productName: 'Morax Code',
+    // Electron sets the X11/Wayland class from app.getName(), which keeps the internal name.
+    wmClass: 'Emdash',
+  },
   {
     channel: 'canary',
     baseConfig: canaryConfig,
     desktopId: 'emdash-canary',
-    productName: 'Emdash Canary',
+    productName: 'Morax Code Canary',
+    wmClass: 'Emdash Canary',
   },
-])('$channel Linux desktop identity', ({ channel, baseConfig, desktopId, productName }) => {
-  it.each(['local', 'release'])('matches the %s launcher on Wayland and X11', async (mode) => {
-    const versionOverride =
-      mode === 'release' && channel === 'canary' ? '9.9.9-canary.123' : undefined;
-    const config =
-      mode === 'release'
-        ? createReleaseBuildConfig(
-            baseConfig,
-            packageJson.devDependencies.electron,
-            versionOverride
-          )
-        : structuredClone(baseConfig);
-    const packager = new Packager({ projectDir, config });
-    await packager.validateConfig();
-    packager._appInfo = new AppInfo(packager, null);
-    const linuxPackager = new LinuxPackager(packager);
-    // Exercise the builder's desktop generator and merged package metadata without
-    // downloading Electron or invoking native Linux packaging tools.
-    const helper = new LinuxTargetHelper(linuxPackager);
-    const desktopEntry = await helper.computeDesktopEntry(
-      linuxPackager.platformSpecificBuildOptions
-    );
-    const metadata = packager.metadata;
+])(
+  '$channel Linux desktop identity',
+  ({ channel, baseConfig, desktopId, productName, wmClass }) => {
+    it.each(['local', 'release'])('matches the %s launcher on Wayland and X11', async (mode) => {
+      const versionOverride =
+        mode === 'release' && channel === 'canary' ? '9.9.9-canary.123' : undefined;
+      const config =
+        mode === 'release'
+          ? createReleaseBuildConfig(
+              baseConfig,
+              packageJson.devDependencies.electron,
+              versionOverride
+            )
+          : structuredClone(baseConfig);
+      const packager = new Packager({ projectDir, config });
+      await packager.validateConfig();
+      packager._appInfo = new AppInfo(packager, null);
+      const linuxPackager = new LinuxPackager(packager);
+      // Exercise the builder's desktop generator and merged package metadata without
+      // downloading Electron or invoking native Linux packaging tools.
+      const helper = new LinuxTargetHelper(linuxPackager);
+      const desktopEntry = await helper.computeDesktopEntry(
+        linuxPackager.platformSpecificBuildOptions
+      );
+      const metadata = packager.metadata;
 
-    expect(metadata.desktopName).toBe(`${desktopId}.desktop`);
-    expect(helper.getDesktopFileName()).toBe(desktopId);
-    expect(helper.getDesktopFileName('different-executable')).toBe(desktopId);
-    expect(metadata.desktopName).toBe(`${helper.getDesktopFileName()}.desktop`);
-    expect(desktopEntry).toContain(`\nStartupWMClass=${productName}\n`);
-    expect(desktopEntry).toContain(`\nName=${productName}\n`);
-    expect(config.productName).toBe(productName);
-    expect(metadata.version).toBe(versionOverride ?? packageJson.version);
-  });
-});
+      expect(metadata.desktopName).toBe(`${desktopId}.desktop`);
+      expect(helper.getDesktopFileName()).toBe(desktopId);
+      expect(helper.getDesktopFileName('different-executable')).toBe(desktopId);
+      expect(metadata.desktopName).toBe(`${helper.getDesktopFileName()}.desktop`);
+      expect(desktopEntry).toContain(`\nStartupWMClass=${wmClass}\n`);
+      expect(desktopEntry).toContain(`\nName=${productName}\n`);
+      expect(config.productName).toBe(productName);
+      expect(metadata.version).toBe(versionOverride ?? packageJson.version);
+    });
+  }
+);
 
 describe('createReleaseBuildConfig', () => {
   it('isolates nested configuration between architecture builds', () => {

@@ -96,6 +96,7 @@ export function createDesktopWireOptions(
       getElectronVersion: () => appOperations.getElectronVersion(),
       getPlatform: () => appOperations.getPlatform(),
       getPlatformDisplayName: () => appOperations.getPlatformDisplayName(),
+      getComputerInfo: () => appOperations.getComputerInfo(),
       getDiagnosticLogAttachment: () => appOperations.getDiagnosticLogAttachment(),
       submitFeedback: (input) => appOperations.submitFeedback(input),
     },
@@ -135,6 +136,8 @@ export function createDesktopWireOptions(
     updateOperations,
     usage: services.usage,
     waitlistOperations,
+    fleet: services.fleet,
+    mobileRemote: services.mobileRemote,
     workspaceIdentity: database.workspaceIdentity,
     workspacePlacement: services.workspacePlacement,
     workspaces: {

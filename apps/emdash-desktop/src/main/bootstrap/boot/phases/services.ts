@@ -24,6 +24,10 @@ import { ConversationBackfillService } from '@core/features/conversations/node/s
 import { ConversationSyncService } from '@core/features/conversations/node/sync/conversation-sync-service';
 import { TuiConversationProvider } from '@core/features/conversations/node/tui-conversation-provider';
 import {
+  createFleetOverview,
+  createFleetSettingsPort,
+} from '@core/features/fleet/node/fleet-overview';
+import {
   createGitCredentialsService,
   type GitCredentialsService,
 } from '@core/features/github/api/node/services/git-credentials-service';
@@ -153,6 +157,7 @@ import { getTerminalColorEnv } from '@main/core/terminal-shell/color-env';
 import { runLocalCommand } from '@main/core/utils/exec';
 import { cleanupLegacyOperationsDatabases } from '@main/db/legacy-operations-cleanup';
 import type { DesktopRuntimes } from '@main/gateway/desktop-runtimes';
+import { createMobileGateway } from '@main/gateway/mobile-gateway';
 import { createDesktopWorkspaceRuntimeAcquirer } from '@main/gateway/workspace-runtime';
 import { setBrowserCorsRelaxationSettings } from '@main/host/browser/browser-profile-session';
 import { browserWebContentsRegistry } from '@main/host/browser/browser-webcontents-registry';
@@ -175,6 +180,8 @@ import type { InfrastructureBundle } from './infrastructure';
 export type ServicesBundle = {
   readonly account: ReturnType<typeof createEmdashAccountService>;
   readonly automations: AutomationsService;
+  readonly fleet: ReturnType<typeof createFleetOverview>;
+  readonly mobileRemote: ReturnType<typeof createMobileGateway>['source'];
   readonly github: {
     cliImport: GitHubCliAccountImportService;
     legacyTokenImport: GitHubLegacyTokenImportStep;
@@ -216,6 +223,18 @@ export async function bootServices(
     machines: infrastructure.ssh.machines,
     hosts: infrastructure.hosts,
     hostAvailability: desktopRuntimes.hostAvailability,
+  });
+  const fleet = createFleetOverview({
+    scope: appScope,
+    settings: createFleetSettingsPort(appSettingsService),
+    secrets: encryptedAppSecretsStore,
+    logger: log,
+  });
+  const mobileGateway = createMobileGateway({
+    scope: appScope,
+    appSettings: appSettingsService,
+    secrets: encryptedAppSecretsStore,
+    logger: log,
   });
   const getMementosRuntimeClient = async () => clients.mementos;
   const getPullRequestsRuntimeClient = async () => clients.pullRequests;
@@ -482,6 +501,7 @@ export async function bootServices(
     logger: log,
     createSystemSink: createSystemNotificationSink,
   });
+  notificationService.registerSink(mobileGateway.pushSink);
   const legacyAccountImports = new LegacyAccountImports(db, plaintextSecrets, log);
   const legacyIntegrationAccounts = new LegacyIntegrationAccountsMigration(
     db,
@@ -876,6 +896,8 @@ export async function bootServices(
     taskService,
     taskSessions: taskSessionManager,
     usage,
+    fleet,
+    mobileRemote: mobileGateway.source,
     workspacePlacement,
     conversationSync,
     reconcileSweep,

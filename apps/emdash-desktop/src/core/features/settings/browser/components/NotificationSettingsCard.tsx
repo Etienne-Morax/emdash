@@ -4,6 +4,7 @@ import { FolderOpen, Play } from 'lucide-react';
 import React from 'react';
 import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
 import { configureSoundPlayer, soundPlayer } from '@core/features/settings/browser/sound-player';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import type { NotificationSettings } from '@core/primitives/app-settings/api';
 import { getHostClient } from '@core/primitives/desktop-host/browser/host-client';
 import { cn } from '@core/primitives/styling/browser/cn';
@@ -217,7 +218,7 @@ const NotificationSettingsCard: React.FC = () => {
 
             <SettingRow
               title="OS notifications"
-              description="Show system banners when agents need attention or finish (while Emdash is unfocused)."
+              description={`Show system banners when agents need attention or finish (while ${PRODUCT_NAME} is unfocused).`}
               control={
                 <>
                   <ResetToDefaultButton

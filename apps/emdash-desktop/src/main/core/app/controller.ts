@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process';
-import { arch, release } from 'node:os';
+import { arch, hostname, release } from 'node:os';
 import { promisify } from 'node:util';
 import type { HostFileRef } from '@emdash/core/primitives/path/api';
 import type { OpenInAppId } from '@core/primitives/open-in-apps/api/open-in-apps';
@@ -49,6 +49,25 @@ async function getPlatformDisplayName(): Promise<string> {
   }
 
   return `${process.platform} ${release()} (${architecture})`;
+}
+
+async function readDarwinValue(command: string, args: string[]): Promise<string> {
+  try {
+    const { stdout } = await execFileAsync(command, args);
+    return stdout.trim();
+  } catch {
+    // Sandboxed or stripped-down environments: fall back to generic values.
+    return '';
+  }
+}
+
+async function getComputerInfo(): Promise<{ name: string; model: string }> {
+  if (process.platform !== 'darwin') return { name: hostname(), model: '' };
+  const [name, model] = await Promise.all([
+    readDarwinValue('scutil', ['--get', 'ComputerName']),
+    readDarwinValue('sysctl', ['-n', 'hw.model']),
+  ]);
+  return { name: name || hostname(), model };
 }
 
 export const appOperations = {
@@ -198,6 +217,7 @@ export const appOperations = {
   getElectronVersion: () => process.versions.electron,
   getPlatform: () => process.platform,
   getPlatformDisplayName,
+  getComputerInfo,
   getDiagnosticLogAttachment,
   submitFeedback: async (args: { content: string; files: FeedbackAttachment[] }) => {
     try {

@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
 import { SCOPE_CATALOG } from '@core/manifests/browser/scope-catalog';
 import { COMMAND_CATALOG } from '@core/manifests/shared/command-catalog';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import {
   CODE_TO_US_CHAR,
   detectPlatformContext,
@@ -81,7 +82,7 @@ const KeyboardSettingsCard: React.FC = observer(function KeyboardSettingsCard() 
       if (rejected) {
         const conflictingTitle =
           COMMAND_CATALOG.byId(rejected.id)?.title ??
-          (rejected.id === SYSTEM_HIDE_ENTRY.id ? 'Hide Emdash' : rejected.id);
+          (rejected.id === SYSTEM_HIDE_ENTRY.id ? `Hide ${PRODUCT_NAME}` : rejected.id);
         toast.error(
           rejected.severity === 'reserved' ? 'Shortcut is reserved' : 'Shortcut conflict',
           { description: `Conflicts with "${conflictingTitle}". Choose a different shortcut.` }

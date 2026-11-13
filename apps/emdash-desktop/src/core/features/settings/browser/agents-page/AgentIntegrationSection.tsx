@@ -5,6 +5,7 @@ import { useAgentHooksStatus } from '@core/features/agents/api/browser/use-agent
 import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
 import { settingsViewDef } from '@core/features/settings/contributions/views';
 import type { AgentPayload } from '@core/primitives/agents/api';
+import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import { useNavigate } from '@core/primitives/navigation/browser/navigation-hooks';
 
 const HOME_PREFIX_RE = /^\/(?:Users|home)\/[^/]+/;
@@ -46,8 +47,8 @@ export function AgentHooksSection({ agent, host }: { agent: AgentPayload; host: 
       <div className="flex items-center gap-1.5">
         <Label>Hooks</Label>
         <InfoTooltip>
-          Hooks let Emdash track agent status, deliver notifications, and capture session IDs for
-          reliable resume.
+          Hooks let {PRODUCT_NAME} track agent status, deliver notifications, and capture session
+          IDs for reliable resume.
         </InfoTooltip>
       </div>
       <div>
