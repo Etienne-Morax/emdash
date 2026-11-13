@@ -67,6 +67,15 @@ public enum NewTask {
     return options.first
   }
 
+  /// The base to keep selected once the options or the default branch change: the current
+  /// choice while it is still offered, else the default base, else none (empty id).
+  public static func selectedBaseId(
+    _ current: String, options: [BaseBranch], defaultBranch: String?
+  ) -> String {
+    if options.contains(where: { $0.id == current }) { return current }
+    return defaultBase(options, defaultBranch: defaultBranch)?.id ?? ""
+  }
+
   /// `resolveTaskBranchName` (desktop): prefix + name + optional random suffix.
   public static func branchName(
     taskName: String, defaults: TaskDefaults, suffix: String
